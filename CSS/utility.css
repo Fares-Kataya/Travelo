@@ -1,0 +1,7 @@
+:root {
+	--dark: #252525;
+}
+
+div {
+	color: var(--dark);
+}
