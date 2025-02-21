@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Planner</title>
+		<link rel="stylesheet" href="../CSS/bootstrap.min.css" />
+		<link rel="stylesheet" href="../CSS/planner.css" />
+		<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+		<link rel="stylesheet" href="../CSS/style.css">
+		<script src="../JS/planner.js"></script>
+		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+		<script src="../JS/loadHeaderFooter.js" defer></script>
+	</head>
+	<body>
+		<header id="header-container">
+			<nav></nav>
+		</header>
+		<section class="container col-6 mb-5">
+			<ul id="menu-list">
+				<li><a class="menu-links" href="#">Discover</a></li>
+				<li><a class="menu-links" href="#">Inspiration</a></li>
+				<li><a class="menu-links active" href="#">My Trips</a></li>
+			</ul>
+		</section>
+		<section class="container col-10">
+			<h1>My Trips</h1>
+			<hr />
+			<button class="card" id="tripbtn">+ Create a New Trip</button><br />
+			<h2>Planned Trips</h2>
+			<hr />
+			<article id="planned-Trips">
+				<div id="empty">
+					<p class="para">
+						you have no upcoming trips. Where are you going next?
+					</p>
+					<button id="exploreBtn">Start Exploring!</button>
+				</div>
+			</article>
+			<h2>Completed Trips</h2>
+			<hr>
+			<div class="comp">
+				<p class="para">
+						your completed trips will appear here, start by creating a new trip!
+					</p>
+			</div>
+			<button id="add">+</button>
+		</section>
+		<footer id="footer-container">
+
+		</footer>
+	</body>
+</html>
