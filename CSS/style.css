@@ -87,7 +87,7 @@ html, body {
     padding: 0;
 }
 .container-fluid{
-    background-color: rgb(221, 209, 220);
+    background-color: rgb(255, 255, 255);
     height: 100vh;
     width: 100%;
 }
@@ -106,10 +106,12 @@ html, body {
     align-items: center;
 }
 .btn-yellow {
-    background-color: #ffc107;
-    color: black;
+    background-color: #ffc107 !important;
+    color: black !important;
 }
 
 .btn-yellow:hover {
-    background-color: #e0a800;
+    background-color: #e0a800 !important;
 }
+
+
