@@ -96,11 +96,16 @@ html, body {
     height: 100%;
     margin: 0;
 }
-.Rightside
+.Rightside img
 {
-    background-image: url("../Assets/images/Reg1.jpg");
-    background-size: cover;
-    background-position: center;
+    object-fit: cover;
+    aspect-ratio: 1 /1;
+    /* background-image: url("../Assets/images/Reg1.jpg"); */
+    /* background-size: cover; */
+}
+.Rightside{
+    height: 100vh;
+    
 }
 .Leftside{
     align-items: center;
@@ -111,7 +116,7 @@ html, body {
 }
 
 .btn-yellow:hover {
-    background-color: #e0a800 !important;
+    background-color: #e7b110 !important;
 }
 
 
