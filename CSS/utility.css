@@ -1,14 +1,13 @@
 :root {
 	--text-dark: #252525;
 	--primaryText: var(--black);
-
+	--red: #ff385c;
 }
 
 .xx-small {
 	font-size: 12px !important;
 	font-weight: lighter !important;
 }
-
 
 .x-small {
 	font-size: 14px !important;
