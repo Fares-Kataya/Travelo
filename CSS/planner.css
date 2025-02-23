@@ -327,3 +327,53 @@ transform: scale(1.1);
 #add-Date:hover{
 transform: scale(1.1);
 }
+#months{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#months > h4{
+    margin-bottom:0px;
+    padding: 20px;
+    position: relative;
+    top: 8px;
+}
+#months > button{
+    width: 20px;
+    height: 30px;
+    padding: 0px;
+    border:none;
+    background-color: transparent;
+}
+#months > button > img{
+display: block;
+width: 100%;
+height: 100%;
+object-fit: contain;
+}
+#weekdays {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px;
+}
+.date-modal{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    left:10%;
+    width: 80%;
+    height: 80%;
+    z-index: 9999;
+}
+.weekDaysBtn{
+    border: black solid 2px;
+    background-color: transparent;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+}

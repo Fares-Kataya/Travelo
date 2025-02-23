@@ -61,7 +61,7 @@ export function createElement(
 	}
 	const element = document.createElement(elementName);
 
-	if (attributes && typeof attributes === 'Object') {
+	if (attributes && typeof attributes === 'object') {
 		for (let key in attributes) {
 			element.setAttribute(key, attributes[key]);
 		}
@@ -76,4 +76,12 @@ export function createElement(
 	}
 
 	return element;
+}
+export function loadHeaderFooter(elementID, filePath) {
+     fetch(filePath)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById(elementID).innerHTML = data;
+        })
+        .catch(error => console.error("Error loading component:", error));
 }
