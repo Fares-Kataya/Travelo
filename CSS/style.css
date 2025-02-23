@@ -3,18 +3,6 @@ body {
 	margin: 16px;
 }
 
-@media (min-width: 1100px) {
-	.container-lg {
-		width: 1100px !important;
-	}
-}
-
-@media (min-width: 1200px) {
-	.container-xl {
-		width: 1200px !important;
-	}
-}
-
 .logo {
 	display: flex;
 	flex-direction: row;
