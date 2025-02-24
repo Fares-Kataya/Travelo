@@ -1,87 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <title>Sign up</title>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("signupForm").addEventListener("submit", function(e) {
-                e.preventDefault();
-                let fullName = document.getElementById("fullName").value.trim();
-                let email = document.getElementById("email").value.trim();
-                let password = document.getElementById("password").value.trim();
-                document.querySelectorAll(".error-message").forEach(el => el.remove());
-                let valid = true;
-                if (!/^[A-Za-z\s]+$/.test(fullName)) {
-                showError("fullName", "Full name must contain only letters.");
-                valid = false;
-                 }
-                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    showError("email", "Please enter a valid email address.");
-                    valid = false;
-                }
-                const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-                if (!passwordPattern.test(password)) {
-                    showError("password", "Password must be at least 8 characters long and include uppercase, lowercase, a number, and a symbol.");
-                    valid = false;
-                }
-                function showError(inputId, message) {
-                    let inputElement = document.getElementById(inputId);
-                    let errorElement = document.createElement("div");
-                    errorElement.className = "error-message text-danger mt-1";
-                    errorElement.innerText = message;
-                    inputElement.parentNode.appendChild(errorElement);
-                }
-               if(valid)
-               {
-                console.log(fullName);
-                console.log(email);
-                console.log(password);
-               }
-            });
-        });
-    </script>
-</head>
-<body>
-    <div class="container-fluid ">
-        <div class="row">
-            <div class="col-lg-6 col-12  Leftside d-flex justify-content-center align-items-center">
-                <div class="col-10 col-md-8">
-                    <h2>Create an account</h2>
-                    <form id="signupForm">
-                        <div class="mb-3">
-                            <label for="fullName" class="form-label ">Full name</label>
-                            <input type="text" class="form-control shadow-sm" id="fullName"  placeholder="Enter your name" required minlength="3" maxlength="50">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control  shadow-sm" id="email" placeholder="Enter your email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control  shadow-sm" id="password" placeholder="Enter your password" required minlength="8">
-                        </div>
-                        <button type="submit" class="btn btn-yellow w-100 mb-3">Submit</button>
-                        <div class="social-btns d-flex justify-content-center align-items-center">
-                            <button type="button" class="btn btn-outline-dark me-2">
-                                <i class="fa-brands fa-google"></i> Google
-                            </button>
-                            <button type="button" class="btn btn-outline-dark me-2">
-                                <i class="fa-brands fa-facebook"></i> Facebook
-                            </button>
-                        </div>
-                    </form>
-                    <p class="mt-4">have account? <a href="login.html" class="text-decoration-none">login</a></p>
-                </div>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block Rightside overflow-hidden p-0">
-                <img src="../Assets/images/Reg1.jpg" class="w-100 " alt="">
-            </div>
-        </div>
-    </div>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="../CSS/style.css" />
+		<link
+			rel="stylesheet"
+			href="../CSS/bootstrap.min.css" />
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+			rel="stylesheet" />
+		<title>Sign up</title>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				document
+					.getElementById('signupForm')
+					.addEventListener('submit', function (e) {
+						e.preventDefault();
+						let fullName = document.getElementById('fullName').value.trim();
+						let email = document.getElementById('email').value.trim();
+						let password = document.getElementById('password').value.trim();
+						document
+							.querySelectorAll('.error-message')
+							.forEach((el) => el.remove());
+						let valid = true;
+						if (!/^[A-Za-z\s]+$/.test(fullName)) {
+							showError('fullName', 'Full name must contain only letters.');
+							valid = false;
+						}
+						if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+							showError('email', 'Please enter a valid email address.');
+							valid = false;
+						}
+						const passwordPattern =
+							/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+						if (!passwordPattern.test(password)) {
+							showError(
+								'password',
+								'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a symbol.'
+							);
+							valid = false;
+						}
+						function showError(inputId, message) {
+							let inputElement = document.getElementById(inputId);
+							let errorElement = document.createElement('div');
+							errorElement.className = 'error-message text-danger mt-1';
+							errorElement.innerText = message;
+							inputElement.parentNode.appendChild(errorElement);
+						}
+						if (valid) {
+							console.log(fullName);
+							console.log(email);
+							console.log(password);
+						}
+					});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div
+					class="col-lg-6 col-12 Leftside d-flex justify-content-center align-items-center">
+					<div class="col-10 col-md-8">
+						<h2>Create an account</h2>
+						<form id="signupForm">
+							<div class="mb-3">
+								<label
+									for="fullName"
+									class="form-label"
+									>Full name</label
+								>
+								<input
+									type="text"
+									class="form-control shadow-sm"
+									id="fullName"
+									placeholder="Enter your name"
+									required
+									minlength="3"
+									maxlength="50" />
+							</div>
+							<div class="mb-3">
+								<label
+									for="email"
+									class="form-label"
+									>Email</label
+								>
+								<input
+									type="email"
+									class="form-control shadow-sm"
+									id="email"
+									placeholder="Enter your email"
+									required />
+							</div>
+							<div class="mb-3">
+								<label
+									for="password"
+									class="form-label"
+									>Password</label
+								>
+								<input
+									type="password"
+									class="form-control shadow-sm"
+									id="password"
+									placeholder="Enter your password"
+									required
+									minlength="8" />
+							</div>
+							<button
+								type="submit"
+								class="btn btn-yellow w-100 mb-3">
+								Submit
+							</button>
+							<div
+								class="social-btns d-flex justify-content-center align-items-center">
+								<button
+									type="button"
+									class="btn btn-outline-dark me-2">
+									<i class="fa-brands fa-google"></i> Google
+								</button>
+								<button
+									type="button"
+									class="btn btn-outline-dark me-2">
+									<i class="fa-brands fa-facebook"></i> Facebook
+								</button>
+							</div>
+						</form>
+						<p class="mt-4">
+							have account?
+							<a
+								href="login.html"
+								class="text-decoration-none"
+								>login</a
+							>
+						</p>
+					</div>
+				</div>
+				<div class="col-lg-6 d-none d-lg-block Rightside overflow-hidden p-0">
+					<img
+						src="../Assets/images/Reg1.jpg"
+						class="w-100 h-100"
+						alt="" />
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
