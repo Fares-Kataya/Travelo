@@ -8,41 +8,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <title>Document</title>
-    <style>
-         html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        .container-fluid{
-            background-color: rgb(221, 209, 220);
-            height: 100vh;
-            width: 100%;
-        }
-
-        .row {
-            height: 100%;
-            margin: 0;
-        }
-        .Rightside
-        {
-            background-image: url("../Assets/images/Reg1.jpg");
-            background-size: cover;
-            background-position: center;
-        }
-        .Leftside{
-            align-items: center;
-        }
-        .btn-yellow {
-            background-color: #ffc107;
-            color: black;
-        }
-
-        .btn-yellow:hover {
-            background-color: #e0a800;
-        }
-        
-    </style>
 </head>
 <body>
     <div class="container-fluid ">
@@ -52,16 +17,16 @@
                     <h2>Create an account</h2>
                     <form>
                         <div class="mb-3">
-                            <label for="fullName" class="form-label">Full name</label>
-                            <input type="text" class="form-control" id="fullName" placeholder="yousef abdo">
+                            <label for="fullName" class="form-label ">Full name</label>
+                            <input type="text" class="form-control shadow-sm" id="fullName" placeholder="yousef abdo">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="yousefabdo@gmail.com">
+                            <input type="email" class="form-control  shadow-sm" id="email" placeholder="yousefabdo@gmail.com">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" placeholder="********">
+                            <input type="password" class="form-control  shadow-sm" id="password" placeholder="********">
                         </div>
                         <button type="submit" class="btn btn-yellow w-100 mb-3">Submit</button>
                         <div class="social-btns d-flex justify-content-center align-items-center">
@@ -76,7 +41,9 @@
                     <p class="mt-4">have account? <a href="#" class="text-decoration-none">login</a></p>
                 </div>
             </div>
-            <div class="col-6 Rightside "></div>
+            <div class="col-6 Rightside overflow-hidden p-0">
+                <img src="../Assets/images/Reg1.jpg" class="w-100" alt="">
+            </div>
         </div>
     </div>
 </body>

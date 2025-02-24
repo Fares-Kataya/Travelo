@@ -81,3 +81,42 @@ body {
 
     color: rgb(72, 72, 72) !important;
 }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.container-fluid{
+    background-color: rgb(255, 255, 255);
+    height: 100vh;
+    width: 100%;
+}
+
+.row {
+    height: 100%;
+    margin: 0;
+}
+.Rightside img
+{
+    object-fit: cover;
+    aspect-ratio: 1 /1;
+    /* background-image: url("../Assets/images/Reg1.jpg"); */
+    /* background-size: cover; */
+}
+.Rightside{
+    height: 100vh;
+    
+}
+.Leftside{
+    align-items: center;
+}
+.btn-yellow {
+    background-color: #ffc107 !important;
+    color: black !important;
+}
+
+.btn-yellow:hover {
+    background-color: #e7b110 !important;
+}
+
+
