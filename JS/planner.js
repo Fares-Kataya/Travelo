@@ -13,7 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		let tripContainer = createElement("div", [], { id: "trip" });
 		modal.appendChild(tripContainer);
-		let tripDetails = createElement("div", ["container"], { id: "tripdetails" });
+		let tripDetails = createElement("div", ["container"], {
+			id: "tripdetails",
+		});
 		tripContainer.appendChild(tripDetails);
 
 		let tripNameLabel = createElement("label", [], {}, "Trip Name");
@@ -74,6 +76,19 @@ document.addEventListener("DOMContentLoaded", function () {
 		setupTripCreation(overlay);
 		setupDestinationMap();
 		setupDateModal(overlay, addDateButton);
+		document.addEventListener("keydown", keyPress);
+	}
+	function keyPress(e) {
+		if (e.key === "Escape") {
+			let dateModal = document.querySelector(".date-modal");
+			let mainModal = document.querySelector(".custom-modal");
+			let overlay = document.querySelector(".overlay");
+			if (dateModal) {
+				overlay.removeChild(dateModal);
+			} else if (mainModal) {
+				document.body.removeChild(overlay);
+			}
+		}
 	}
 	function setupTripCreation(overlay) {
 		let name = document.getElementById("name");
@@ -87,10 +102,19 @@ document.addEventListener("DOMContentLoaded", function () {
 			let tripCard = createElement("div", ["card"], { id: "trip-card" });
 			let title = createElement("h2", [], {}, name.value);
 			let location = createElement("div", [], { id: "location" });
-			let details = createElement("div", ["card-img-overlay"], { id: "details" });
+			let details = createElement("div", ["card-img-overlay"], {
+				id: "details",
+			});
 			let imgDiv = createElement("div", ["image-fade"]);
-			let pinpoint = createElement("img", [], { id: "pinpoint", src: "../Assets/icons/pinpoint-svgrepo-com.svg" });
-			let destImg = createElement("img", ["card-img", "img-fluid", "rounded-4"], { id: "destImg" });
+			let pinpoint = createElement("img", [], {
+				id: "pinpoint",
+				src: "../Assets/icons/pinpoint-svgrepo-com.svg",
+			});
+			let destImg = createElement(
+				"img",
+				["card-img", "img-fluid", "rounded-4"],
+				{ id: "destImg" }
+			);
 			let dest = createElement("h6", [], {}, destination.value);
 			let desc = createElement("p", [], {}, description.value);
 			imageSelector(dest, destImg);
@@ -147,21 +171,63 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 	function setupDateModal(overlay, addDate) {
 		addDate.addEventListener("click", function () {
-			let dateModal = createElement("div", ["custom-modal", "date-modal","container"], {});
+			let dateModal = createElement("div", ["date-modal", "container"], {});
 			let header = createElement("h2", [], {}, "Add dates or Trip Length");
-			let dateOptions = createElement("div", [], { id: "date-options" });
-			let datesButton = createElement("button", [], {}, "Dates(MM/DD)");
-			let tripLengthButton = createElement("button", [], {}, "Trip Length");
+			let dateOptions = createElement("div", ["container"], {
+				id: "date-options",
+			});
+			let datesButton = createElement(
+				"button",
+				[],
+				{ id: "datesBtn" },
+				"Dates(MM/DD)"
+			);
+			let tripLengthButton = createElement(
+				"button",
+				[],
+				{ id: "tripLenBtn" },
+				"Trip Length"
+			);
+			let buttonsDiv = createElement("div", ["container"], {
+				id: "date-options-buttons",
+			});
+			buttonsDiv.appendChild(datesButton);
+			buttonsDiv.appendChild(tripLengthButton);
+			tripLengthButton.addEventListener("click", () => { 
+				dateModal.removeChild(dateModal.querySelector("#monthDays"));
+				dateModal.removeChild(dateModal.querySelector("#weekdays"));
+				dateModal.removeChild(dateModal.querySelector("#months"));
+				dateModal.removeChild(hr);
+				let TLcontainer = createElement("div", ["container"], { id: "tripLengthContainer" });
+				let plusButton = createElement("button", ["tripLenBtn"],{}, "+");
+				let minusButton = createElement("button", ["tripLenBtn"],{}, "-");
+				let TLheader = createElement("h5", [], {}, "Number of Days");
+				let pmDays = createElement("div", [], { id: "pmDays" });
+				let daysContainer = createElement("div", [], { id: "daysContainer" });
+				let days = createElement("p", [], {}, "0");
+				daysContainer.appendChild(days);
+				pmDays.appendChild(minusButton);
+				pmDays.appendChild(daysContainer);
+				pmDays.appendChild(plusButton);
+				TLcontainer.appendChild(TLheader);
+				TLcontainer.appendChild(pmDays);
+				dateModal.appendChild(TLcontainer);
+			});
 			dateOptions.appendChild(header);
-			dateOptions.appendChild(datesButton);
-			dateOptions.appendChild(tripLengthButton);
+			dateOptions.appendChild(buttonsDiv);
 			dateModal.appendChild(dateOptions);
 			let monthsDiv = createElement("div", [], { id: "months" });
-			let backImg = createElement("img", [], { src: "../Assets/icons/back-svgrepo-com.svg" });
+			let backImg = createElement("img", [], {
+				src: "../Assets/icons/back-svgrepo-com.svg",
+			});
 			let backButton = createElement("button", [], {});
 			backButton.appendChild(backImg);
-			let monthHeading = createElement("h4", [], {}, "Month");
-			let nextImg = createElement("img", [], { src: "../Assets/icons/next-svgrepo-com.svg" });
+			let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+			let monthHeading = createElement("h4", [], {}, months[new Date().getMonth()]);
+			let weeks = generateCalendar("2025",months.indexOf(monthHeading.textContent));
+			let nextImg = createElement("img", [], {
+				src: "../Assets/icons/next-svgrepo-com.svg",
+			});
 			let nextButton = createElement("button", [], {});
 			nextButton.appendChild(nextImg);
 			monthsDiv.appendChild(backButton);
@@ -170,17 +236,65 @@ document.addEventListener("DOMContentLoaded", function () {
 			dateModal.appendChild(monthsDiv);
 			let daysDiv = createElement("div", [], { id: "weekdays" });
 			let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-			days.forEach((day) => { 
-				let dayButton = createElement("button", ["weekDaysBtn"], {}, day);
-				daysDiv.appendChild(dayButton);
+			days.forEach((day) => {
+				let dayDiv = createElement("div", ["weekDaysDivs"], { id: day }, day);
+				daysDiv.appendChild(dayDiv);
 			});
 			dateModal.appendChild(daysDiv);
 			let hr = createElement("hr");
 			dateModal.appendChild(hr);
+			renderCalendar(weeks, dateModal);
+
+			nextButton.addEventListener("click", () => {
+				dateModal.removeChild(document.querySelector("#monthDays"));
+				let monthIndex = months.indexOf(monthHeading.textContent);
+				monthIndex = (monthIndex + 1);
+				monthHeading.textContent = months[monthIndex];
+				let weeks = generateCalendar("2025", monthIndex);
+				renderCalendar(weeks, dateModal);
+			});
 			overlay.appendChild(dateModal);
+			setTimeout(() => {
+				dateModal.classList.add("open");
+			}, 10);
 		});
 	}
-		
+	function generateCalendar(year, month) {
+		let firstDay = new Date(year, month, 1).getDay();
+		let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+		let weeks = [];
+		let week = new Array(7).fill(null);
+		let dayCounter = 1;
+
+		for (let i = firstDay; i < 7; i++) {
+			week[i] = dayCounter++;
+		}
+		weeks.push(week);
+		while (dayCounter <= daysInMonth) {
+			week = new Array(7).fill(null);
+			for (let i = 0; i < 7 && dayCounter <= daysInMonth; i++) {
+				week[i] = dayCounter++;
+			}
+			weeks.push(week);
+		}
+
+		return weeks;
+	}
+	function renderCalendar(weeks, dateModal) {
+		let monthDaysBlock = createElement("div", [], { id: "monthDays" });
+		for (let i = 0; i < weeks.length; i++) {
+			let week = createElement("div", ["week"], { id: `week${i}` });
+			for (let j = 0; j < 7; j++) {
+				let day = createElement("div", ["day"], { id: `day${i}${j}` }, weeks[i][j]);
+				week.appendChild(day);
+			}
+			monthDaysBlock.appendChild(week);
+		}
+		dateModal.appendChild(monthDaysBlock);
+	// console.log(weeks);
+
+	}
 });
 
 let imageSelector = (destination, image) => {
