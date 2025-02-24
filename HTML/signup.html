@@ -15,51 +15,7 @@
 			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
 			rel="stylesheet" />
 		<title>Sign up</title>
-		<script>
-			document.addEventListener('DOMContentLoaded', function () {
-				document
-					.getElementById('signupForm')
-					.addEventListener('submit', function (e) {
-						e.preventDefault();
-						let fullName = document.getElementById('fullName').value.trim();
-						let email = document.getElementById('email').value.trim();
-						let password = document.getElementById('password').value.trim();
-						document
-							.querySelectorAll('.error-message')
-							.forEach((el) => el.remove());
-						let valid = true;
-						if (!/^[A-Za-z\s]+$/.test(fullName)) {
-							showError('fullName', 'Full name must contain only letters.');
-							valid = false;
-						}
-						if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-							showError('email', 'Please enter a valid email address.');
-							valid = false;
-						}
-						const passwordPattern =
-							/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-						if (!passwordPattern.test(password)) {
-							showError(
-								'password',
-								'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a symbol.'
-							);
-							valid = false;
-						}
-						function showError(inputId, message) {
-							let inputElement = document.getElementById(inputId);
-							let errorElement = document.createElement('div');
-							errorElement.className = 'error-message text-danger mt-1';
-							errorElement.innerText = message;
-							inputElement.parentNode.appendChild(errorElement);
-						}
-						if (valid) {
-							console.log(fullName);
-							console.log(email);
-							console.log(password);
-						}
-					});
-			});
-		</script>
+		<script src="../JS/signup.js"></script>
 	</head>
 	<body>
 		<div class="container-fluid">
