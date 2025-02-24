@@ -119,5 +119,18 @@ html, body {
 .btn-yellow:hover {
     background-color: #e7b110 !important;
 }
-
+input:invalid {
+    border-color: #dc3545;
+}
+.back-ground{
+    background-image: url("../Assets/images/log.jpg");
+    background-size: cover;
+    background-position: center;
+}
+.blur{
+    background:transparent ;
+    filter: blur(70px);
+    opacity: 0.8;
+    z-index: -1;
+}
 
