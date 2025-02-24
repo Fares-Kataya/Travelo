@@ -82,3 +82,94 @@ body {
 .btn-yellow:hover {
 	background-color: #e7b110 !important;
 }
+
+/* Start Details Page */
+/* Start Images Container */
+.images {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: 200px 200px;
+	gap: 0.5rem;
+	overflow: hidden;
+	border-radius: 1rem;
+}
+
+.images div:first-child {
+	grid-column: 1 / 3;
+	grid-row: 1/3;
+}
+.images div:nth(2)-child,
+.images div:nth(3)-child,
+.images div:nth(4)-child,
+.images div:nth(5)-child {
+	grid-column: 3 / 5;
+}
+/* End Images Container */
+
+/* Star Reservation form */
+.reservation-form input,
+.reservation-form select {
+	border: 1px solid #bbb;
+	outline: none;
+	padding: 0.5rem 1rem;
+}
+/* End Reservation form */
+
+/* Start Features */
+.features {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+.features li {
+	position: relative;
+	color: var(--text-secondary);
+	font-size: 17px;
+}
+.features > li + li::before {
+	content: '•';
+	position: absolute;
+	left: -0.6rem;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.rate {
+	font-size: 3rem;
+}
+/* End Features */
+
+/* Start Reviews Section */
+
+/* Start Total Reviews */
+.total-reviews h2 {
+	font-size: 6rem;
+	font-weight: bold;
+}
+.total-reviews p {
+	font-size: 3rem;
+	font-weight: bold;
+}
+/* End Total Reviews */
+
+/* Start Person info*/
+.person-review {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.person-review div .person-img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+.person-review div:last-child p {
+	width: 70%;
+}
+.map-container {
+	height: 500px;
+}
+/* End Person info*/
+
+/* End Reviews Section */
+/* End Details Page */
