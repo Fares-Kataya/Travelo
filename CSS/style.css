@@ -173,3 +173,11 @@ body {
 
 /* End Reviews Section */
 /* End Details Page */
+
+/* Start Media Queries */
+@media (max-width: 992px) {
+	.person-review div:last-child p {
+		width: 80%;
+	}
+}
+/* End Media Queries */
