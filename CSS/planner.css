@@ -155,11 +155,55 @@
 	align-items: center;
 	z-index: 1000;
 }
-
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Allows absolute positioning of the close button */
+}
+.modal-header h2 {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+}
+.modal-header .close {
+	cursor: pointer;
+	background-color: black;
+	color: #ffffff;
+	border: 0px;
+	position: relative;
+	width: 40px;
+	height: 40px;
+	padding: 8px;
+	left: 3%;
+	bottom: 25px;
+	border-radius: 20px;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	-ms-border-radius: 20px;
+	-o-border-radius: 20px;
+	transition: transform 0.2s ease;
+}
+.close:hover {
+	transform: scale(1.1);
+	-webkit-transform: scale(1.1);
+	-moz-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	-o-transform: scale(1.1);
+}
+.date-input-container{
+	/* display: none; */
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 54%;
+	margin: 0;
+}
 .custom-modal {
 	background: #fff;
-	height: 500px;
-	width: 1000px;
+	height: 550px;
+	width: 1200px;
 	padding: 20px;
 	border-radius: 20px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -169,6 +213,7 @@
 	-moz-border-radius: 20px;
 	-ms-border-radius: 20px;
 	-o-border-radius: 20px;
+	
 }
 
 .custom-modal button {
@@ -178,6 +223,7 @@
 	display: flex;
 	align-items: flex-start;
 	flex-direction: column;
+	margin-right: 25px;
 }
 #tripdetails input {
 	width: 500px;
@@ -234,6 +280,11 @@
 }
 #createbtn:hover {
 	transform: scale(1.1);
+}
+.trip-in,.form-control{
+	width: 100%;
+	box-sizing: border-box;
+	min-width: 0;
 }
 #closeModal {
 	background-color: black;
@@ -333,7 +384,7 @@
 	height: 400px;
 	margin: 20px;
 }
-#trip-card {
+.card {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: flex-start;
@@ -348,8 +399,9 @@
 }
 #details {
 	color: black;
-	margin-left: 20px;
-	line-height: 30px;
+	margin-left: 15px;
+	padding: 20px;
+	line-height: 20px;
 }
 #details > p {
 	width: 500px;
@@ -372,7 +424,7 @@
 	max-height: 100%;
 	width: 100%;
 	opacity: 100%;
-	height: 400px;
+	height: 250px;
 	border-radius: 20px;
 	-webkit-border-radius: 20px;
 	-moz-border-radius: 20px;
@@ -495,6 +547,7 @@
 }
 #months > h4 {
     font-size: xx-large;
+	min-width: 180px;
 	padding: 5px;
 	margin-left: 30px;
 	margin-bottom: 0px;
@@ -534,6 +587,30 @@
 	justify-content: space-around;
 	padding: 10px;
     position: relative;
+}
+.content{
+	margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+	justify-content: space-between;
+	max-width: 90%;
+	position: relative;
+	left: 5%;
+	max-height: 100%;
+}
+textarea:focus {
+	border: #000;
+}
+.modal-body, 
+.modal-footer {
+	width: 50%;
+	padding: 0px;
+	/* border: 1px solid #ccc;
+	border-radius: 50px; */
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	-ms-border-radius: 50px;
+	-o-border-radius: 50px;
 }
 .date-modal {
   background: #fff;
@@ -599,6 +676,10 @@
     -ms-border-radius: 100px;
     -o-border-radius: 100px;
 }
+.day p{
+	text-align: center;
+	margin: 0px;
+}
 .empty{
     width: 40px;
   height: 40px;
@@ -609,7 +690,8 @@
     text-align: center;
 }
 .day:hover{
-    background-color: lightgray;
+    background-color: #e7e7e7;
+	border: #000 2px solid;
     cursor: pointer;
 }
 #monthDays{
@@ -641,17 +723,25 @@
     left: 20%;
 }
 .tripLenBtn{
-    background-color: black;
-    color: #ffffff;
-    border: 0px;
-    border-radius: 20px;
-    text-align: center;
-    width: 35px;
-    height: 35px;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    -ms-border-radius: 20px;
-    -o-border-radius: 20px;
+	background-color: black;
+	color: #ffffff;
+	border: 0px;
+	border-radius: 20px;
+	text-align: center;
+	width: 35px;
+	height: 35px;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	-ms-border-radius: 20px;
+	-o-border-radius: 20px;
+	transition: transform 0.3s ease-in-out;
+	-webkit-transition: transform 0.3s ease-in-out;
+	-moz-transition: transform 0.3s ease-in-out;
+	-ms-transition: transform 0.3s ease-in-out;
+	-o-transition: transform 0.3s ease-in-out;
+}
+.tripLenBtn:hover{
+	transform: scale(1.1);
 }
 .action-btns{
 	margin-top: 20px;
@@ -685,12 +775,71 @@
 #apply{
 	background-color: black;
 	color: #ffffff;
+	transition: transform 0.2s ease-in-out;
+	-webkit-transition: transform 0.2s ease-in-out;
+	-moz-transition: transform 0.2s ease-in-out;
+	-ms-transition: transform 0.2s ease-in-out;
+	-o-transition: transform 0.2s ease-in-out;
+}
+#apply:hover {
+	transform: scale(1.1);
+	-webkit-transform: scale(1.1);
+	-moz-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	-o-transform: scale(1.1);
 }
 #clear{
 	background-color: #ccc;
 	color: #000;
+	transition: transform 0.2s ease-in-out;
+	-webkit-transition: transform 0.2s ease-in-out;
+	-moz-transition: transform 0.2s ease-in-out;
+	-ms-transition: transform 0.2s ease-in-out;
+	-o-transition: transform 0.2s ease-in-out;
+}
+#clear:hover {
+	transform: scale(1.1);
+	-webkit-transform: scale(1.1);
+	-moz-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	-o-transform: scale(1.1);
+}
+.option-btns{
+	display: none;
+	display: flex;
+	flex-direction: row;
+	margin-left: 50px;
+	justify-content: space-between;
+	width: 100%;
 }
 .action-btns button:hover {
 	transform: scale(1.1);
 	box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.3);
 }
+#preview{
+	width: 90%;
+	height: 370px;
+}
+#date{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+#date h6{
+	#date h6 {
+  flex: 0 0 200px;
+}
+}
+.highlighter{
+	background-color: #ccc;
+	width: 40px;
+	height: 40px;
+}
+.selected{
+	background-color: #000;
+	color: #ffffff;
+}
+.selected:hover{
+	background-color: #000;
+}
+.hidden

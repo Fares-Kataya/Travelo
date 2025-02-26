@@ -77,6 +77,12 @@ export function createElement(
 
 	return element;
 }
+/**
+ * Loads HTML content from a file and injects it into an element with the given ID.
+ *
+ * @param {string} elementID - The ID of the DOM element where the content will be loaded.
+ * @param {string} filePath - The path to the HTML file to load.
+ */
 export function loadHeaderFooter(elementID, filePath) {
      fetch(filePath)
         .then(response => response.text())
@@ -84,4 +90,35 @@ export function loadHeaderFooter(elementID, filePath) {
             document.getElementById(elementID).innerHTML = data;
         })
         .catch(error => console.error("Error loading component:", error));
+}
+/**
+ * Loads data from local storage.
+ *
+ * @param {string} key - The key to look up in local storage.
+ * @param {*} [defaultValue=null] - A default value to return if the key is not found or parsing fails.
+ * @returns {*} The parsed data from local storage, or the default value.
+ */
+export function loadFromLocalStorage(key, defaultValue = null) {
+  try {
+    const storedData = localStorage.getItem(key);
+    if (storedData === null) {
+      return defaultValue;
+    }
+    return JSON.parse(storedData);
+  } catch (error) {
+    console.error(`Error loading local storage key "${key}":`, error);
+    return defaultValue;
+  }
+}
+/**
+ * Toggles the active/inactive classes between two buttons or elements.
+ *
+ * @param {HTMLElement} activeBtn - The element to be set as active.
+ * @param {HTMLElement} inactiveBtn - The element to be set as inactive.
+ */
+export function toggleActive(activeBtn, inactiveBtn) {
+  activeBtn.classList.add("active-date");
+  activeBtn.classList.remove("inactive-date");
+  inactiveBtn.classList.add("inactive-date");
+  inactiveBtn.classList.remove("active-date");
 }

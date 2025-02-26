@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		}
 	}
-	function setupTripCreation(overlay,addDateButton) {
+	function setupTripCreation(overlay) {
 		let name = document.getElementById("name");
 		let description = document.getElementById("Desc");
 		let destination = document.getElementById("Dest");
@@ -126,8 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
 			location.appendChild(pinpoint);
 			location.appendChild(dest);
 			details.appendChild(location);
-			let dateDiv = setupDateModal(overlay,addDateButton);
-			details.appendChild(dateDiv);
 			details.appendChild(desc);
 			tripCard.appendChild(destImg);
 			tripCard.appendChild(details);

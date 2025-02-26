@@ -22,3 +22,24 @@
 .fs-small {
 	font-size: 14px;
 }
+.active-date{
+	background-color: #000;
+	color: #fff;
+	transition: background-color 0.3s ease-in-out;
+	-webkit-transition: background-color 0.3s ease-in-out;
+	-moz-transition: background-color 0.3s ease-in-out;
+	-ms-transition: background-color 0.3s ease-in-out;
+	-o-transition: background-color 0.3s ease-in-out;
+}
+.inactive-date{
+    background-color: transparent;
+    font-weight: 500;
+    transition: background-color 0.3s ease-in-out;
+    -webkit-transition: background-color 0.3s ease-in-out;
+    -moz-transition: background-color 0.3s ease-in-out;
+    -ms-transition: background-color 0.3s ease-in-out;
+    -o-transition: background-color 0.3s ease-in-out;
+}
+.inactive-date:hover{
+    background-color: gray;
+}
