@@ -34,7 +34,7 @@
 				</button>
 			</div>
 			<div class="images">
-				<div>
+				<div class="active">
 					<img
 						src="https://images.unsplash.com/photo-1739993655680-4b7050ed2896?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 						alt="" />
@@ -60,10 +60,34 @@
 						src="https://images.unsplash.com/photo-1739993655680-4b7050ed2896?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 						alt="" />
 				</div>
+				<button class="right d-block d-lg-none">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="25"
+						height="25"
+						viewBox="0 0 320 512">
+						<!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+						<path
+							d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
+					</svg>
+				</button>
+				<button class="left d-block d-lg-none">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="25"
+						height="25"
+						viewBox="0 0 320 512">
+						<!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+						<path
+							d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+					</svg>
+				</button>
+				<span
+					class="dots d-flex d-lg-none gap-2 justify-content-center align-items-center"></span>
 			</div>
 
 			<div class="row my-3">
-				<div class="col-12 col-md-7 pe-4">
+				<div class="col-12 col-lg-7 pe-4">
 					<div>
 						<h4 class="mb-1">Sky view restaurant Le Metropole hotel</h4>
 						<ul class="list-unstyled features">
@@ -224,13 +248,12 @@
 				</div>
 
 				<div
-					class="col-12 col-md-5 position-relative d-flex justify-content-end">
+					class="reservation-section col-12 col-lg-5 d-flex justify-content-end">
 					<div
-						style="top: 24px; width: 90%; height: fit-content"
-						class="position-sticky start-0 rounded-4 shadow-lg border border-1 border-opacity-10 p-4">
-						<form class="reservation-form d-flex flex-column gap-4">
+						class="reservation-container shadow-lg border border-1 border-opacity-10 p-4">
+						<form class="reservation-form d-flex flex-column gap-lg-4 gap-1">
 							<h3>2,000 LE</h3>
-							<div class="d-flex flex-column gap-3">
+							<div class="d-none d-lg-flex flex-column gap-3">
 								<div class="d-flex gap-3 align-items-center">
 									<div class="w-50">
 										<label>Check-in</label>
@@ -256,14 +279,29 @@
 									</select>
 								</div>
 							</div>
-							<button
-								type="submit"
-								class="reserve-btn">
-								Reserve
-							</button>
+							<div
+								class="d-flex d-lg-block align-items-center gap-2 gap-sm-0 justify-content-between justify-content-lg-start">
+								<button
+									type="submit"
+									class="reserve-btn">
+									Reserve
+								</button>
+								<button class="d-block d-lg-none favourite">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="20"
+										height="20"
+										stroke-width="2.5rem"
+										viewBox="0 0 520 550">
+										<path
+											d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
+									</svg>
+								</button>
+							</div>
 						</form>
-						<hr class="my-4" />
-						<ul class="list-unstyled d-flex flex-column gap-3 fw-normal">
+						<hr class="my-4 d-none d-lg-block" />
+						<ul
+							class="list-unstyled d-flex d-none d-lg-flex flex-column gap-3 fw-normal">
 							<li class="d-flex justify-content-between align-items-center">
 								<p class="m-0">Some service</p>
 								<p class="m-0">1000 LE</p>
@@ -281,7 +319,7 @@
 								<p class="m-0">1000 LE</p>
 							</li>
 						</ul>
-						<hr />
+						<hr class="my-2 my-lg-3" />
 						<div class="d-flex justify-content-between align-items-center fs-5">
 							<p class="m-0 fw-bold">Total after taxes</p>
 							<p class="m-0">4000 LE</p>
@@ -300,7 +338,7 @@
 				</div>
 				<hr class="my-4" />
 				<div
-					class="d-flex flex-column flex-md-row justify-content-md-between gap-3">
+					class="d-flex flex-column flex-lg-row justify-content-lg-between gap-3">
 					<div>
 						<div class="person-review">
 							<div class="d-flex align-items-center gap-3">
@@ -450,6 +488,9 @@
 			</div>
 		</div>
 		<footer id="footer-container"></footer>
+		<script
+			src="../JS/main.js"
+			type="module"></script>
 		<script src="../JS/loadHeaderFooter.js"></script>
 	</body>
 </html>

@@ -107,11 +107,27 @@ body {
 /* End Images Container */
 
 /* Star Reservation form */
+.reservation-section {
+	position: relative;
+}
+
+.reservation-container {
+	position: sticky;
+	top: 24px;
+	left: 0;
+	width: 90%;
+	height: fit-content;
+	border-radius: 1.5rem;
+}
+
 .reservation-form input,
 .reservation-form select {
 	border: 1px solid #bbb;
 	outline: none;
 	padding: 0.5rem 1rem;
+}
+.reserve-btn {
+	width: 100%;
 }
 /* End Reservation form */
 
@@ -176,8 +192,119 @@ body {
 
 /* Start Media Queries */
 @media (max-width: 992px) {
+	.images {
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		width: 100%;
+		height: 350px;
+	}
+
+	.images .right,
+	.images .left {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 1;
+		cursor: pointer;
+		background-color: transparent;
+		outline: none;
+		border: none;
+		transition: all 0.3s linear;
+		padding: 0.5rem;
+	}
+
+	.images .right svg,
+	.images .left svg {
+		fill: white;
+	}
+	.images .right:hover,
+	.images .left:hover {
+		background-color: rgba(0, 0, 0, 0.308);
+	}
+
+	.images .right {
+		right: 10px;
+	}
+
+	.images .left {
+		left: 10px;
+	}
+
+	.images div {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		transition: all 0.3s linear;
+		transform: translateX(100%);
+	}
+
+	.images div.active {
+		transform: translateX(0);
+	}
+	.images div.inActive {
+		transform: translateX(-100%);
+	}
+
+	.images div:first-child {
+		grid-column: unset;
+		grid-row: unset;
+	}
+	.images div:nth(2)-child,
+	.images div:nth(3)-child,
+	.images div:nth(4)-child,
+	.images div:nth(5)-child {
+		grid-column: unset;
+	}
+
+	.images .dots {
+		position: absolute;
+		bottom: 10px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 1;
+		width: 100%;
+	}
+	.images .dots .dot {
+		background-color: white;
+		opacity: 0.5;
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+
+		z-index: 1;
+	}
+	.images .dots .dot.active {
+		opacity: 1;
+	}
 	.person-review div:last-child p {
 		width: 80%;
+	}
+
+	.reservation-section {
+		position: unset;
+	}
+
+	.reservation-container {
+		position: fixed;
+		width: 100%;
+		top: unset;
+		bottom: 0;
+		left: 0;
+		z-index: 1;
+		border-radius: 0;
+		background-color: white;
+	}
+	.reserve-btn {
+		width: 88%;
+	}
+}
+
+@media (max-width: 768px) {
+	.features li {
+		font-size: 14px;
 	}
 }
 /* End Media Queries */
