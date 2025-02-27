@@ -1,39 +1,81 @@
+/* Button for adding an item */
 #add {
-	text-align: center;
-	font-size: large;
-	color: #ffffff;
-	background-color: #ff5d5d;
-	padding-bottom: 30px;
-	border: 0px;
-	width: 35px;
-	height: 30px;
-	border-radius: 50%;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	-ms-border-radius: 50%;
-	-o-border-radius: 50%;
+  text-align: center;
+  font-size: large;
+  color: #fff;
+  background-color: #ff5d5d;
+  padding-bottom: 30px;
+  border: 0;
+  width: 35px;
+  height: 30px;
+  border-radius: 50%;
 }
+#planned-Trips {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 38vw;
+  gap: 10px;
+  height: 180vh;
+}
+@media (max-width: 800px) {
+	#planned-Trips{
+		flex-wrap: nowrap;
+		width: 100%;
+	}
+	#details h2{
+		font-size: medium;
+	}
+	#details h6{
+		font-size: small;
+	}
+	#details p{
+		font-size: smaller !important;
+	}
+	#details h2,div,p{
+		margin-top: 2px;
+	}
+
+
+}
+@media (max-width:1000px) {
+	#planned-Trips{
+		flex-wrap: nowrap;
+		width: 100%;
+	}
+	#details img{
+		width: 0.8rem;
+		height: 0.8rem;
+	}
+}
+@media (max-height: 500px) {
+	#planned-Trips{
+		flex-wrap: wrap;
+	}
+}
+
+/* Trip button responsive styles */
 @media (max-width: 600px) {
   #tripbtn .plus-btn {
     font-size: 2rem;
     padding: 0.5rem 1rem;
     width: 90%;
   }
-   #tripbtn:hover {
+  #tripbtn:hover {
     border: 1px solid !important;
-}
+  }
   #tripbtn .tripbtn-txt {
-	display: none;
+    display: none;
   }
 }
+
 @media (max-width: 800px) and (min-width: 577px) {
-	#tripbtn .tripbtn-txt{
-		font-size: 0.9rem;
-	}
-	#tripbtn .plus-btn{
-		font-size: 0.9rem;
-	}
+  #tripbtn .tripbtn-txt,
+  #tripbtn .plus-btn {
+    font-size: 0.9rem;
+  }
 }
+
 @media (min-width: 577px) {
   #tripbtn {
     font-size: 1.25rem;
@@ -41,282 +83,246 @@
     width: auto;
   }
   #tripbtn .tripbtn-txt {
-	display: inline-block;
+    display: inline-block;
   }
 }
+
 #tripbtn {
-	text-align: center;
-	font-size: x-large;
-	width: 50%;
-	height: 60px;
-	border: solid 1px;
-	border-radius: 20px;
-	transition: box-shadow 0.3s ease-in-out;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	-ms-border-radius: 20px;
-	-o-border-radius: 20px;
-	-webkit-transition: box-shadow 0.3s ease-in-out;
-	-moz-transition: box-shadow 0.3s ease-in-out;
-	-ms-transition: box-shadow 0.3s ease-in-out;
-	-o-transition: box-shadow 0.3s ease-in-out;
+  text-align: center;
+  font-size: x-large;
+  width: 50%;
+  height: 20px;
+  border: 1px solid;
+  border-radius: 20px;
+  transition: box-shadow 0.3s ease-in-out, border 0.1s ease-in-out;
 }
-#tripbtn{
-	transition: border 0.1s ease-in-out;
-	-webkit-transition: border 0.1s ease-in-out;
-	-moz-transition: border 0.1s ease-in-out;
-	-ms-transition: border 0.1s ease-in-out;
-	-o-transition: border 0.1s ease-in-out;
-}
+
 #tripbtn:hover {
-	box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.3);
-	background-color: white;
-	border: 5px solid rgb(88, 188, 155);
-	color: black;
+  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.3);
+  background-color: white;
+  border: 5px solid rgb(88, 188, 155);
+  color: black;
 }
+
 #menu-list {
-	list-style-type: none;
-	display: flex;
-	justify-content: space-between;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
 }
-.menu-links {
-	text-decoration: none;
-	color: black;
-}
-#menu-list {
-	list-style-type: none;
-	display: flex;
-	justify-content: space-between;
-	padding: 0;
+@media (max-width: 600px) {
+	#menu-list{
+		flex-direction: column;
+	}
+	.listnav{
+		margin: 0px;
+	}
+	.menu-links{
+		width: 100%;	
+	}
 }
 
 #menu-list li {
-	padding: 10px;
-	position: relative;
-}
-.menu-links {
-	text-decoration: none;
-	color: gray;
-	padding: 10px;
-	display: block;
-	font-weight: bold;
-	transition: color 0.3s ease-in-out;
-	-webkit-transition: color 0.3s ease-in-out;
-	-moz-transition: color 0.3s ease-in-out;
-	-ms-transition: color 0.3s ease-in-out;
-	-o-transition: color 0.3s ease-in-out;
-}
-.menu-links:hover {
-	color: rgb(88, 188, 155);
-	font-weight: bolder;
+  padding: 10px;
+  position: relative;
 }
 
-/* Underline effect using ::after */
+.menu-links {
+  text-decoration: none;
+  color: gray;
+  padding: 10px;
+  display: block;
+  font-weight: bold;
+  transition: color 0.3s ease-in-out;
+}
+
+.menu-links:hover {
+  color: rgb(88, 188, 155);
+  font-weight: bolder;
+}
+
+/* Underline effect for menu items */
 #menu-list li::after {
-	content: "";
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	width: 0;
-	height: 3px;
-	background-color: rgb(88, 188, 155);
-	transition: width 0.3s ease-in-out;
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background-color: rgb(88, 188, 155);
+  transition: width 0.3s ease-in-out;
 }
 
 #menu-list li:hover::after {
-	width: 100%;
-}
-#menu-list .active {
-	font-weight: bold;
-	color: rgb(88, 188, 155);
-	position: relative;
-}
-#menu-list .active::after {
-	content: "";
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	top: 51px;
-	width: 100%;
-	height: 3px;
-	background-color: rgb(88, 188, 155);
+  width: 100%;
 }
 
+#menu-list .active {
+  font-weight: bold;
+  color: rgb(88, 188, 155);
+  position: relative;
+}
+
+#menu-list .active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 51px;
+  width: 100%;
+  height: 3px;
+  background-color: rgb(88, 188, 155);
+}
+
+/* Overlay and modal */
 .overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background: rgba(0, 0, 0, 0.5);
-	backdrop-filter: blur(5px);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
+
 .modal-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative; /* Allows absolute positioning of the close button */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
+
 .modal-header h2 {
-    flex: 1;
-    text-align: center;
-    margin: 0;
+  flex: 1;
+  text-align: center;
+  margin: 0;
 }
+
 .modal-header .close {
-	cursor: pointer;
-	background-color: black;
-	color: #ffffff;
-	border: 0px;
-	position: relative;
-	width: 40px;
-	height: 40px;
-	padding: 8px;
-	left: 3%;
-	bottom: 25px;
-	border-radius: 20px;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	-ms-border-radius: 20px;
-	-o-border-radius: 20px;
-	transition: transform 0.2s ease;
+  cursor: pointer;
+  background-color: black;
+  color: #fff;
+  border: 0;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  left: 3%;
+  bottom: 25px;
+  border-radius: 20px;
+  transition: transform 0.2s ease;
 }
+
 .close:hover {
-	transform: scale(1.1);
-	-webkit-transform: scale(1.1);
-	-moz-transform: scale(1.1);
-	-ms-transform: scale(1.1);
-	-o-transform: scale(1.1);
+  transform: scale(1.1);
 }
-.date-input-container{
-	/* display: none; */
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	width: 54%;
-	margin: 0;
+
+/* Date input container */
+.date-input-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 54%;
+  margin: 0;
 }
+
+/* Custom modal */
 .custom-modal {
-	background: #fff;
-	height: 550px;
-	width: 1200px;
-	padding: 20px;
-	border-radius: 20px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-	max-width: 90%;
-	text-align: center;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	-ms-border-radius: 20px;
-	-o-border-radius: 20px;
-	
+  background: #fff;
+  height: 550px;
+  width: 1200px;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  text-align: center;
 }
 
 .custom-modal button {
-	margin-top: 20px;
+  margin-top: 20px;
 }
+
 #tripdetails {
-	display: flex;
-	align-items: flex-start;
-	flex-direction: column;
-	margin-right: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 25px;
 }
-#tripdetails input {
-	width: 500px;
-	position: relative;
-	border: 1px solid;
-	padding: 8px;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	-ms-border-radius: 10px;
-	-o-border-radius: 10px;
-}
+
 #tripdetails input,
 #tripdetails textarea {
-  width: 100%;        /* Take up full width of the container */
-  max-width: 500px;   /* But never exceed 500px */
+  width: 100%;
+  max-width: 500px;
   padding: 8px;
-  border: 1px solid #ccc; /* Updated border color for better appearance */
+  border: 1px solid #ccc;
   border-radius: 10px;
-  box-sizing: border-box; /* Ensures padding is included in the width */
+  box-sizing: border-box;
 }
-#tripdetails textarea {
-	width: 500px;
-	padding: 8px;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	-ms-border-radius: 10px;
-	-o-border-radius: 10px;
-}
+
 #tripdetails label {
-	font-weight: bold;
-	margin-top: 10px;
-	margin-bottom: 10px;
+  font-weight: bold;
+  margin: 10px 0;
 }
+
+/* Create button */
 #createbtn {
-	background-color: black;
-	color: #ffffff;
-	border: 0px;
-	padding: 8px;
-	position: relative;
-	left: 82%;
-	bottom: 15%;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	-ms-border-radius: 10px;
-	-o-border-radius: 10px;
-	transition: transform 0.2s ease-in-out;
-	-webkit-transition: transform 0.2s ease-in-out;
-	-moz-transition: transform 0.2s ease-in-out;
-	-ms-transition: transform 0.2s ease-in-out;
-	-o-transition: transform 0.2s ease-in-out;
+  background-color: black;
+  color: #fff;
+  border: 0;
+  padding: 8px;
+  position: relative;
+  left: 82%;
+  bottom: 15%;
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
 }
+
 #createbtn:hover {
-	transform: scale(1.1);
+  transform: scale(1.1);
 }
-.trip-in,.form-control{
-	width: 100%;
-	box-sizing: border-box;
-	min-width: 0;
+
+/* Generic input classes */
+.trip-in,
+.form-control {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
+
+/* Close modal button */
 #closeModal {
-	background-color: black;
-	color: #ffffff;
-	border: 0px;
-	position: relative;
-	bottom: 108%;
-	left: 51%;
-	width: 40px;
-	height: 40px;
-	padding: 5px;
-	border-radius: 20px;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	-ms-border-radius: 20px;
-	-o-border-radius: 20px;
-	transition: transform 0.2s ease;
+  background-color: black;
+  color: #fff;
+  border: 0;
+  position: relative;
+  bottom: 108%;
+  left: 51%;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  border-radius: 20px;
+  transition: transform 0.2s ease;
 }
+
 #closeModal:hover {
-	transform: scale(1.1);
-	-webkit-transform: scale(1.1);
-	-moz-transform: scale(1.1);
-	-ms-transform: scale(1.1);
-	-o-transform: scale(1.1);
+  transform: scale(1.1);
 }
+
+/* Paragraph styling */
 .para {
-	display: flex;
-	justify-self: center;
-	font-size: large;
-	color: grey;
-	font-weight: bold;
+  display: flex;
+  justify-self: center;
+  font-size: large;
+  color: grey;
+  font-weight: bold;
 }
+
+/* Explore button responsive styles */
 @media (max-width: 576px) {
   #exploreBtn .btn-text {
     display: none;
@@ -325,9 +331,9 @@
     display: inline-block;
     font-size: 1.5rem;
   }
-    #exploreBtn:hover {
+  #exploreBtn:hover {
     border: 1px solid !important;
-}
+  }
 }
 
 @media (min-width: 577px) {
@@ -338,175 +344,178 @@
     display: none;
   }
 }
+
 @media (max-width: 1200px) and (min-width: 577px) {
   #exploreBtn .btn-text {
-    display: inline-block;
-	font-size: 0.90rem;
+    font-size: 0.9rem;
   }
 }
+
+/* Explore button base styles */
 #exploreBtn {
-	background-color: #ffffff;
-	color: black;
-	border: 1px solid black;
-	text-align: center;
-	height: 60px;
-	width: 20%;
-	border-radius: 20px;
-	font-size: x-large;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	-ms-border-radius: 20px;
-	-o-border-radius: 20px;
-	transition: box-shadow 0.3s ease-in-out;
+  background-color: #fff;
+  color: black;
+  border: 1px solid black;
+  text-align: center;
+  height: 60px;
+  width: 20%;
+  border-radius: 20px;
+  font-size: x-large;
+  transition: box-shadow 0.3s ease-in-out, border 0.1s ease-in-out;
 }
+
 #exploreBtn:hover {
-	box-shadow: 5px 5px 9px rgba(0, 0, 0, 0.3);
+  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.3);
+  background-color: white;
+  border: 5px solid rgb(88, 188, 155);
+  color: black;
 }
-#exploreBtn{
-	transition: border 0.1s ease-in-out;
-	-webkit-transition: border 0.1s ease-in-out;
-	-moz-transition: border 0.1s ease-in-out;
-	-ms-transition: border 0.1s ease-in-out;
-	-o-transition: border 0.1s ease-in-out;
-}
-#exploreBtn:hover {
-	box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.3);
-	background-color: white;
-	border: 5px solid rgb(88, 188, 155);
-	color: black;
-}
+
+/* Layout containers */
 #trip {
-	display: flex;
-	justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
+
 #map {
-	width: 100%;
-	height: 400px;
-	margin: 20px;
+  width: 100%;
+  height: 400px;
+  margin: 20px;
 }
+
 .card {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	border-radius: 20px;
-	min-height: 100px;
-	margin-bottom: 10px;
-	cursor: pointer;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	-ms-border-radius: 20px;
-	-o-border-radius: 20px;
+  width: calc(100% - 5px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  border-radius: 20px;
+  min-height: 100px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: flex 0.5s ease;
 }
-#details {
-	color: black;
-	margin-left: 15px;
-	padding: 20px;
-	line-height: 20px;
-}
-#details > p {
-	width: 500px;
-	font-size: medium;
-	color: grey;
-}
-#location {
-	display: flex;
-	flex-direction: row;
-}
-#pinpoint {
-	margin-right: 5px;
+#arrowDown{
 	width: 20px;
 	height: 20px;
-	z-index: 1000;
-}
-#destImg {
-	object-fit: fill;
-	max-width: 100%;
-	max-height: 100%;
-	width: 100%;
-	opacity: 100%;
-	height: 250px;
-	border-radius: 20px;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	-ms-border-radius: 20px;
-	-o-border-radius: 20px;
-}
-.image-fade {
 	position: relative;
-	display: inline-block;
+	left: 45%;
+	top:41.8%;
+	transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
 }
-.image-fade img {
-	display: block;
+.card:hover{
+flex:1 1 auto;
 }
-.image-fade::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 50%; /* Adjust to cover how much of the left side you want */
-	height: 100%;
-	background: linear-gradient(to right, white, transparent);
-	pointer-events: none; /* So that it doesn’t interfere with any interactions */
+.show-arrow{
+	visibility: visible !important;
 }
+
+
+#details {
+  color: black;
+  margin-left: 15px;
+  padding: 20px;
+  line-height: 20px;
+}
+
+#details > p {
+  width: 500px;
+  font-size: medium;
+  color: grey;
+}
+
+#location {
+  display: flex;
+  flex-direction: row;
+}
+
+#pinpoint {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  z-index: 1000;
+}
+
+/* Destination image */
 #destImg {
-	background-color: white;
-	-webkit-mask-image: linear-gradient(to right, transparent 2%, black 100%);
-	mask-image: linear-gradient(to right, transparent 2%, black 100%);
+  object-fit: fill;
+  width: 100%;
+  height: 250px;
+  max-width: 100%;
+  max-height: 100%;
+  opacity: 1;
+  border-radius: 20px;
+  background-color: white;
+  mask-image: linear-gradient(to right, transparent 2%, black 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 2%, black 100%);
 }
+
+/* Image fade effect */
+.image-fade {
+  position: relative;
+  display: inline-block;
+}
+
+.image-fade img {
+  display: block;
+}
+
+.image-fade::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, white, transparent);
+  pointer-events: none;
+}
+
+/* Add dates button */
 #add-Date {
-	background-color: black;
-	color: #ffffff;
-	padding: 8px;
-	border: 0px;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	-ms-border-radius: 10px;
-	-o-border-radius: 10px;
-	transition: transform 0.2s ease-in-out;
-	-webkit-transition: transform 0.2s ease-in-out;
-	-moz-transition: transform 0.2s ease-in-out;
-	-ms-transition: transform 0.2s ease-in-out;
-	-o-transition: transform 0.2s ease-in-out;
+  background-color: black;
+  color: #fff;
+  padding: 8px;
+  border: 0;
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
 }
+
 #add-Date:hover {
-	transform: scale(1.1);
+  transform: scale(1.1);
 }
-#date-options{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-	width: 100%;
-	padding: 0 1rem;
+
+/* Date options container */
+#date-options {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  padding: 0 1rem;
 }
-#date-options-buttons{
-    margin: 10px 0px;
-    background-color: lightgray;
-    border-radius: 30px;
-    width: 100%;
-	max-width: 600px;
-    height: 50px;
-    padding: 5px;
-    -webkit-border-radius: 30px;
-    -moz-border-radius: 30px;
-    -ms-border-radius: 30px;
-    -o-border-radius: 30px;
-	margin-left: auto;
-  margin-right: auto;
+
+#date-options-buttons {
+  margin: 10px 0;
+  background-color: lightgray;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 600px;
+  height: 50px;
+  padding: 5px;
+  margin: 0 auto;
 }
-#date-options-buttons button{
-    margin: 0;
-    height: 100%;
-    width: 50%;
-    border: 0;
-    border-radius: 20px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    -ms-border-radius: 20px;
-    -o-border-radius: 20px;
+
+#date-options-buttons button {
+  margin: 0;
+  height: 100%;
+  width: 50%;
+  border: 0;
+  border-radius: 20px;
 }
+
 @media (max-width: 400px) {
   #date-options-buttons {
     padding: 3px;
@@ -515,103 +524,100 @@
     font-size: 0.9rem;
   }
 }
-#datesBtn{
-    font-weight: 500;
+
+#datesBtn {
+	appearance: none;
+  font-weight: 500;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
-.active-date{
-	background-color: #000;
-	color: #fff;
-	transition: background-color 0.3s ease-in-out;
-	-webkit-transition: background-color 0.3s ease-in-out;
-	-moz-transition: background-color 0.3s ease-in-out;
-	-ms-transition: background-color 0.3s ease-in-out;
-	-o-transition: background-color 0.3s ease-in-out;
+
+.active-date {
+  background-color: #000;
+  color: #fff;
+  transition: background-color 0.3s ease-in-out;
 }
-.inactive-date{
-    background-color: transparent;
-    font-weight: 500;
-    transition: background-color 0.3s ease-in-out;
-    -webkit-transition: background-color 0.3s ease-in-out;
-    -moz-transition: background-color 0.3s ease-in-out;
-    -ms-transition: background-color 0.3s ease-in-out;
-    -o-transition: background-color 0.3s ease-in-out;
+
+.inactive-date {
+  background-color: transparent;
+  font-weight: 500;
+  transition: background-color 0.3s ease-in-out;
+  -webkit-transition: background-color 0.3s ease-in-out;
+  -moz-transition: background-color 0.3s ease-in-out;
+  -ms-transition: background-color 0.3s ease-in-out;
+  -o-transition: background-color 0.3s ease-in-out;
 }
-.inactive-date:hover{
-    background-color: gray;
+
+.inactive-date:hover {
+  background-color: gray;
 }
+
+/* Months and weekdays */
 #months {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-    position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
+
 #months > h4 {
-    font-size: xx-large;
-	min-width: 180px;
-	padding: 5px;
-	margin-left: 30px;
-	margin-bottom: 0px;
-	margin-right: 30px;
-	position: relative;
+  font-size: xx-large;
+  min-width: 180px;
+  padding: 5px;
+  margin: 0 30px;
 }
+
 #months > button {
-    width: 30px;
-    height: 40px;
-    padding: 0px;
-    border: none;
-    border-radius: 30px;
-    background-color: transparent;
-    -webkit-border-radius: 30px;
-    -moz-border-radius: 30px;
-    -ms-border-radius: 30px;
-    -o-border-radius: 30px;
-    transition: background-color 0.1s ease-in-out ;
-    -webkit-transition: background-color 0.1s ease-in-out ;
-    -moz-transition: background-color 0.1s ease-in-out ;
-    -ms-transition: background-color 0.1s ease-in-out ;
-    -o-transition: background-color 0.1s ease-in-out ;
+  width: 30px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 30px;
+  background-color: transparent;
+  transition: background-color 0.1s ease-in-out;
 }
-#months > button:hover{
-    background-color: lightgray;
+
+#months > button:hover {
+  background-color: lightgray;
 }
+
 #months > button > img {
-	display: block;
-	width: 100%;
-	height: 100%;
-	object-fit: contain;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
+
 #weekdays {
-    width: 80%;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	padding: 10px;
-    position: relative;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 10px;
 }
-.content{
-	margin-top: 10px;
-    display: flex;
-    flex-direction: row;
-	justify-content: space-between;
-	max-width: 90%;
-	position: relative;
-	left: 5%;
-	max-height: 100%;
+
+/* Content layout */
+.content {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 90%;
+  position: relative;
+  left: 5%;
+  max-height: 100%;
 }
+
 textarea:focus {
-	border: #000;
+  border: #000;
 }
-.modal-body, 
+
+.modal-body,
 .modal-footer {
-	width: 50%;
-	padding: 0px;
-	/* border: 1px solid #ccc;
-	border-radius: 50px; */
-	-webkit-border-radius: 50px;
-	-moz-border-radius: 50px;
-	-ms-border-radius: 50px;
-	-o-border-radius: 50px;
+  width: 50%;
+  padding: 0;
 }
+/* Date modal */
 .date-modal {
   background: #fff;
   padding: 20px;
@@ -619,9 +625,9 @@ textarea:focus {
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* start packing children at the top */
+  justify-content: flex-start;
   align-items: center;
-  gap: 10px; /* add controlled spacing between children */
+  gap: 10px;
   position: absolute;
   left: 25%;
   width: 50%;
@@ -631,13 +637,24 @@ textarea:focus {
   transform: translateY(-20px);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
-
+@media (max-width: 600px) or (max-height: 600px) {
+	.date-modal{
+		width: 100vw;
+		height: 100vh;
+		left:0;
+		right: 0;
+		top:0;
+	}
+	.date-modal h2, #date-options-buttons, #months {
+		display: none;
+	}
+}
 .date-modal.open {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Simplified HR style */
+
 .date-modal hr {
   height: 1px;
   width: 100%;
@@ -645,201 +662,181 @@ textarea:focus {
   margin: 10px 0;
 }
 
+/* Weekdays and days */
 .weekDaysDivs {
-	width: 60px;
-	border: black 1px;
-	background-color: rgb(242, 241, 241);
-	border-radius: 100px;
-	-webkit-border-radius: 100px;
-	-moz-border-radius: 100px;
-	-ms-border-radius: 100px;
-	-o-border-radius: 100px;
+  width: 60px;
+  background-color: rgb(242, 241, 241);
+  border-radius: 100px;
 }
-.week{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+
+.week {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
-.day{
-    width: 40px;
+
+.day {
+  width: 40px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-    border: 0px solid;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 100px;
-    -webkit-border-radius: 100px;
-    -moz-border-radius: 100px;
-    -ms-border-radius: 100px;
-    -o-border-radius: 100px;
+  border: 1px solid #ccc;
+  border-radius: 100px;
+  text-align: center;
 }
-.day p{
-	text-align: center;
-	margin: 0px;
+
+.day p {
+  margin: 0;
 }
-.empty{
-    width: 40px;
+
+.empty {
+  width: 40px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-    border: 0;
-    text-align: center;
+  border: 0;
+  text-align: center;
 }
-.day:hover{
-    background-color: #e7e7e7;
-	border: #000 2px solid;
-    cursor: pointer;
+
+.day:hover {
+  background-color: #e7e7e7;
+  border: 2px solid #000;
+  cursor: pointer;
 }
-#monthDays{
-    width: 70%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: space-between;
-    align-items: center;
+
+#monthDays {
+  width: 70%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
 }
-#tripLengthContainer{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    position: relative;
-    left: 8%;
-    margin-top: 20px;
+
+/* Trip length controls */
+#tripLengthContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  left: 8%;
+  margin-top: 20px;
 }
+
 #pmDays {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 50%;
-    position: relative;
-    left: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 50%;
+  position: relative;
+  left: 20%;
 }
-.tripLenBtn{
-	background-color: black;
-	color: #ffffff;
-	border: 0px;
-	border-radius: 20px;
-	text-align: center;
-	width: 35px;
-	height: 35px;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	-ms-border-radius: 20px;
-	-o-border-radius: 20px;
-	transition: transform 0.3s ease-in-out;
-	-webkit-transition: transform 0.3s ease-in-out;
-	-moz-transition: transform 0.3s ease-in-out;
-	-ms-transition: transform 0.3s ease-in-out;
-	-o-transition: transform 0.3s ease-in-out;
+
+#tripLenBtn {
+  /* background-color: black; */
+  /* color: #fff; */
+  border: 0;
+    border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-radius: 20px;
+  text-align: center;
+  width: 35px;
+  height: 35px;
+  transition: transform 0.3s ease-in-out;
 }
-.tripLenBtn:hover{
-	transform: scale(1.1);
+
+.tripLenBtn:hover {
+  transform: scale(1.1);
 }
-.action-btns{
-	margin-top: 20px;
-	display: flex;
- 	flex-direction: row;
-	justify-content: space-around;
-	max-width: 400px;
-	width: 100%;
+
+/* Action buttons */
+.action-btns {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  max-width: 400px;
+  width: 100%;
 }
+
 .action-btns button {
-	padding: 8px;
-	border: 0px;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	-ms-border-radius: 10px;
-	-o-border-radius: 10px;
-	transition: transform 0.2s ease-in-out;
-	-webkit-transition: transform 0.2;
-	-moz-transition: transform 0.2;
-	-ms-transition: transform 0.2;
-	-o-transition: transform 0.2;
+  padding: 8px;
+  border: 0;
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.5s ease-in-out;
 }
-.action-btns button {
-	transition: box-shadow 0.5s ease-in-out;
-	-webkit-transition: box-shadow 0.5s ease-in-out;
-	-moz-transition: box-shadow 0.5s ease-in-out;
-	-ms-transition: box-shadow 0.5s ease-in-out;
-	-o-transition: box-shadow 0.5s ease-in-out;
-}
-#apply{
-	background-color: black;
-	color: #ffffff;
-	transition: transform 0.2s ease-in-out;
-	-webkit-transition: transform 0.2s ease-in-out;
-	-moz-transition: transform 0.2s ease-in-out;
-	-ms-transition: transform 0.2s ease-in-out;
-	-o-transition: transform 0.2s ease-in-out;
-}
-#apply:hover {
-	transform: scale(1.1);
-	-webkit-transform: scale(1.1);
-	-moz-transform: scale(1.1);
-	-ms-transform: scale(1.1);
-	-o-transform: scale(1.1);
-}
-#clear{
-	background-color: #ccc;
-	color: #000;
-	transition: transform 0.2s ease-in-out;
-	-webkit-transition: transform 0.2s ease-in-out;
-	-moz-transition: transform 0.2s ease-in-out;
-	-ms-transition: transform 0.2s ease-in-out;
-	-o-transition: transform 0.2s ease-in-out;
-}
-#clear:hover {
-	transform: scale(1.1);
-	-webkit-transform: scale(1.1);
-	-moz-transform: scale(1.1);
-	-ms-transform: scale(1.1);
-	-o-transform: scale(1.1);
-}
-.option-btns{
-	display: none;
-	display: flex;
-	flex-direction: row;
-	margin-left: 50px;
-	justify-content: space-between;
-	width: 100%;
-}
+
 .action-btns button:hover {
-	transform: scale(1.1);
-	box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.3);
+  transform: scale(1.1);
+  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.3);
 }
-#preview{
-	width: 90%;
-	height: 370px;
+
+#apply {
+  background-color: black;
+  color: #fff;
+  transition: transform 0.2s ease-in-out;
 }
-#date{
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
+
+#apply:hover {
+  transform: scale(1.1);
 }
-#date h6{
-	#date h6 {
+
+#clear {
+  background-color: #ccc;
+  color: #000;
+  transition: transform 0.2s ease-in-out;
+}
+
+#clear:hover {
+  transform: scale(1.1);
+}
+
+.option-btns {
+  display: flex;
+  flex-direction: row;
+  margin-left: 50px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#preview {
+  width: 90%;
+  height: 370px;
+}
+
+#date {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+#date h6 {
   flex: 0 0 200px;
 }
+
+/* Highlighting selections */
+.highlighter {
+  background-color: #ccc;
+  width: 40px;
+  height: 40px;
 }
-.highlighter{
-	background-color: #ccc;
-	width: 40px;
-	height: 40px;
+
+.selected {
+  background-color: #000;
+  color: #fff;
 }
-.selected{
-	background-color: #000;
-	color: #ffffff;
+
+.selected:hover {
+  background-color: #000;
 }
-.selected:hover{
-	background-color: #000;
+
+.hidden {
+  display: none;
 }
-.hidden
