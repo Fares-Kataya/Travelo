@@ -30,14 +30,7 @@ document.getElementById("planned-Trips").addEventListener("click", function(even
 				console.log("Clicked card:", card);
 			}
 });
-	document.getElementById("planned-Trips").addEventListener("mouseover", function(event) {
-		const arrow = event.target.closest(".arrowDown");
-		console.log("afas");	
-		if (arrow) {
-			console.log("Click");
-				arrow.classList.add("show-arrow")
-			}
-	});
+	
 	document
 		.getElementById("tripbtn")
 		.addEventListener("click", () => new TripModal());
@@ -475,7 +468,7 @@ class TripModal {
 function addTrip(trip) {
 	let placeholder = document.getElementById("empty");
 	if (placeholder) placeholder.style.display = "none";
-	let tripCard = createElement("div", ["card", "trip-card"], {});
+	let tripCard = createElement("div", ["card", "trip-card","inactive-card"], {});
 	let details = createElement("div", ["card-img-overlay"], { id: "details" });
 	let location = createElement("div", [], { id: "location" });
 	let date = createElement("div", [], { id: "date" });
@@ -505,7 +498,7 @@ function addTrip(trip) {
 	details.appendChild(location);
 	details.appendChild(date);
 	details.appendChild(createElement("p", [], {}, trip.description));
-	details.appendChild(createElement("img", ["arrowDown"], { id: "arrowDown", src: "../Assets/icons/back-svgrepo-com.svg", style: "" }));
+	details.appendChild(createElement("img", ["arrowDown", "hide"], { id: "arrowDown", src: "../Assets/icons/back-svgrepo-com.svg", style: "" }));
 	tripCard.appendChild(
 		imageSelector(
 			trip.destination,
@@ -516,35 +509,114 @@ function addTrip(trip) {
 	);
 	tripCard.appendChild(details);
 
+	let originalWidth;
+	let originalHeight;
+	let detailsOriginalHeight;
 	tripCard.addEventListener("click", () => {
-    document.querySelectorAll(".card").forEach(c => {
-      if(c !== tripCard) c.style.display = "none";
-    });
-    tripCard.querySelector("#arrowDown").style.display = "none";
-    const cardContainer = tripCard.parentElement;
-    const flexContainer = cardContainer.parentElement;
-    let cardW = cardContainer.offsetWidth;
-    let cardH = cardContainer.offsetHeight;
-    const containerMaxWidth = flexContainer.offsetWidth;
-    tripCard.classList.add("active");
-    const timer = setInterval(() => {
-      if (cardW < containerMaxWidth) {
-        cardW += 20;
-        cardH += 20;
-        tripCard.style.width = cardW + "px";
-        tripCard.style.height = cardH + "px";
-        cardContainer.style.width = cardW + "px";
-      } else {
-        flexContainer.style.width = "100%";
-        flexContainer.style.height = "200%";
-        clearInterval(timer);
-      }
-    }, 1);
-    renderItinerary(tripCard);
+  document.querySelectorAll(".card").forEach((c) => {
+    if (c !== tripCard) c.style.display = "none";
   });
+  
+  const arrow = tripCard.querySelector(".arrowDown");
+  arrow.classList.remove("show");
+  arrow.classList.add("hide");
+
+  const cardContainer = tripCard.parentElement;
+  const flexContainer = cardContainer.parentElement;
+  let currentWidth = tripCard.offsetWidth;
+  let currentHeight = tripCard.offsetHeight;
+  const containerMaxWidth = flexContainer.offsetWidth;
+  if (!originalWidth) {
+        originalWidth = currentWidth;
+		originalHeight = currentHeight;
+		const computedStyle = window.getComputedStyle(tripCard);
+        if (computedStyle.height !== 'auto') {
+            originalHeight = parseInt(computedStyle.height);
+		}
+		let detailsDiv = tripCard.querySelector("#details")
+		const detailsComputedStyle = window.getComputedStyle(detailsDiv);
+        if (computedStyle.height !== 'auto') {
+            detailsOriginalHeight = parseInt(detailsComputedStyle.height);
+        }
+    }
+  const collapseAnimation = () => {
+  if (currentWidth > originalWidth) {
+    currentWidth = Math.max(originalWidth, currentWidth - 20);
+    currentHeight = Math.max(originalHeight, currentHeight - 20);
+    tripCard.style.width = currentWidth + "px";
+    tripCard.style.height = originalHeight + "px";
+    cardContainer.style.width = currentWidth + "px";
+    cardContainer.style.height = originalHeight + "px";
+    const details = tripCard.querySelector("#details");
+    if (details) details.style.height = detailsOriginalHeight;
+    requestAnimationFrame(collapseAnimation);
+  } else {
+    tripCard.style.removeProperty("width");
+    tripCard.style.removeProperty("height");
+    cardContainer.style.removeProperty("width");
+    cardContainer.style.removeProperty("height");
+
+    const itinerary = tripCard.querySelector("#itinerary-Container");
+    if (itinerary) itinerary.style.display = "none";
+    flexContainer.style.height = "150%";
+    document.querySelectorAll(".card").forEach((c) => {
+      c.style.display = "flex";
+    });
+    // Restore arrow visibility:
+    arrow.classList.remove("hide");
+    arrow.classList.add("show");
+  }
+};
+
+
+  // Define a function for expanding animation
+  const expandAnimation = () => {
+    if (currentWidth < containerMaxWidth) {
+      currentWidth += 20;
+      currentHeight += 10;
+      tripCard.style.width = currentWidth + "px";
+      tripCard.style.height = currentHeight + "px";
+      cardContainer.style.width = currentWidth + "px";
+      requestAnimationFrame(expandAnimation);
+    } else {
+      flexContainer.style.width = "100%";
+      flexContainer.style.height = "200%";
+      renderItinerary(tripCard);
+    }
+  };
+
+  if (tripCard.classList.contains("active-card")) {
+    // If already active, collapse it
+    tripCard.classList.remove("active-card");
+    tripCard.classList.add("inactive-card");
+    requestAnimationFrame(collapseAnimation);
+  } else {
+    // Otherwise, expand it
+    tripCard.classList.add("active-card");
+    tripCard.classList.remove("inactive-card");
+    requestAnimationFrame(expandAnimation);
+  }
+});
 
 	let plannedTrips = document.getElementById("planned-Trips"); 
+	plannedTrips.classList.add("active-article");
 	plannedTrips.appendChild(tripCard);
+	plannedTrips.querySelectorAll(".trip-card").forEach((trip) => {
+		trip.addEventListener("mouseover", () => {
+			const arrow = trip.querySelector(".arrowDown");
+			if (arrow && trip.classList.contains("inactive-card")) {
+				arrow.classList.remove("hide")
+				arrow.classList.add("show")
+			}
+		})
+		trip.addEventListener("mouseout", () => { 
+			const arrow = trip.querySelector(".arrowDown");
+			if (arrow) {
+				arrow.classList.remove("show")
+				arrow.classList.add("hide")
+			}
+		})
+	});
 	
 	let count = parseInt(loadFromLocalStorage("count")) || 0;
 	localStorage.setItem(`planned-Trips ${count}`, JSON.stringify(trip));
@@ -568,8 +640,9 @@ function renderItinerary(card) {
 		datetxt = date.getElementsByTagName("h6")[0].innerHTML;
 	}
 	let dateArr = datetxt.split("-");
+	let diffDays
 	if (dateArr.length < 2) {
-		console.log(parseInt(dateArr[0].split(" ")[0],10));
+		diffDays = parseInt(dateArr[0].split(" ")[0],10);
 	} else {
 	let fromDay   = parseInt(dateArr[2], 10);
 	let fromMonth = parseInt(dateArr[1], 10) - 1;
@@ -582,10 +655,18 @@ function renderItinerary(card) {
 	let toDate = new Date(toYear, toMonth, toDay);
 		
 	let diffMs = toDate - fromDate;
-	let diffDays = diffMs / (1000 * 60 * 60 * 24);
+	diffDays = diffMs / (1000 * 60 * 60 * 24);
 	}
-	flexContainer = createElement('flex-container', ["Container"], { id: "itinerary-Container" });
-	
+	if (!card.querySelector("#itinerary-Container")) {
+	var flexContainer = createElement('div', ["Container"], { id: "itinerary-Container"});
+	} else {
+		card.querySelector("#itinerary-Container").style.display = "flex";	
+	}
+	let itineraryDetails = createElement('div', ["container"], { id: "itinerary-Details" }, diffDays);
+	let placesPinedMap = createElement('div', ["container"], { id: "placesPinedMap" });
+	flexContainer.appendChild(itineraryDetails);
+	flexContainer.appendChild(placesPinedMap);
+	card.querySelector("#details").appendChild(flexContainer);
 }
 
 // async function fetch(){
