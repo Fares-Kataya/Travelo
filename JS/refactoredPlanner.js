@@ -24,13 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	planned_Trips.forEach((trip) => {
 		addTrip(trip, false);
 	});
-document.getElementById("planned-Trips").addEventListener("click", function(event) {
-			const card = event.target.closest(".trip-card");
-			if (card) {
-				console.log("Clicked card:", card);
-			}
-});
-	
 	document
 		.getElementById("tripbtn")
 		.addEventListener("click", () => new TripModal());
@@ -512,7 +505,10 @@ function addTrip(trip) {
 	let originalWidth;
 	let originalHeight;
 	let detailsOriginalHeight;
-	tripCard.addEventListener("click", () => {
+	tripCard.addEventListener("click", (event) => {
+		if (event.target.closest("#itinerary-Container")) {
+    return;
+  }
   document.querySelectorAll(".card").forEach((c) => {
     if (c !== tripCard) c.style.display = "none";
   });
@@ -541,8 +537,8 @@ function addTrip(trip) {
     }
   const collapseAnimation = () => {
   if (currentWidth > originalWidth) {
-    currentWidth = Math.max(originalWidth, currentWidth - 20);
-    currentHeight = Math.max(originalHeight, currentHeight - 20);
+    currentWidth -= 20;
+	currentHeight -= 20;
     tripCard.style.width = currentWidth + "px";
     tripCard.style.height = originalHeight + "px";
     cardContainer.style.width = currentWidth + "px";
@@ -562,14 +558,10 @@ function addTrip(trip) {
     document.querySelectorAll(".card").forEach((c) => {
       c.style.display = "flex";
     });
-    // Restore arrow visibility:
     arrow.classList.remove("hide");
     arrow.classList.add("show");
   }
 };
-
-
-  // Define a function for expanding animation
   const expandAnimation = () => {
     if (currentWidth < containerMaxWidth) {
       currentWidth += 20;
@@ -586,12 +578,10 @@ function addTrip(trip) {
   };
 
   if (tripCard.classList.contains("active-card")) {
-    // If already active, collapse it
     tripCard.classList.remove("active-card");
     tripCard.classList.add("inactive-card");
     requestAnimationFrame(collapseAnimation);
   } else {
-    // Otherwise, expand it
     tripCard.classList.add("active-card");
     tripCard.classList.remove("inactive-card");
     requestAnimationFrame(expandAnimation);
@@ -636,6 +626,7 @@ let imageSelector = (destination, image) => {
 function renderItinerary(card) {
 	let date = card.querySelector("#date")
 	let datetxt = ""
+	let fromDate,toDate
 	if (date) {
 		datetxt = date.getElementsByTagName("h6")[0].innerHTML;
 	}
@@ -651,9 +642,9 @@ function renderItinerary(card) {
 	let toMonth = parseInt(dateArr[4], 10) - 1;
 	let toYear = parseInt(dateArr[3], 10);
 		
-	let fromDate = new Date(fromYear, fromMonth, fromDay);
-	let toDate = new Date(toYear, toMonth, toDay);
-		
+	fromDate = new Date(fromYear, fromMonth, fromDay);
+	toDate = new Date(toYear, toMonth, toDay);
+		console.log(toDate);
 	let diffMs = toDate - fromDate;
 	diffDays = diffMs / (1000 * 60 * 60 * 24);
 	}
@@ -662,11 +653,62 @@ function renderItinerary(card) {
 	} else {
 		card.querySelector("#itinerary-Container").style.display = "flex";	
 	}
-	let itineraryDetails = createElement('div', ["container"], { id: "itinerary-Details" }, diffDays);
+	let itineraryDetails = createElement('div', ["container"], { id: "itinerary-Details" });
 	let placesPinedMap = createElement('div', ["container"], { id: "placesPinedMap" });
 	flexContainer.appendChild(itineraryDetails);
+	const daysContainer = createElement('div', ["container"], { id: "daysContainer" });
+	let dayDiv
+	let addItineraryBtn
+	for (let i = 0; i < diffDays; i++) {
+		if (!fromDate && !toDate) {
+			dayDiv = createElement('div', ["container","daysDivs"], { id: `day${i+1}` });
+			const dayHeader = createElement("h3", ["daysHeader"], { id: `day${i + 1}-header` }, `Day${i + 1}`);
+			const timnelineDiv = createElement("div", ["timelineDiv"], { id: "timeline" });
+			addItineraryBtn = createElement("button",["addItinerary"], { id: `addItineraryBtn${i+1}` }, '+');
+			dayDiv.appendChild(dayHeader);
+			dayDiv.appendChild(timnelineDiv);
+			dayDiv.appendChild(addItineraryBtn);
+			dayDiv.appendChild(createElement("hr"));
+			daysContainer.appendChild(dayDiv);
+
+		}
+	}
+	itineraryDetails.appendChild(daysContainer);
 	flexContainer.appendChild(placesPinedMap);
+	flexContainer.style.zIndex = 1;
 	card.querySelector("#details").appendChild(flexContainer);
+	const itineraryOptions = createElement("div", ["it-options"]);
+	const itineraryButtons = card.querySelectorAll(".addItinerary");
+	itineraryButtons.forEach((btn) => { 
+		btn.addEventListener("click", (e) => {
+			e.stopPropagation();
+			if (!btn.parentElement.querySelector("#it-options")) {
+				btn.appendChild(itineraryOptions);
+			}
+			if (!itineraryOptions.classList.contains("expand")) {
+				setTimeout(() => {
+				itineraryOptions.classList.remove("collapse");
+				itineraryOptions.classList.add("expand");
+				}, 50);
+			} else {
+				itineraryOptions.classList.remove("expand");
+				itineraryOptions.classList.add("collapse");
+			}
+				itineraryOptions.classList.remove("collapse");
+				itineraryOptions.classList.remove("expand");
+			
+		})
+	});
+	const img = createElement("img",["OptIcon"], {src: "../Assets/icons/house_16203341.png"});
+	const addActivityBtn = createElement("button", ["it-option"], {id: "activityOpt"}, "Add Activity");
+	const addRestaurantBtn = createElement("button", ["it-option"], {id: "restaurantOpt"}, "Add Restaurant");
+const addAccommodationBtn = createElement("button", ["it-option"], {id: "accomodationOpt"}, "Add Accommodation");
+	const addTransportBtn = createElement("button", ["it-option"], { id: "transportationOpt" }, "Add Transportation");
+	addAccommodationBtn.appendChild(img);
+itineraryOptions.appendChild(addActivityBtn);
+itineraryOptions.appendChild(addAccommodationBtn);
+itineraryOptions.appendChild(addTransportBtn);
+itineraryOptions.appendChild(addRestaurantBtn);
 }
 
 // async function fetch(){

@@ -537,7 +537,7 @@ html, body {
   -o-transition: flex 0.5s ease;
 }
 .card.active-card{
-  width: 100%;
+  
 }
 #arrowDown{
 	width: 20px;
@@ -1015,6 +1015,10 @@ textarea:focus {
 .hidden {
   display: none;
 }
+#itinerary-Container hr{
+  position: relative;
+  z-index: -1;
+}
 #itinerary-Container{
   position: relative;
   background-color: #ffffff;
@@ -1024,8 +1028,134 @@ textarea:focus {
   height: 74%;
   border:  1px solid rgba(0, 0, 0, 0.2);
   border-radius: 20px;
+    max-height: 800px;
+    overflow-y: auto;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   -ms-border-radius: 20px;
   -o-border-radius: 20px;
+}
+#itinerary-Container{
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  flex: 1 1 auto;
+}
+#daysContainer{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 80px;
+}
+.addItinerary{
+  width: 30px;
+  height: 30px;
+  background-color: #ffffff;
+  color: #000;
+  text-align: center;
+  border: 2px solid;
+  border-radius: 50px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+}
+.addItinerary:hover{
+  background-color: #000;
+  color: #ffffff;
+  border: 5px;
+}
+#timeline{
+  background-color: #555;
+  width: 5px;
+  position: relative;
+  left: 2.3%;
+  height: 150px;
+  border: 1px solid #ffffff;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+#it-options{
+  width: 200px;
+  height: 200px;
+  background-color: #000;
+  transform: scale(0);
+  transform-origin: top left;
+  transition: transform 0.5s ease;
+  -webkit-transition: transform 0.5s ease;
+  -moz-transition: transform 0.5s ease;
+  -ms-transition: transform 0.5s ease;
+  -o-transition: transform 0.5s ease;
+}
+.it-options {
+  width: 200px;
+  height: 150px;
+  margin: 10px;
+  background-color: #ffffff;
+  z-index: 1;
+  transform: scale(0);
+  transform-origin: top left;
+  border: 3px solid rgba(181, 19, 19, 0.5);
+  border-radius: 20px;
+  transition: transform 0.7s ease-in-out;
+  -webkit-transition: transform 0.7s ease-in-out;
+  -moz-transition: transform 0.7s ease-in-out;
+  -ms-transition: transform 0.7s ease-in-out;
+  -o-transition: transform 0.7s ease-in-out;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+.it-options.expand {
+  transform: scale(1);
+}
+.it-options.collapse{
+  transform: scale(0);
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  -o-transform: scale(0);
+}
+.it-option{
+  display: flex;
+  flex-direction: row;
+width: 90%;
+left: 5%;
+}
+.it-option img{
+  width: 30px;
+  height: 30px;
 }
