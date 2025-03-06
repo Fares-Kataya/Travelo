@@ -17,6 +17,7 @@
 		<title>Details</title>
 	</head>
 	<body>
+		<div class="dark"></div>
 		<header id="header-container"></header>
 		<div class="container-xl">
 			<div class="d-flex align-items-center justify-content-between mb-3">
@@ -282,7 +283,8 @@
 							<div
 								class="d-flex d-lg-block align-items-center gap-2 gap-sm-0 justify-content-between justify-content-lg-start">
 								<button
-									type="submit"
+									type="button"
+									id="reserve"
 									class="reserve-btn">
 									Reserve
 								</button>
@@ -484,6 +486,108 @@
 						allowfullscreen=""
 						loading="lazy"
 						referrerpolicy="no-referrer-when-downgrade"></iframe>
+				</div>
+			</div>
+		</div>
+		<div
+			class="confirm position-fixed row start-50 top-50 translate-middle bg-white rounded-4 py-4 px-3">
+			<span
+				class="close position-absolute border border-1 border-dark p-1 rounded-circle"
+				style="cursor: pointer; width: 35px; height: 37px"
+				><svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="25"
+					height="25"
+					viewBox="0 0 384 512">
+					<!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+					<path
+						d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg
+			></span>
+
+			<div class="col-12 col-lg-6 order-last order-lg-first">
+				<h2 class="d-none d-lg-block">Confirm and Pay</h2>
+				<div>
+					<h3>Your trip</h3>
+					<div>
+						<p>Dates</p>
+						<p>from - to</p>
+					</div>
+
+					<div>
+						<p>Guests</p>
+						<p>1 guest</p>
+					</div>
+				</div>
+				<hr />
+				<form class="d-flex flex-column w-100 gap-3">
+					<div class="d-flex gap-2 gap-lg-3 align-items-center">
+						<input
+							id="fname"
+							name="fname"
+							type="text"
+							class="w-50"
+							placeholder="First Name" />
+						<input
+							id="lname"
+							name="lname"
+							type="text"
+							class="w-50"
+							placeholder="Last Name" />
+					</div>
+					<div class="d-flex gap-2 gap-lg-3 align-items-center">
+						<input
+							id="iban"
+							name="iban"
+							type="text"
+							class="w-75"
+							placeholder="Credit number" />
+						<input
+							id="ccv"
+							name="ccv"
+							type="text"
+							class="w-25"
+							placeholder="CCV" />
+					</div>
+					<button
+						type="submit"
+						class="reserve-btn w-100">
+						Check out
+					</button>
+				</form>
+			</div>
+			<hr class="d-block d-md-none my-3" />
+			<div class="col-12 col-lg-6 order-first order-lg-last">
+				<div class="d-flex flex-column">
+					<div class="d-flex gap-3">
+						<div>
+							<img
+								src=""
+								alt="" />
+						</div>
+						<div>
+							<p class="fs-5">place name</p>
+							<p>5.0 (reviews)</p>
+						</div>
+					</div>
+					<hr />
+					<div>
+						<p class="fs-4 fw-bold">Price details</p>
+						<div>
+							<div class="d-flex align-items-center justify-content-between">
+								<p>3300 LE X 5 night</p>
+								<p>total</p>
+							</div>
+							<div class="d-flex align-items-center justify-content-between">
+								<p>fees</p>
+								<p>number</p>
+							</div>
+							<hr />
+							<div class="d-flex align-items-center justify-content-between">
+								<p>Total</p>
+								<p>total number</p>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
