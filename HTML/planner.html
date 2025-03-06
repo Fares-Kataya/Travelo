@@ -8,16 +8,17 @@
 		<link rel="stylesheet" href="../CSS/planner.css" />
 		<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 		<link rel="stylesheet" href="../CSS/utility.css">
-		<link rel="stylesheet" href="../CSS/style.css">
+		<!-- <link rel="stylesheet" href="../CSS/style.css"> -->
 		<script type="module" src="../JS/utility.js"></script>
-		<script type="module" src="../JS/planner.js"></script>
+		<script type="module" src="../JS/refactoredPlanner.js"></script>
+		<!-- <script type="module" src="../JS/planner.js"></script> -->
 		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 	</head>
 	<body>
 		<header id="header-container">
 			<nav></nav>
 		</header>
-		<section class="container col-6 mb-5">
+		<section class="listnav container col-6 mb-5">
 			<ul id="menu-list">
 				<li><a class="menu-links" href="#">Discover</a></li>
 				<li><a class="menu-links" href="#">Inspiration</a></li>
@@ -27,17 +28,19 @@
 		<section class="container col-10">
 			<h1>My Trips</h1>
 			<hr />
-			<button class="card" id="tripbtn">+ Create a New Trip</button><br />
+			<button class="btn btn-lg d-block mx-auto mt-5" id="tripbtn"><span class="plus-btn">+</span> <span class="tripbtn-txt">Create a New Trip</span></button>
 			<h2>Planned Trips</h2>
 			<hr />
+			<div>
 			<article id="planned-Trips">
 				<div id="empty">
 					<p class="para">
 						you have no upcoming trips. Where are you going next?
 					</p>
-					<button id="exploreBtn">Start Exploring!</button>
+					<button class="btn d-block mx-auto mt-3" id="exploreBtn"><span class="btn-text">Start Exploring!</span><img class="btn-icon" src="../Assets/icons/icons8-explore-50.png" alt=""></button>
 				</div>
 			</article>
+			<article id="completed">
 			<h2>Completed Trips</h2>
 			<hr>
 			<div class="comp">
@@ -45,10 +48,11 @@
 						your completed trips will appear here, start by creating a new trip!
 					</p>
 			</div>
-			<button id="add">+</button>
+			</article>
 		</section>
 		<footer id="footer-container">
 
 		</footer>
+		</div>
 	</body>
 </html>
