@@ -1,59 +1,67 @@
 <div class="container-lg container-xl">
 	<!-- Header of the Page -->
-
-	<header class="d-flex flex-row justify-content-between mb-5 py-3">
-		<!-- Icon and websitename -->
-		<a
-			href=""
-			class="logo text-decoration-none text-black">
-			<img
-				src="../Assets/icons/destination.png"
-				alt=""
-				class="header_icon position-relative" />
-			<h1>Travelo</h1>
-		</a>
+	<header class="row justify-content-between mb-5 py-3">
+		<div class="col-4 col-lg-2 d-flex align-items-center align-self-start">
+			<!-- Icon and website name -->
+			<a
+				href="#"
+				class="logo text-decoration-none text-black d-flex align-items-center">
+				<img
+					src="../Assets/icons/destination.png"
+					alt="Logo"
+					class="header_icon"
+					style="width: 30px; height: 30px; object-fit: contain" />
+				<h1 class="mb-0 ms-2">Travelo</h1>
+			</a>
+		</div>
 
 		<!-- Navigation bar -->
-		<nav class="navbar navbar-expand-lg navbar-light justify-content-between">
-			<button
-				class="navbar-toggler"
-				type="button"
-				data-toggle="collapse"
-				data-target="#navbarNavAltMarkup"
-				aria-controls="navbarNavAltMarkup"
-				aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div
-				class="collapse navbar-collapse"
-				id="navbarNavAltMarkup">
-				<div class="navbar-nav gap-4">
-					<a
-						class="nav-item nav-link fw-bolder"
-						href="#"
-						>Discover</a
-					>
-					<a
-						class="nav-item nav-link fw-bolder"
-						href="#"
-						>Trips</a
-					>
-					<a
-						class="nav-item nav-link fw-bolder"
-						href="#"
-						>Reviews</a
-					>
-					<a
-						class="nav-item nav-link fw-bolder"
-						href="#"
-						>More</a
-					>
+		<div class="col-4 col-lg-8 d-flex justify-content-center w-auto">
+			<nav
+				class="navbar navbar-expand-lg navbar-light w-25 d-flex justify-content-center">
+				<div class="d-flex justify-content-center">
+					<button
+						class="navbar-toggler"
+						type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#navbarNavAltMarkup"
+						aria-controls="navbarNavAltMarkup"
+						aria-expanded="false"
+						aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
 				</div>
-			</div>
-		</nav>
+				<div
+					class="collapse navbar-collapse justify-content-center"
+					id="navbarNavAltMarkup">
+					<div
+						class="navbar-nav gap-4 d-flex justify-content-center align-items-center">
+						<a
+							class="nav-item nav-link fw-bolder"
+							href="#"
+							>Discover</a
+						>
+						<a
+							class="nav-item nav-link fw-bolder"
+							href="#"
+							>Trips</a
+						>
+						<a
+							class="nav-item nav-link fw-bolder"
+							href="#"
+							>Reviews</a
+						>
+						<a
+							class="nav-item nav-link fw-bolder"
+							href="#"
+							>More</a
+						>
+					</div>
+				</div>
+			</nav>
+		</div>
 
-		<div>
+		<div class="col-4 col-lg-2 d-flex justify-content-end align-self-start">
 			<button class="bg-black color-white rounded-5 text-white p-2 ps-3 pe-3">
 				Sign in
 			</button>

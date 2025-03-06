@@ -1,3 +1,8 @@
+window.addEventListener('load', () => {
+	loadHeaderFooter('header-container', '../HTML/header.html');
+	loadHeaderFooter('footer-container', '../HTML/footer.html');
+});
+
 /**
  * Fetches data from the server using the Fetch API.
  * @param {String} url - The endpoint to be appended to the base API URL (e.g., ":searchNearby").

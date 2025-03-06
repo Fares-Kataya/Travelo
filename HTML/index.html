@@ -1,94 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Travelo</title>
+		<link
+			rel="stylesheet"
+			href="../CSS/bootstrap.min.css" />
+		<link
+			rel="stylesheet"
+			href="../CSS/utility.css" />
+		<link
+			rel="stylesheet"
+			href="../CSS/style.css" />
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Travelo</title>
-    <link rel="stylesheet" href="../CSS/bootstrap.min.css" />
-    <link rel="stylesheet" href="../CSS/utility.css" />
-    <link rel="stylesheet" href="../CSS/style.css" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	</head>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</head>
+	<body class="">
+		<div class="container-xl">
+			<!-- Header of the Page -->
 
-<body class="">
-    <div class="container-lg container-xl">
-        <!-- Header of the Page -->
+			<div id="header-container"></div>
+			<!-- Search -->
+			<section class="search">
+				<h3></h3>
+				<form class="form-inline mt-5">
+					<div class="input-group w-75 m-auto">
+						<span
+							class="input-group-text bg-transparent inputGroup-sizing-default"
+							style="width: 50px; height: 50px">
+							<img
+								loading="lazy"
+								src="../Assets/icons/search-icon.png"
+								alt="Search" />
+						</span>
+						<input
+							class="form-control mr-sm-2"
+							type="search"
+							placeholder="Places to go, things to do, hotels..."
+							aria-label="Search" />
+					</div>
+				</form>
+			</section>
+		</div>
 
-        <header class="row justify-content-between">
-            <div class="col-4 col-lg-2 d-flex align-items-center align-self-start">
-                <!-- Icon and website name -->
-                <a href="#" class="logo text-decoration-none text-black d-flex align-items-center">
-                    <img src="../Assets/icons/destination.png" alt="Logo" class="header_icon"
-                        style="width: 30px; height: 30px; object-fit: contain" />
-                    <h1 class="mb-0 ms-2">Travelo</h1>
-                </a>
-            </div>
+		<div class="mt-5">
+			<div class="trip-container-home container-xl mt-5 p-5 g-2">
+				<div class="trip-image-home">
+					<img
+						loading="lazy"
+						src="../Assets/images/Travel-Background.jpg"
+						alt="Trip Preview-home" />
+				</div>
+				<div class="trip-content-home">
+					<span class="ai-badge-home"
+						>Powered by AI <span class="beta-home">BETA</span></span
+					>
+					<h1>Plan a trip that's so you</h1>
+					<p>
+						From farm tours to forest bathing – get custom recs for whatever
+						you're into.
+					</p>
+					<button class="trip-button-home">✨ SIgn In Now To Start</button>
+				</div>
+			</div>
+		</div>
 
-            <!-- Navigation bar -->
-            <div class="col-4 col-lg-8 d-flex justify-content-center w-auto">
-                <nav class="navbar navbar-expand-lg navbar-light w-25 d-flex justify-content-center">
-                    <div class="d-flex justify-content-center">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                    </div>
-                    <div class="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
-                        <div class="navbar-nav gap-4 d-flex justify-content-center align-items-center">
-                            <a class="nav-item nav-link fw-bolder" href="#">Discover</a>
-                            <a class="nav-item nav-link fw-bolder" href="#">Trips</a>
-                            <a class="nav-item nav-link fw-bolder" href="#">Reviews</a>
-                            <a class="nav-item nav-link fw-bolder" href="#">More</a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-
-            <div class="col-4 col-lg-2 d-flex justify-content-end align-self-start">
-                <button class="bg-black color-white rounded-5 text-white p-2 ps-3 pe-3">
-                    Sign in
-                </button>
-            </div>
-        </header>
-        <!-- Search -->
-        <section class="search">
-            <h3></h3>
-            <form class="form-inline mt-5">
-                <div class="input-group w-75 m-auto">
-                    <span class="input-group-text bg-transparent inputGroup-sizing-default"
-                        style="width: 50px; height: 50px">
-                        <img src="../Assets/icons/search-icon.png" alt="Search" />
-                    </span>
-                    <input class="form-control mr-sm-2" type="search"
-                        placeholder="Places to go, things to do, hotels..." aria-label="Search" />
-                </div>
-            </form>
-        </section>
-    </div>
-
-    <div class="mt-5">
-        <div class="trip-container-home container-lg container-xl mt-5 p-5 g-2">
-            <div class="trip-image-home">
-                <img src="../Assets/images/Travel-Background.jpg" alt="Trip Preview-home" />
-            </div>
-            <div class="trip-content-home">
-                <span class="ai-badge-home">Powered by AI <span class="beta-home">BETA</span></span>
-                <h1>Plan a trip that's so you</h1>
-                <p>
-                    From farm tours to forest bathing – get custom recs for whatever
-                    you're into.
-                </p>
-                <button class="trip-button-home">✨ SIgn In Now To Start</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- <div class="categories-wrapper">
+		<!-- <div class="categories-wrapper">
         <div class="category-container container-lg container-xl text-center mt-5 d-flex">
             <button id="left-arrow" class="arrow left">&lt;</button>
             <div class="category-list m-auto">
@@ -131,7 +116,7 @@
             </div>
             <button id="right-arrow" class="arrow right">&gt;</button>
         </div> -->
-    <!-- 
+		<!-- 
         <div class="container-lg container-xl mt-5">
             <h3>Ways to tour Alexandria</h2>
                 <p class="fw-light fs-5">Book these experiences for a close-up look at Alexandria.</p>
@@ -305,484 +290,409 @@
         </section>
     </div> -->
 
-    <div class="explore-the-world mt-5">
-        <div class="container-lg container-xl">
-            <h3 class="mb-4 text-center text-xl-start">
-                Explore the world’s most stunning seasides
-            </h3>
-            <p class="fw-light fs-5 text-center text-xl-start">
-                2025’s Travelers’ Choice Awards Best of the Best Beaches
-            </p>
-            <div class="row justify-content-center justify-content-md-center justify-content-lg-between">
-                <div class="col-12 col-md-6 col-lg-3 mt-2 carouselExampleIndicators3 mb-5 position-relative" id="div1">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <img src="../Assets/icons/logo2.png" alt="" class="logo2 position-absolute mt-1 start-0" />
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img" src="../Assets/images/world.jpg" alt="First slide" />
-                        </div>
-                        <h3 class="ms-3 text-center position-absolute bottom-0 text-white fw-bolder">
-                            World
-                        </h3>
-                    </div>
-                </div>
+		<div class="explore-the-world mt-5">
+			<div class="container-xl">
+				<h3 class="mb-4 text-center text-xl-start">
+					Explore the world’s most stunning seasides
+				</h3>
+				<p class="fw-light fs-5 text-center text-xl-start">
+					2025’s Travelers’ Choice Awards Best of the Best Beaches
+				</p>
+				<div class="row">
+					<div
+						class="col-12 col-md-6 col-lg-3 mt-2 carouselExampleIndicators3 mb-5 position-relative"
+						id="div1">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<img
+								loading="lazy"
+								src="../Assets/icons/logo2.png"
+								alt=""
+								class="logo2 position-absolute mt-1 start-0" />
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3 img"
+									src="../Assets/images/world.jpg"
+									alt="First slide" />
+							</div>
+							<h3
+								class="ms-3 text-center position-absolute bottom-0 text-white fw-bolder">
+								World
+							</h3>
+						</div>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <img src="../Assets/icons/logo2.png" alt=""
-                            class="logo2 position-absolute mt-1 top-0 start-0" />
-                        <div class="carousel-item active">
-                            <img class="rounded-3" src="../Assets/images/Europe.jpeg" alt="First slide" />
-                        </div>
-                        <h3 class="ms-3 position-absolute bottom-0 text-white fw-bolder">
-                            Europe
-                        </h3>
-                    </div>
-                </div>
+					<div
+						class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<img
+								loading="lazy"
+								src="../Assets/icons/logo2.png"
+								alt=""
+								class="logo2 position-absolute mt-1 top-0 start-0" />
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3"
+									src="../Assets/images/Europe.jpeg"
+									alt="First slide" />
+							</div>
+							<h3 class="ms-3 position-absolute bottom-0 text-white fw-bolder">
+								Europe
+							</h3>
+						</div>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <img src="../Assets/icons/logo2.png" alt=""
-                            class="logo2 position-absolute mt-1 top-0 start-0" />
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img-fluid" src="../Assets/images/asia.jpeg" alt="First slide" />
-                        </div>
-                        <h3 class="position-absolute text-white fw-bolder w-100 bottom-0 ms-3">
-                            Asia
-                        </h3>
-                    </div>
-                </div>
+					<div
+						class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<img
+								loading="lazy"
+								src="../Assets/icons/logo2.png"
+								alt=""
+								class="logo2 position-absolute mt-1 top-0 start-0" />
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3"
+									src="../Assets/images/asia.jpeg"
+									alt="First slide" />
+							</div>
+							<h3
+								class="position-absolute text-white fw-bolder w-100 bottom-0 ms-3">
+								Asia
+							</h3>
+						</div>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5 position-relative">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <img src="../Assets/icons/logo2.png" alt=""
-                            class="logo2 position-absolute mt-1 top-0 start-0" />
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img-fluid" src="../Assets/images/south_pacific.jpeg"
-                                alt="First slide" />
-                        </div>
-                        <h3 class="ms-3 position-absolute bottom-0 text-white fw-bolder w-100 bottom-0">
-                            South Pacific
-                        </h3>
-                    </div>
-                </div>
+					<div
+						class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5 position-relative">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<img
+								loading="lazy"
+								src="../Assets/icons/logo2.png"
+								alt=""
+								class="logo2 position-absolute mt-1 top-0 start-0" />
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3"
+									src="../Assets/images/south_pacific.jpeg"
+									alt="First slide" />
+							</div>
+							<h3
+								class="ms-3 position-absolute bottom-0 text-white fw-bolder w-100 bottom-0">
+								South Pacific
+							</h3>
+						</div>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-3 mt-2 d-none carouselExampleIndicators3 mb-5 position-relative"
-                    id="div5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <img src="../Assets/icons/logo2.png" alt="" class="logo2 position-absolute mt-1 start-0" />
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img" src="../Assets/images/world.jpg" alt="First slide" />
-                        </div>
-                        <h3 class="ms-3 text-center position-absolute bottom-0 text-white fw-bolder">
-                            World
-                        </h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					<div
+						class="col-12 col-md-6 col-lg-3 mt-2 d-none carouselExampleIndicators3 mb-5 position-relative"
+						id="div5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<img
+								loading="lazy"
+								src="../Assets/icons/logo2.png"
+								alt=""
+								class="logo2 position-absolute mt-1 start-0" />
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3 img"
+									src="../Assets/images/world.jpg"
+									alt="First slide" />
+							</div>
+							<h3
+								class="ms-3 text-center position-absolute bottom-0 text-white fw-bolder">
+								World
+							</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <div class="sponsored-banner1 container-lg container-xl mt-5">
-        <div class="d-flex align-items-center p-4">
-            <div class="image-container1">
-                <img src="../Assets/images/sponsered-banner1.jpg" alt="Sponsored Image" class="banner-image1" />
-            </div>
+		<div class="sponsored-banner1 container-xl mt-5">
+			<div
+				class="d-flex flex-column flex-md-row align-items-center p-4 gap-5 gap-md-0">
+				<div class="image-container1">
+					<img
+						loading="lazy"
+						src="../Assets/images/sponsered-banner1.jpg"
+						alt="Sponsored Image"
+						loading="lazy"
+						class="banner-image1" />
+				</div>
 
-            <div class="text-content1 ms-4">
-                <span class="sponsored-label1">Sponsored by Malaysia Airlines</span>
-                <h2 class="title1">
-                    Malaysia Airlines’ direct Paris–Kuala Lumpur flight: Your Gateway to
-                    Asia and Beyond
-                </h2>
-                <p class="description1">
-                    Commencing 23rd March 2025, Malaysia Airlines’ new daily direct
-                    departure from Paris to Kuala Lumpur invites you to experience its
-                    signature ‘Malaysian Hospitality’ above the clouds.
-                </p>
-                <button class="read-btn1">Read now</button>
-            </div>
-        </div>
-    </div>
+				<div class="text-content1 ms-4">
+					<span class="sponsored-label1">Sponsored by Malaysia Airlines</span>
+					<h2 class="title1">
+						Malaysia Airlines’ direct Paris–Kuala Lumpur flight: Your Gateway to
+						Asia and Beyond
+					</h2>
+					<p class="description1">
+						Commencing 23rd March 2025, Malaysia Airlines’ new daily direct
+						departure from Paris to Kuala Lumpur invites you to experience its
+						signature ‘Malaysian Hospitality’ above the clouds.
+					</p>
+					<button class="read-btn1">Read now</button>
+				</div>
+			</div>
+		</div>
 
-    <div class="top-destinations mt-5">
-        <div class="container-lg container-xl">
-            <h2 class="mb-4 mt-0 text-center text-xl-start">
-                Top destinations for your next vacation
-            </h2>
-            <div class="row justify-content-center justify-content-md-between">
-                <div class="col-12 col-md-6 col-lg-3 mt-2 carouselExampleIndicators3 mb-5 position-relative">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img" src="../Assets/images/Yellowstone National Park, WY.jpg"
-                                alt="First slide" />
-                        </div>
-                        <h3 class="mt-3 text-center position-absolute bottom-0 text-white fw-bolder">
-                            Yellowstone National Park, WY
-                        </h3>
-                    </div>
-                </div>
+		<div class="top-destinations mt-5">
+			<div class="container-xl">
+				<h2 class="mb-4 mt-0 text-center text-xl-start">
+					Top destinations for your next vacation
+				</h2>
+				<div class="row">
+					<div
+						class="col-12 col-md-6 col-lg-3 mt-2 dest-trip mb-5 position-relative">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3 img"
+									src="../Assets/images/Yellowstone National Park, WY.jpg"
+									alt="First slide" />
+							</div>
+							<h3
+								class="mt-3 text-center position-absolute bottom-0 text-white fw-bolder">
+								Yellowstone National Park, WY
+							</h3>
+						</div>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <div class="carousel-item active">
-                            <img class="rounded-3" src="../Assets/images/punca.jpg" alt="First slide" />
-                        </div>
-                        <h3 class="mt-3 text-center position-absolute bottom-0 text-white fw-bolder">
-                            Punta Cana, Dominican Republic
-                        </h3>
-                    </div>
-                </div>
+					<div class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 dest-trip mb-5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3"
+									src="../Assets/images/punca.jpg"
+									alt="First slide" />
+							</div>
+							<h3
+								class="mt-3 text-center position-absolute bottom-0 text-white fw-bolder">
+								Punta Cana, Dominican Republic
+							</h3>
+						</div>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img-fluid" src="../Assets/images/orlando , fl.jpg"
-                                alt="First slide" />
-                        </div>
-                        <h3 class="position-absolute text-white fw-bolder w-100 bottom-0 end-0 text-center">
-                            Orlando, FL
-                        </h3>
-                    </div>
-                </div>
+					<div class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 dest-trip mb-5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3"
+									src="../Assets/images/orlando , fl.jpg"
+									alt="First slide" />
+							</div>
+							<h3
+								class="position-absolute text-white fw-bolder w-100 bottom-0 end-0 text-center">
+								Orlando, FL
+							</h3>
+						</div>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 carouselExampleIndicators3 mb-5" id="div5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img-fluid" src="../Assets/images/Sedona.jpg" alt="First slide" />
-                        </div>
-                        <h3
-                            class="mt-3 text-center position-absolute bottom-0 text-white fw-bolder w-100 bottom-0 end-0">
-                            Sedona, AZ
-                        </h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					<div
+						class="col-12 col-md-6 col-lg-3 col-xl-3 mt-2 dest-trip mb-5"
+						id="div5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3"
+									src="../Assets/images/Sedona.jpg"
+									alt="First slide" />
+							</div>
+							<h3
+								class="mt-3 text-center position-absolute bottom-0 text-white fw-bolder w-100 bottom-0 end-0">
+								Sedona, AZ
+							</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <div class="custom-card-container-home container-lg container-xl mt-5">
-        <div class="custom-card custom-card-pink container-lg container-xl">
-            <div class="custom-card-image">
-                <img src="../Assets/images/../images/playa.jpg" alt="Image 2" />
-            </div>
-            <div class="custom-card-content">
-                <h2>The Playa del Carmen you don't know</h2>
-                <p>
-                    Where to find the best wine bars, gluten-free goodies, and Wi-Fi in
-                    Playa del Carmen.
-                </p>
-                <button class="custom-card-btn">Read Now</button>
-            </div>
-        </div>
+		<div class="custom-card-container-home container-xl mt-5">
+			<div class="custom-card custom-card-pink container-xl">
+				<div class="custom-card-image">
+					<img
+						loading="lazy"
+						src="../Assets/images/../images/playa.jpg"
+						alt="Image 2" />
+				</div>
+				<div class="custom-card-content">
+					<h2>The Playa del Carmen you don't know</h2>
+					<p>
+						Where to find the best wine bars, gluten-free goodies, and Wi-Fi in
+						Playa del Carmen.
+					</p>
+					<button class="custom-card-btn">Read Now</button>
+				</div>
+			</div>
 
-        <div class="custom-card custom-card-green container-lg container-xl mt-5">
-            <div class="custom-card-image">
-                <img src="../Assets/images/../images/Europe.jpg" alt="Image 2" />
-            </div>
-            <div class="custom-card-content">
-                <h2>Plan your trip your way</h2>
-                <p>Save your faves and more with Trips.</p>
-                <button class="custom-card-btn">Get Started</button>
-            </div>
-        </div>
-    </div>
+			<div class="custom-card custom-card-green container-xl mt-5">
+				<div class="custom-card-image">
+					<img
+						loading="lazy"
+						src="../Assets/images/../images/Europe.jpg"
+						alt="Image 2" />
+				</div>
+				<div class="custom-card-content">
+					<h2>Plan your trip your way</h2>
+					<p>Save your faves and more with Trips.</p>
+					<button class="custom-card-btn">Get Started</button>
+				</div>
+			</div>
+		</div>
 
-    <div class="more-to-explore mt-5 d-flex flex-column align-items-center">
-        <div class="container-lg container-xl">
-            <h2 class="mb-4 mt-0 text-center text-md-start">More to explore</h2>
-            <div class="row justify-content-center justify-content-md-between">
-                <div class="col-12 col-md-6 col-lg-4 mt-2 carouselExampleIndicators2 mb-5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img" src="../Assets/images/Europe-trip.jpeg" alt="First slide" />
-                        </div>
-                    </div>
-                    <h6 class="mt-3 text-center">
-                        Our guide to Europe's 'new' culture capitals
-                    </h6>
-                </div>
+		<div class="more-to-explore mt-5 d-flex flex-column align-items-center">
+			<div class="container-xl">
+				<h2 class="mb-4 mt-0 text-center text-md-start">More to explore</h2>
+				<div class="row justify-content-center justify-content-md-between">
+					<div class="col-12 col-md-4 mt-2 mb-5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3 img"
+									src="../Assets/images/Europe-trip.jpeg"
+									alt="First slide" />
+							</div>
+						</div>
+						<h6 class="mt-3 text-center">
+							Our guide to Europe's 'new' culture capitals
+						</h6>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-2 carouselExampleIndicators2 mb-5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img-fluid" src="../Assets/images/romantic-trip.webp"
-                                alt="First slide" />
-                        </div>
-                    </div>
-                    <h6 class="mt-3 text-center">
-                        8 romantic trips for couples in the US
-                    </h6>
-                </div>
+					<div class="col-12 col-md-4 mt-2 mb-5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3"
+									src="../Assets/images/romantic-trip.webp"
+									alt="First slide" />
+							</div>
+						</div>
+						<h6 class="mt-3 text-center">
+							8 romantic trips for couples in the US
+						</h6>
+					</div>
 
-                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-2 carouselExampleIndicators2 mb-5">
-                    <div class="carousel-inner position-relative card2">
-                        <i class="fa-solid fa-heart heart"></i>
-                        <div class="carousel-item active">
-                            <img class="rounded-3 img-fluid" src="../Assets/images/black-trip.jpeg" alt="First slide" />
-                        </div>
-                    </div>
-                    <h6 class="mt-3 text-center">Your guide to Black travel</h6>
-                </div>
-            </div>
-        </div>
-    </div>
+					<div class="col-12 col-md-4 mt-2 mb-5">
+						<div class="carousel-inner position-relative card2">
+							<i class="fa-solid fa-heart heart"></i>
+							<div class="carousel-item active">
+								<img
+									loading="lazy"
+									class="rounded-3"
+									src="../Assets/images/black-trip.jpeg"
+									alt="First slide" />
+							</div>
+						</div>
+						<h6 class="mt-3 text-center">Your guide to Black travel</h6>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <div class="custom-card-container-home container-lg container-xl mt-5">
-        <div class="custom-card custom-card-blue">
-            <div class="custom-card-image">
-                <img src="../Assets/images/award.webp" alt="Image 1" />
-            </div>
-            <div class="custom-card-content">
-                <h2>Go on an award-winning adventure</h2>
-                <p>Travlel's Choise Awards Best of the best</p>
-                <button class="custom-card-btn">See the list</button>
-            </div>
-        </div>
-    </div>
+		<div class="custom-card-container-home container-xl mt-5">
+			<div class="custom-card custom-card-blue">
+				<div class="custom-card-image">
+					<img
+						loading="lazy"
+						src="../Assets/images/award.webp"
+						alt="Image 1" />
+				</div>
+				<div class="custom-card-content">
+					<h2>Go on an award-winning adventure</h2>
+					<p>Travlel's Choise Awards Best of the best</p>
+					<button class="custom-card-btn">See the list</button>
+				</div>
+			</div>
+		</div>
 
-    <div class="custom-card-container-home container-lg container-xl mt-5">
-        <div class="custom-card custom-card-perple">
-            <div class="custom-card-image">
-                <img src="../Assets/images/68.jpg" alt="Image 1" />
-            </div>
-            <div class="custom-card-content">
-                <h2>8 can’t-miss pubs and distilleries in Edinburgh</h2>
-                <p>From whisky blending experiences to natural wine.</p>
-                <button class="custom-card-btn">Show details</button>
-            </div>
-        </div>
-    </div>
+		<div class="custom-card-container-home container-xl mt-5">
+			<div class="custom-card custom-card-perple">
+				<div class="custom-card-image">
+					<img
+						loading="lazy"
+						src="../Assets/images/68.jpg"
+						alt="Image 1" />
+				</div>
+				<div class="custom-card-content">
+					<h2>8 can’t-miss pubs and distilleries in Edinburgh</h2>
+					<p>From whisky blending experiences to natural wine.</p>
+					<button class="custom-card-btn">Show details</button>
+				</div>
+			</div>
+		</div>
 
-    <section class="about-us mt-5">
-        <div class="container-lg container-xl">
-            <div class="image-placeholder">
-                <img src="../Assets/images/../images/vacanse.jpg" alt="" />
-            </div>
-            <div class="about-content mt-3">
-                <h2 class="about-title">ABOUT US</h2>
-                <p class="about-text">
-                    We are passionate about creating unforgettable travel experiences.
-                    Our platform connects travelers with the best destinations, unique
-                    adventures, and seamless booking experiences. Whether you’re seeking
-                    relaxation or adventure, we bring your dream trip to life with ease
-                    and efficiency.
-                </p>
-                <h3 class="about-author">John Doe</h3>
-                <p class="about-position">Founder & CEO, TravelCo</p>
-            </div>
-        </div>
-    </section>
+		<section class="about-us mt-5">
+			<div class="container-xl">
+				<div class="image-placeholder">
+					<img
+						loading="lazy"
+						src="../Assets/images/../images/vacanse.jpg"
+						alt="" />
+				</div>
+				<div class="about-content mt-3">
+					<h2 class="about-title">ABOUT US</h2>
+					<p class="about-text">
+						We are passionate about creating unforgettable travel experiences.
+						Our platform connects travelers with the best destinations, unique
+						adventures, and seamless booking experiences. Whether you’re seeking
+						relaxation or adventure, we bring your dream trip to life with ease
+						and efficiency.
+					</p>
+					<h3 class="about-author">John Doe</h3>
+					<p class="about-position">Founder & CEO, TravelCo</p>
+				</div>
+			</div>
+		</section>
 
-    <div class="contact-section container-lg container-xl p-5 mt-5">
-        <div class="contact-image">
-            <img src="../Assets/images/R.jpeg" alt="Contact Us Image" />
-        </div>
-        <div class="contact-content">
-            <p class="sponsored">Sponsored by <a href="#">CESAR</a></p>
-            <h2>We’re here to help, anytime!</h2>
-            <p>
-                Have a question or need support? Our team is ready to assist you.
-                Reach out to us for any inquiries or assistance.
-            </p>
-            <button class="contact-btn">Contact Us</button>
-        </div>
-    </div>
+		<div class="contact-section container-xl p-5 mt-5">
+			<div class="contact-image">
+				<img
+					loading="lazy"
+					src="../Assets/images/R.jpeg"
+					alt="Contact Us Image" />
+			</div>
+			<div class="contact-content">
+				<p class="sponsored">Sponsored by <a href="#">CESAR</a></p>
+				<h2>We’re here to help, anytime!</h2>
+				<p>
+					Have a question or need support? Our team is ready to assist you.
+					Reach out to us for any inquiries or assistance.
+				</p>
+				<button class="contact-btn">Contact Us</button>
+			</div>
+		</div>
 
-    <footer class="w-100 mt-5 d-flex justify-content-end">
-        <div class="container-xl container-xl py-5">
-            <div class="row d-flex flex-column flex-md-row justify-content-start">
-                <!-- About -->
-                <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                    <h3 class="text-white fw-bold fs-6 text-black" style="color: black !important">
-                        About Tripadvisor
-                    </h3>
-                    <ul class="list-unstyled" style="color: #555">
-                        <li>
-                            <a href="#" class="fo1-link fs-small">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Press
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Resources and Policies</a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Careers
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Investor Relations
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Trust & Safety
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Contact us
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Accessibility Statement
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-12 col-sm-12 col-md-6 col-lg-2">
-                    <h3 class="text-white fw-bold fs-6 text-black" style="color: black !important">
-                        Explore
-                    </h3>
-                    <ul class="list-unstyled" style="color: #555">
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Add a place</a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Join</a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Travelers' Choice
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Help Center</a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Travel Stories
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-3">
-                    <h3 class="text-white fw-bold fs-6" style="color: black !important">
-                        Do Business With Us
-                    </h3>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Owners
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Business Advantage
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Sponsored Placements
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Access our Content API
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="fo1-link fs-small">Become an Affiliate
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="d-flex flex-row justify-content-lg-center col-12 col-md-6 col-lg-4">
-                    <div class="d-flex flex-column">
-                        <h3 class="fw-bolder fs-6 text-black" style="color: black !important">
-                            Travelo sites
-                        </h3>
-
-                        <ul class="list-unstyled fs-small" style="color: #555">
-                            <li>
-                                Book the best restaurants with
-                                <a href="#" class="fo3-link">TheFork
-                                </a>
-                            </li>
-                            <li>
-                                Book tours and attraction tickets on
-                                <a href="#" class="fo3-link">Viator
-                                </a>
-                            </li>
-
-                            <li>
-                                Read cruise reviews on
-                                <a href="#" class="fo3-link">
-                                    Cruise Critic
-                                </a>
-                            </li>
-                            <li>
-                                Get airline seating charts on
-                                <a href="#" class="fo3-link">Seat Guru
-                                </a>
-                            </li>
-                            <li>
-                                Search for holiday rentals on
-                                <a href="#" class="fo3-link">
-                                    Holiday Lettings
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="mt-4 row d-flex">
-                    <div class="d-flex flex-row col-12 col-lg-12">
-                        <div style="width: 30px; height: 30px">
-                            <img src="../Assets/icons/destination.png" alt="" class="mt-3" />
-                        </div>
-                        <div class="d-flex flex-column">
-                            <p class="text-gray xx-small ms-1 mt-2">
-                                © 2025 Travelo LLC All rights reserved.
-                            </p>
-
-                            <ul class="d-flex flex-row flex-wrap flex-lg-row flex-lg-nowrap list-unstyled mt-n3">
-                                <li class="ms-2 mt-0 mt-n3">
-                                    <a href="" class="fo3-link">Terms of use</a>
-                                </li>
-                                <li class="ms-2 mt-0 mt-n3">
-                                    <a href="" class="fo3-link">Privacy and Cookies Statement</a>
-                                </li>
-                                <li class="ms-2 mt-0 mt-n3">
-                                    <a href="" class="fo3-link">Cookie consent</a>
-                                </li>
-                                <li class="ms-2 mt-0 mt-n3">
-                                    <a href="" class="fo3-link">Site Map
-                                    </a>
-                                </li>
-                                <li class="ms-2 mt-0 mt-n3">
-                                    <a href="" class="fo3-link">How the site works</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-9">
-                        <p class="x-small">
-                            This is the version of our website addressed to speakers of
-                            English in the United States. If you are a resident of another
-                            country or region, please select the appropriate version of
-                            Tripadvisor for your country or region in the drop-down menu.
-                            more
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <script src="../JS/main.js" type="module"></script>
-</body>
-
+		<div id="footer-container"></div>
+		<script
+			src="../JS/main.js"
+			type="module"></script>
+		<script
+			src="../JS/utility.js"
+			type="module"></script>
+	</body>
 </html>
 
 <!-- <div class="row mt-5 contain-card d-flex flex-wrap">
