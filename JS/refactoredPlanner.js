@@ -3,7 +3,7 @@ import {
 	loadHeaderFooter,
 	toggleActive,
 	loadFromLocalStorage,
-	// getData
+	getData
 } from "../JS/utility.js";
 import {
 	generateCalendar,
@@ -27,6 +27,30 @@ document.addEventListener("DOMContentLoaded", function () {
 	document
 		.getElementById("tripbtn")
 		.addEventListener("click", () => new TripModal());
+	getData(":autocomplete", "POST", {
+		input: 'santiago',
+		locationBias: {
+			circle: {
+				center: {
+					latitude: 30.0443879,
+					longitude: 31.2357257
+				},
+				radius: 10000
+			}
+		},
+		includedPrimaryTypes: [],
+		includedRegionCodes: ["EG"],
+		languageCode: '',
+		regionCode: '',
+		origin: {
+			latitude: 0,
+			longitude: 0
+		},
+		inputOffset: 0,
+		includeQueryPredictions: true,
+		sessionToken: ''
+	}).then(data => console.log(data))
+		.catch(err => console.error(err));
 });
 
 class TripModal {
@@ -661,7 +685,7 @@ function renderItinerary(card) {
 	let addItineraryBtn
 	for (let i = 0; i < diffDays; i++) {
 		if (!fromDate && !toDate) {
-			dayDiv = createElement('div', ["container","daysDivs"], { id: `day${i+1}` });
+			dayDiv = createElement('div', ["container","daysDivs", "dayFlex"], { id: `day${i+1}` });
 			const dayHeader = createElement("h3", ["daysHeader"], { id: `day${i + 1}-header` }, `Day${i + 1}`);
 			const timnelineDiv = createElement("div", ["timelineDiv"], { id: "timeline" });
 			addItineraryBtn = createElement("button",["addItinerary"], { id: `addItineraryBtn${i+1}` }, '+');
@@ -683,9 +707,10 @@ function renderItinerary(card) {
 		btn.addEventListener("click", (e) => {
 			e.stopPropagation();
 			if (!btn.parentElement.querySelector("#it-options")) {
-				btn.appendChild(itineraryOptions);
+				btn.insertAdjacentElement("afterend",itineraryOptions);
 			}
 			if (!itineraryOptions.classList.contains("expand")) {
+			itineraryOptions.style.display = "block";
 				setTimeout(() => {
 				itineraryOptions.classList.remove("collapse");
 				itineraryOptions.classList.add("expand");
@@ -693,6 +718,7 @@ function renderItinerary(card) {
 			} else {
 				itineraryOptions.classList.remove("expand");
 				itineraryOptions.classList.add("collapse");
+				itineraryOptions.style.display = "none";
 			}
 				itineraryOptions.classList.remove("collapse");
 				itineraryOptions.classList.remove("expand");
@@ -705,10 +731,12 @@ function renderItinerary(card) {
 const addAccommodationBtn = createElement("button", ["it-option"], {id: "accomodationOpt"}, "Add Accommodation");
 	const addTransportBtn = createElement("button", ["it-option"], { id: "transportationOpt" }, "Add Transportation");
 	addAccommodationBtn.appendChild(img);
-itineraryOptions.appendChild(addActivityBtn);
-itineraryOptions.appendChild(addAccommodationBtn);
-itineraryOptions.appendChild(addTransportBtn);
-itineraryOptions.appendChild(addRestaurantBtn);
+	const optBtnsDiv = createElement("div", [], { id: "it-option" });
+optBtnsDiv.appendChild(addActivityBtn);
+optBtnsDiv.appendChild(addRestaurantBtn);	
+optBtnsDiv.appendChild(addAccommodationBtn);
+optBtnsDiv.appendChild(addTransportBtn);
+	itineraryOptions.appendChild(optBtnsDiv);
 }
 
 // async function fetch(){
