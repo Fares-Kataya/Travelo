@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		let tripNameLabel = createElement("label", [], {}, "Trip Name");
 		tripDetails.appendChild(tripNameLabel);
-		let tripNameInput = createElement("input", [], {
+		let tripNameInput = createElement("input", ["trip-in"], {
 			type: "text",
 			placeholder: "eg., Summer Vacation in Egypt",
 			id: "name",
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		let destinationLabel = createElement("label", [], {}, "Destination");
 		tripDetails.appendChild(destinationLabel);
-		let destinationInput = createElement("input", [], {
+		let destinationInput = createElement("input", ["trip-in"], {
 			type: "text",
 			id: "Dest",
 		});
@@ -37,9 +37,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		let descriptionLabel = createElement("label", [], {}, "Description");
 		tripDetails.appendChild(descriptionLabel);
-		let descriptionTextarea = createElement("textarea", [], {
-			id: "Desc",
-		});
+		let descriptionTextarea = createElement(
+			"textarea",
+			["trip-in", "form-control"],
+			{
+				id: "Desc",
+			}
+		);
 		tripDetails.appendChild(descriptionTextarea);
 
 		let addDateButton = createElement(
@@ -73,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		closeModal.addEventListener("click", () => {
 			document.body.removeChild(overlay);
 		});
-		setupTripCreation(overlay);
+		setupTripCreation(overlay,addDateButton);
 		setupDestinationMap();
 		setupDateModal(overlay, addDateButton);
 		document.addEventListener("keydown", keyPress);
@@ -178,13 +182,13 @@ document.addEventListener("DOMContentLoaded", function () {
 			});
 			let datesButton = createElement(
 				"button",
-				[],
+				["active-date"],
 				{ id: "datesBtn" },
 				"Dates(MM/DD)"
 			);
 			let tripLengthButton = createElement(
 				"button",
-				[],
+				["inactive-date"],
 				{ id: "tripLenBtn" },
 				"Trip Length"
 			);
@@ -193,18 +197,51 @@ document.addEventListener("DOMContentLoaded", function () {
 			});
 			buttonsDiv.appendChild(datesButton);
 			buttonsDiv.appendChild(tripLengthButton);
-			tripLengthButton.addEventListener("click", () => { 
-				dateModal.removeChild(dateModal.querySelector("#monthDays"));
+
+			let actionBtn = createElement("div", ["action-btns"]);
+			let clearBtn = createElement(
+				"button",
+				["clear"],
+				{ id: "clear" },
+				"Clear"
+			);
+			let applyBtn = createElement(
+				"button",
+				["apply"],
+				{ id: "apply" },
+				"Apply"
+			);
+			actionBtn.appendChild(clearBtn);
+			actionBtn.appendChild(applyBtn);
+			tripLengthButton.addEventListener("click", () => {
+				datesButton.classList.remove("active-date");
+				datesButton.classList.add("inactive-date");
+				tripLengthButton.classList.remove("inactive-date");
+				tripLengthButton.classList.add("active-date");
 				dateModal.removeChild(dateModal.querySelector("#weekdays"));
+				dateModal.removeChild(dateModal.querySelector("#monthDays"));
 				dateModal.removeChild(dateModal.querySelector("#months"));
 				dateModal.removeChild(hr);
-				let TLcontainer = createElement("div", ["container"], { id: "tripLengthContainer" });
-				let plusButton = createElement("button", ["tripLenBtn"],{}, "+");
-				let minusButton = createElement("button", ["tripLenBtn"],{}, "-");
+				dateModal.removeChild(dateModal.querySelector(".action-btns"));
+				let TLcontainer = createElement("div", ["container"], {
+					id: "tripLengthContainer",
+				});
+				let plusButton = createElement("button", ["tripLenBtn"], {}, "+");
+				let minusButton = createElement("button", ["tripLenBtn"], {}, "-");
 				let TLheader = createElement("h5", [], {}, "Number of Days");
 				let pmDays = createElement("div", [], { id: "pmDays" });
 				let daysContainer = createElement("div", [], { id: "daysContainer" });
 				let days = createElement("p", [], {}, "0");
+				let dateDiv = createElement("div", [], { id: "date" });
+
+				plusButton.addEventListener("click", () => {
+					days.textContent = parseInt(days.textContent) + 1;
+				});
+				minusButton.addEventListener("click", () => {
+					if (days.textContent > 0) {
+						days.textContent = parseInt(days.textContent) - 1;
+					}
+				});
 				daysContainer.appendChild(days);
 				pmDays.appendChild(minusButton);
 				pmDays.appendChild(daysContainer);
@@ -212,7 +249,28 @@ document.addEventListener("DOMContentLoaded", function () {
 				TLcontainer.appendChild(TLheader);
 				TLcontainer.appendChild(pmDays);
 				dateModal.appendChild(TLcontainer);
+				dateModal.appendChild(actionBtn);
+				applyBtn.addEventListener("click", function () {
+					let dayCount = days.textContent;
+					let calIcon = createElement("img", [], {
+						id: "calendar-icon",
+						src: "../Assets/icons/calendar.png",
+					});
+					let tripLengthPara = createElement("p", [], {}, `${dayCount} days`);
+					dateDiv.appendChild(calIcon);
+					dateDiv.appendChild(tripLengthPara);
+					let currentDateModal = document.querySelector(".date-modal");
+					if (currentDateModal) {
+						currentDateModal.classList.remove("open");
+						setTimeout(() => {
+							if (currentDateModal.parentNode) {
+								currentDateModal.parentNode.removeChild(currentDateModal);
+							}
+						}, 300);
+					}
+				});
 			});
+
 			dateOptions.appendChild(header);
 			dateOptions.appendChild(buttonsDiv);
 			dateModal.appendChild(dateOptions);
@@ -222,9 +280,30 @@ document.addEventListener("DOMContentLoaded", function () {
 			});
 			let backButton = createElement("button", [], {});
 			backButton.appendChild(backImg);
-			let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-			let monthHeading = createElement("h4", [], {}, months[new Date().getMonth()]);
-			let weeks = generateCalendar("2025",months.indexOf(monthHeading.textContent));
+			let months = [
+				"January",
+				"February",
+				"March",
+				"April",
+				"May",
+				"June",
+				"July",
+				"August",
+				"September",
+				"October",
+				"November",
+				"December",
+			];
+			let monthHeading = createElement(
+				"h4",
+				[],
+				{},
+				months[new Date().getMonth()]
+			);
+			let weeks = generateCalendar(
+				"2025",
+				months.indexOf(monthHeading.textContent)
+			);
 			let nextImg = createElement("img", [], {
 				src: "../Assets/icons/next-svgrepo-com.svg",
 			});
@@ -244,20 +323,54 @@ document.addEventListener("DOMContentLoaded", function () {
 			let hr = createElement("hr");
 			dateModal.appendChild(hr);
 			renderCalendar(weeks, dateModal);
-
+			dateModal.appendChild(actionBtn);
+			datesButton.addEventListener("click", () => {
+				tripLengthButton.classList.remove("active-date");
+				tripLengthButton.classList.add("inactive-date");
+				datesButton.classList.remove("inactive-date");
+				datesButton.classList.add("active-date");
+				dateModal.removeChild(document.querySelector("#tripLengthContainer"));
+				dateModal.appendChild(dateOptions);
+				dateModal.appendChild(monthsDiv);
+				dateModal.appendChild(daysDiv);
+				dateModal.appendChild(hr);
+				renderCalendar(weeks, dateModal);
+				dateModal.appendChild(actionBtn);
+			});
 			nextButton.addEventListener("click", () => {
 				dateModal.removeChild(document.querySelector("#monthDays"));
+				dateModal.removeChild(document.querySelector(".action-btns"));
 				let monthIndex = months.indexOf(monthHeading.textContent);
-				monthIndex = (monthIndex + 1);
+				if (monthIndex === 11) {
+					monthIndex = 0;
+				} else {
+					monthIndex = monthIndex + 1;
+				}
 				monthHeading.textContent = months[monthIndex];
 				let weeks = generateCalendar("2025", monthIndex);
 				renderCalendar(weeks, dateModal);
+				dateModal.appendChild(actionBtn);
+			});
+			backButton.addEventListener("click", () => {
+				dateModal.removeChild(document.querySelector("#monthDays"));
+				dateModal.removeChild(document.querySelector(".action-btns"));
+				let monthIndex = months.indexOf(monthHeading.textContent);
+				if (monthIndex === 0) {
+					monthIndex = 11;
+				} else {
+					monthIndex = monthIndex - 1;
+				}
+				monthHeading.textContent = months[monthIndex];
+				let weeks = generateCalendar("2025", monthIndex);
+				renderCalendar(weeks, dateModal);
+				dateModal.appendChild(actionBtn);
 			});
 			overlay.appendChild(dateModal);
 			setTimeout(() => {
 				dateModal.classList.add("open");
 			}, 10);
 		});
+		return dateDiv;
 	}
 	function generateCalendar(year, month) {
 		let firstDay = new Date(year, month, 1).getDay();
@@ -286,14 +399,23 @@ document.addEventListener("DOMContentLoaded", function () {
 		for (let i = 0; i < weeks.length; i++) {
 			let week = createElement("div", ["week"], { id: `week${i}` });
 			for (let j = 0; j < 7; j++) {
-				let day = createElement("div", ["day"], { id: `day${i}${j}` }, weeks[i][j]);
-				week.appendChild(day);
+				if (weeks[i][j]) {
+					let day = createElement(
+						"div",
+						["day"],
+						{ id: `day${i}${j}` },
+						weeks[i][j]
+					);
+					week.appendChild(day);
+				} else {
+					let day = createElement("div", ["empty"], { id: `day${i}${j}` });
+					week.appendChild(day);
+				}
 			}
 			monthDaysBlock.appendChild(week);
 		}
 		dateModal.appendChild(monthDaysBlock);
-	// console.log(weeks);
-
+		return monthDaysBlock;
 	}
 });
 
