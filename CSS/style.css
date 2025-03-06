@@ -109,36 +109,34 @@ body {
 	justify-content: center !important;
 }
 
-.trip-container {
+.trip-container-home {
 	display: flex;
 	background-color: #fc4747da;
 	padding: 50px 20px 50px 20px;
 	border-radius: 10px;
-	max-width: 900px;
 	width: 90%;
 	align-items: center;
 	gap: 20px;
 }
 
-.trip-image {
+.trip-image-home {
 	flex: 1;
 	display: flex;
 	justify-content: center;
 }
 
-.trip-image img {
-	max-width: 100%;
+.trip-image-home img {
 	height: auto;
 	border-radius: 15px;
 	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-.trip-content {
+.trip-content-home {
 	flex: 1;
 	color: #000;
 }
 
-.ai-badge {
+.ai-badge-home {
 	font-size: 14px;
 	font-weight: bold;
 	background-color: black;
@@ -148,7 +146,7 @@ body {
 	display: inline-block;
 }
 
-.beta {
+.beta-home {
 	background-color: white;
 	color: black;
 	padding: 2px 5px;
@@ -157,17 +155,17 @@ body {
 	margin-left: 5px;
 }
 
-.trip-container h1 {
+.trip-container-home h1 {
 	font-size: 32px;
 	margin: 10px 0;
 }
 
-.trip-container p {
+.trip-container-home p {
 	font-size: 16px;
 	margin-bottom: 15px;
 }
 
-.trip-button {
+.trip-button-home {
 	background-color: black;
 	color: white;
 	border: none;
@@ -178,17 +176,17 @@ body {
 	transition: 0.3s;
 }
 
-.trip-button:hover {
+.trip-button-home:hover {
 	background-color: #333;
 }
 
 @media (max-width: 768px) {
-	.trip-container {
+	.trip-container-home {
 		flex-direction: column;
 		text-align: center;
 	}
 
-	.trip-image img {
+	.trip-image-home img {
 		width: 100%;
 	}
 }
@@ -430,6 +428,14 @@ body {
 	margin: auto;
 }
 
+
+.custom-card-container-home {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin: auto;
+}
+
 .custom-card {
 	display: flex;
 	align-items: center;
@@ -666,12 +672,14 @@ footer {
 .fo3-link:hover {
 	color: rgb(72, 72, 72) !important;
 }
+
 html,
 body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
 }
+
 .container-fluid {
 	background-color: rgb(255, 255, 255);
 	height: 100vh;
@@ -682,16 +690,20 @@ body {
 	height: 100%;
 	margin: 0;
 }
+
 .Rightside img {
 	object-fit: cover;
 	height: 100%;
 }
+
 .Rightside {
 	height: 100vh;
 }
+
 .Leftside {
 	align-items: center;
 }
+
 .submit-btn {
 	background-color: var(--red);
 	color: black !important;
@@ -701,14 +713,17 @@ body {
 	background-color: #e7b110 !important;
 	background-color: #e7b110 !important;
 }
+
 input:invalid {
 	border-color: #dc3545;
 }
+
 .back-ground {
 	background-image: url('../Assets/images/log.jpg');
 	background-size: cover;
 	background-position: center;
 }
+
 .back-ground .login {
 	width: 50%;
 	box-shadow: 0 0 25px 3px rgba(255, 255, 255, 0.25);
@@ -717,6 +732,7 @@ input:invalid {
 	animation-duration: 3s;
 	animation-timing-function: ease-in-out;
 }
+
 .blur {
 	backdrop-filter: blur(5px);
 	z-index: -1;
@@ -726,6 +742,7 @@ input:invalid {
 	0% {
 		transform: translate(-50%, -70%);
 	}
+
 	25% {
 		transform: translate(-50%, -40%);
 	}
@@ -733,6 +750,7 @@ input:invalid {
 	50% {
 		transform: translate(-50%, -55%);
 	}
+
 	100% {
 		transform: translate(-50%, -50%);
 	}
@@ -743,11 +761,14 @@ input:invalid {
 		width: 90%;
 	}
 }
+
 @media (max-width: 992px) {
 	.back-ground .login {
 		width: 80%;
 	}
-} /* Start Details Page */
+}
+
+/* Start Details Page */
 /* Start Images Container */
 .images {
 	display: grid;
@@ -762,12 +783,14 @@ input:invalid {
 	grid-column: 1 / 3;
 	grid-row: 1/3;
 }
+
 .images div:nth(2)-child,
 .images div:nth(3)-child,
 .images div:nth(4)-child,
 .images div:nth(5)-child {
 	grid-column: 3 / 5;
 }
+
 /* End Images Container */
 
 /* Star Reservation form */
@@ -790,9 +813,11 @@ input:invalid {
 	outline: none;
 	padding: 0.5rem 1rem;
 }
+
 .reserve-btn {
 	width: 100%;
 }
+
 /* End Reservation form */
 
 /* Start Features */
@@ -801,12 +826,14 @@ input:invalid {
 	align-items: center;
 	gap: 1rem;
 }
+
 .features li {
 	position: relative;
 	color: var(--text-secondary);
 	font-size: 17px;
 }
-.features > li + li::before {
+
+.features>li+li::before {
 	content: '•';
 	position: absolute;
 	left: -0.6rem;
@@ -817,6 +844,7 @@ input:invalid {
 .rate {
 	font-size: 3rem;
 }
+
 /* End Features */
 
 /* Start Reviews Section */
@@ -826,10 +854,12 @@ input:invalid {
 	font-size: 6rem;
 	font-weight: bold;
 }
+
 .total-reviews p {
 	font-size: 3rem;
 	font-weight: bold;
 }
+
 /* End Total Reviews */
 
 /* Start Person info*/
@@ -838,17 +868,21 @@ input:invalid {
 	flex-direction: column;
 	gap: 0.5rem;
 }
+
 .person-review div .person-img {
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
 }
+
 .person-review div:last-child p {
 	width: 70%;
 }
+
 .map-container {
 	height: 500px;
 }
+
 /* End Person info*/
 
 /* End Reviews Section */
@@ -866,6 +900,7 @@ input:invalid {
 	top: 0;
 	cursor: pointer;
 }
+
 .confirm {
 	display: none;
 	width: 75%;
@@ -873,6 +908,7 @@ input:invalid {
 	height: fit-content;
 	box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.25);
 }
+
 .confirm form input {
 	border: 1px solid #aaa;
 	outline: none;
@@ -888,9 +924,11 @@ input:invalid {
 .dark.active {
 	display: block;
 }
+
 .confirm.active {
 	display: flex;
 }
+
 /* End Confirm Layout */
 /* End Details Page */
 
@@ -922,6 +960,7 @@ input:invalid {
 	.images .left svg {
 		fill: white;
 	}
+
 	.images .right:hover,
 	.images .left:hover {
 		background-color: rgba(0, 0, 0, 0.308);
@@ -948,6 +987,7 @@ input:invalid {
 	.images div.active {
 		transform: translateX(0);
 	}
+
 	.images div.inActive {
 		transform: translateX(-100%);
 	}
@@ -956,6 +996,7 @@ input:invalid {
 		grid-column: unset;
 		grid-row: unset;
 	}
+
 	.images div:nth(2)-child,
 	.images div:nth(3)-child,
 	.images div:nth(4)-child,
@@ -971,6 +1012,7 @@ input:invalid {
 		z-index: 1;
 		width: 100%;
 	}
+
 	.images .dots .dot {
 		background-color: white;
 		opacity: 0.5;
@@ -980,9 +1022,11 @@ input:invalid {
 
 		z-index: 1;
 	}
+
 	.images .dots .dot.active {
 		opacity: 1;
 	}
+
 	.person-review div:last-child p {
 		width: 80%;
 	}
@@ -1001,6 +1045,7 @@ input:invalid {
 		border-radius: 0;
 		background-color: white;
 	}
+
 	.reserve-btn {
 		width: 88%;
 	}
@@ -1035,4 +1080,5 @@ input:invalid {
 		font-size: 14px;
 	}
 }
+
 /* End Media Queries */
