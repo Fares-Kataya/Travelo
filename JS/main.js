@@ -1,218 +1,244 @@
-
 import { createElement } from './utility.js';
 
-
 function createCard() {
+	let imgNumber = 10;
 
-    let imgNumber = 10
+	const card = createElement('div', ['d-flex', 'flex-column', 'col-3']);
 
-    const card = createElement('div', ['d-flex', 'flex-column', 'col-3'])
+	const carouselExample = createElement('div', [
+		'carousel',
+		'slide',
+		'carouselExampleIndicators',
+	]);
 
-    const carouselExample = createElement('div', ['carousel', 'slide', 'carouselExampleIndicators'])
+	const carouselIndicator = createElement('div', ['carousel-indicators']);
 
-    const carouselIndicator = createElement('div', ['carousel-indicators'])
+	for (let i = 0; i < imgNumber; i++) {
+		const button = createElement('button', ['carousel-indicators'], {
+			type: 'button',
+			'data-bs-target': `#carouselExampleIndicators${i + 1}`,
+			'data-bs-slide-to': `${i}`,
+		});
 
+		if (i == 0) {
+			button.classList.add('active');
+		}
 
-    for (let i = 0; i < imgNumber; i++) {
+		carouselIndicator.appendChild(button);
+	}
 
-        const button = createElement("button", ["carousel-indicators"], {
-            type: "button",
-            "data-bs-target": `#carouselExampleIndicators${i + 1}`,
-            "data-bs-slide-to": `${i}`,
+	carouselExample.appendChild(carouselIndicator);
 
-        });
+	const carouselInner = createElement('div', [
+		'carousel-inner',
+		'position-relative',
+		'card1',
+	]);
 
-        if (i == 0) {
-            button.classList.add("active")
-        }
+	const i = createElement('div', ['fa-solid', 'fa-heart', 'heart']);
 
-        carouselIndicator.appendChild(button)
-    }
+	carouselInner.appendChild(i);
+	for (let i = 0; i < imgNumber; i++) {
+		const carouselItem = createElement('div', ['carousel-item']);
 
-    carouselExample.appendChild(carouselIndicator)
+		if (i == 0) {
+			carouselItem.classList.add('active');
+		}
 
+		const img = createElement('img', ['rounded-3'], {
+			src: ``,
+			alt: `slide_${i + 1}`,
+		});
 
-    const carouselInner = createElement('div', ['carousel-inner', 'position-relative', 'card1'])
+		carouselItem.appendChild(img);
+		carouselInner.appendChild(carouselItem);
+	}
 
-    const i = createElement('div', ['fa-solid', 'fa-heart', 'heart'])
+	let responseNumber = 5;
 
+	const buttonPrev = createElement('button', ['carousel-control-prev'], {
+		type: 'button',
+		'data-bs-target': `#carouselExampleIndicators${k++}`,
+		'data-bs-slide': 'prev',
+	});
 
+	const buttonPrevSpan1 = createElement(
+		'span',
+		['carousel-control-prev-icon'],
+		{
+			'aria-hidden': 'true',
+		}
+	);
 
-    carouselInner.appendChild(i)
-    for (let i = 0; i < imgNumber; i++) {
-        const carouselItem = createElement('div', ['carousel-item'])
+	const buttonPrevSpan2 = createElement(
+		'span',
+		['visually-hidden'],
+		{},
+		'Previous'
+	);
 
-        if (i == 0) {
-            carouselItem.classList.add("active")
-        }
+	buttonPrev.appendChild(buttonPrevSpan1);
+	buttonPrev.appendChild(buttonPrevSpan2);
 
-        const img = createElement('img', ['rounded-3'], {
-            src: ``,
-            alt: `slide_${i + 1}`
-        })
+	const buttonNext = createElement('button', ['carousel-control-next'], {
+		type: 'button',
+		'data-bs-target': `#carouselExampleIndicators${k++}`,
+		'data-bs-slide': 'next',
+	});
 
-        carouselItem.appendChild(img)
-        carouselInner.appendChild(carouselItem)
-    }
+	const buttonNextSpan1 = createElement(
+		'span',
+		['carousel-control-next-icon'],
+		{
+			'aria-hidden': 'true',
+		}
+	);
 
-    let responseNumber = 5
+	const buttonNextSpan2 = createElement(
+		'span',
+		['visually-hidden'],
+		{},
+		'Next'
+	);
 
-    const buttonPrev = createElement('button', ['carousel-control-prev'], {
-        type: "button",
-        "data-bs-target": `#carouselExampleIndicators${k++}`,
-        "data-bs-slide": "prev"
-    })
+	buttonNext.appendChild(buttonNextSpan1);
+	buttonNext.appendChild(buttonNextSpan2);
 
-    const buttonPrevSpan1 = createElement('span', ['carousel-control-prev-icon'], {
-        "aria-hidden": "true"
-    })
+	carouselInner.appendChild(buttonPrev);
+	carouselInner.appendChild(buttonNext);
 
-    const buttonPrevSpan2 = createElement('span', ['visually-hidden'], {}, 'Previous')
+	carouselExample.appendChild(carouselInner);
 
-    buttonPrev.appendChild(buttonPrevSpan1)
-    buttonPrev.appendChild(buttonPrevSpan2)
+	card.appendChild(carouselExample);
 
+	const cardBody = createElement('div', ['row']);
 
+	const PCardBody = createElement('p', [
+		'col-5',
+		'd-inline-block',
+		'mb-0',
+		'fw-bolder',
+	]);
 
-    const buttonNext = createElement('button', ['carousel-control-next'], {
-        type: "button",
-        "data-bs-target": `#carouselExampleIndicators${k++}`,
-        "data-bs-slide": "next"
-    })
+	cardBody.appendChild(PCardBody);
 
-    const buttonNextSpan1 = createElement('span', ['carousel-control-next-icon'], {
-        "aria-hidden": "true"
-    })
+	const RateCardBody = createElement('div', [
+		'd-flex',
+		'flex-row',
+		'col-7',
+		'justify-content-end',
+	]);
 
-    const buttonNextSpan2 = createElement('span', ['visually-hidden'], {}, 'Next')
+	const RateStar = createElement('img', ['img-rate-star'], {
+		src: ``,
+	});
 
-    buttonNext.appendChild(buttonNextSpan1)
-    buttonNext.appendChild(buttonNextSpan2)
+	const RateText = createElement('p', [], {}, ``);
 
-    carouselInner.appendChild(buttonPrev)
-    carouselInner.appendChild(buttonNext)
+	RateCardBody.appendChild(RateStar);
+	RateCardBody.appendChild(RateText);
 
-    carouselExample.appendChild(carouselInner)
+	cardBody.appendChild(RateCardBody);
 
-    card.appendChild(carouselExample)
+	const CardDetails = createElement('div', ['d-flex', 'flex-column', 'mt-n3']);
 
-    const cardBody = createElement('div', ['row'])
+	const CardPlaceName = createElement(
+		'span',
+		['col-12', 'fw-light', 'period'],
+		{},
+		``
+	);
 
+	CardDetails.appendChild(CardPlaceName);
 
-    const PCardBody = createElement('p', ['col-5', 'd-inline-block', 'mb-0', 'fw-bolder'])
+	const CardPlacePeriod = createElement(
+		'span',
+		['col-12', 'fw-light', 'period'],
+		{},
+		``
+	);
 
-    cardBody.appendChild(PCardBody)
+	CardDetails.appendChild(CardPlacePeriod);
 
+	const Price = createElement('div', [
+		'd-flex',
+		'flex-row',
+		'col-12',
+		'justify-content-start',
+	]);
 
-    const RateCardBody = createElement('div', ['d-flex', 'flex-row', 'col-7', 'justify-content-end'])
+	const PriceIcon = createElement('img', ['mt-1'], {
+		src: ``,
+	});
 
-    const RateStar = createElement('img', ['img-rate-star'], {
-        src: ``
-    })
+	Price.appendChild(PriceIcon);
 
-    const RateText = createElement('p', [], {}, ``)
+	const PriceText = createElement('span', [], {}, ``);
 
-    RateCardBody.appendChild(RateStar)
-    RateCardBody.appendChild(RateText)
+	Price.appendChild(PriceText);
 
-    cardBody.appendChild(RateCardBody)
+	const TrapMood = createElement('span', ['ms-1', 'fw-bold'], {}, ``);
 
-    const CardDetails = createElement('div', ['d-flex', 'flex-column', 'mt-n3'])
+	Price.appendChild(TrapMood);
 
-    const CardPlaceName = createElement('span', ['col-12', 'fw-light', 'period'], {}, ``)
+	CardDetails.appendChild(Price);
 
-    CardDetails.appendChild(CardPlaceName)
+	cardBody.appendChild(CardDetails);
 
+	carouselExample.appendChild(cardBody);
 
-    const CardPlacePeriod = createElement('span', ['col-12', 'fw-light', 'period'], {}, ``)
+	const containCard = document.getElementsByClassName('contain-card')[0];
 
-    CardDetails.appendChild(CardPlacePeriod)
-
-    const Price = createElement('div', ['d-flex', 'flex-row', 'col-12', 'justify-content-start'])
-
-    const PriceIcon = createElement('img', ['mt-1'], {
-        src: ``
-    })
-
-    Price.appendChild(PriceIcon)
-
-    const PriceText = createElement('span', [], {
-    }, ``)
-
-    Price.appendChild(PriceText)
-
-    const TrapMood = createElement('span', ['ms-1', 'fw-bold'], {
-    }, ``)
-
-    Price.appendChild(TrapMood)
-
-    CardDetails.appendChild(Price)
-
-    cardBody.appendChild(CardDetails)
-
-    carouselExample.appendChild(cardBody)
-
-    const containCard = document.getElementsByClassName("contain-card")[0]
-
-    containCard.appendChild(carouselExample)
+	containCard.appendChild(carouselExample);
 }
-
 
 import { getData } from './utility.js';
 
 const body = {
-    languageCode: "en",
-    regionCode: "US", 
-    includedTypes: ["restaurant"], 
-    maxResultCount: 15, 
-    locationRestriction: {
-        circle: {
-            center: {
-                latitude: 40.7128, 
-                longitude: -74.0060 
-            },
-            radius: 5000
-        }
-    },
-    rankPreference: 0
+	languageCode: 'en',
+	regionCode: 'US',
+	includedTypes: ['restaurant'],
+	maxResultCount: 15,
+	locationRestriction: {
+		circle: {
+			center: {
+				latitude: 40.7128,
+				longitude: -74.006,
+			},
+			radius: 5000,
+		},
+	},
+	rankPreference: 0,
 };
 
 getData(':searchNearby', 'POST', body)
-    .then((data) => console.log('API Response:', data))
-    .catch((err) => console.error('Fetch Error:', err));
+	.then((data) => console.log('API Response:', data))
+	.catch((err) => console.error('Fetch Error:', err));
 
-
-document.querySelectorAll(".category-item").forEach(item => {
-    item.addEventListener("click", () => {
-        document.querySelectorAll(".category-item").forEach(i => i.classList.remove("active"));
-        item.classList.add("active");
-    });
+document.querySelectorAll('.category-item').forEach((item) => {
+	item.addEventListener('click', () => {
+		document
+			.querySelectorAll('.category-item')
+			.forEach((i) => i.classList.remove('active'));
+		item.classList.add('active');
+	});
 });
 
+// Error in left hand assignment
+// document.getElementById("arrow-right") = function () {
+//     let div1 = document.getElementById("div1");
+//     let div5 = document.getElementById("div5");
 
+//     if (div1 && div5) {
+//         div1.classList.remove("visible");
+//         div1.classList.add("hidden");
 
-document.getElementById("arrow-right") = function () {
-    let div1 = document.getElementById("div1");
-    let div5 = document.getElementById("div5");
-
-    if (div1 && div5) {
-        div1.classList.remove("visible");
-        div1.classList.add("hidden");
-
-        setTimeout(() => {
-            div5.classList.remove("hidden");
-            div5.classList.add("visible");
-        }, 500);
-    }
-}
-
-
-
-
-
-
-
-
+//         setTimeout(() => {
+//             div5.classList.remove("hidden");
+//             div5.classList.add("visible");
+//         }, 500);
+//     }
+// }
 
 // Importin elements from details page
 const imagesDivs = document.querySelectorAll('.images div');
