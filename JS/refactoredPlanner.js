@@ -748,9 +748,9 @@ optBtnsDiv.appendChild(addAccommodationBtn);
 optBtnsDiv.appendChild(addTransportBtn);
 	itineraryOptions.appendChild(optBtnsDiv);
 }
-renderMap(card, placePinedMap){
+// renderMap(card, placePinedMap){
 	
-}
+// }
 
 // async function fetch(){
 // const json = await getData(":searchText", "POST", {
