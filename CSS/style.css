@@ -582,7 +582,65 @@
 	background-color: #f2f1ec;
 	padding-top: 50px;
 	padding-bottom: 80px;
+	position: relative;
 }
+
+.more-to-explore-button-right,
+.more-to-explore-button-left
+{
+	width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+	background: white;
+	position: absolute;
+	transition: 0.3s all ease-in-out;
+}
+
+.more-to-explore-button-right {
+right:0px;
+top: 50%;
+transform: translate(23%);
+}
+
+.more-to-explore-button-left {
+	left:0px;
+	top: 50%;
+	transform: translate(-23%);
+	}
+
+	.more-to-explore-button-right:hover,
+	.more-to-explore-button-left:hover {
+		background-color: #e7e1e1;
+	}
+
+
+	.more-to-explore-container {
+		display: flex;
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		width: 100%;
+	  }
+
+	  	.more-to-explore-container .row {
+		flex-wrap: nowrap; 
+	}
+	  
+	  .more-to-explore-container::-webkit-scrollbar {
+		display: none; 
+	  }
+
+	  
+
+	.more-to-explore-wrapper {
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+	}
+
+
+
+	
 
 footer {
 	background-color: #f2f2f2;
@@ -988,6 +1046,24 @@ input:invalid {
 		background: #888;
 		border-radius: 10px;
 	}
+
+	.more-to-explore-button-right {
+		right: 12px;
+		top: 50%;
+		transform: translate(23%);
+}
+
+.more-to-explore-button-left {
+    left: 10px;
+    top: 50%;
+    transform: translate(-23%);
+}
+
+.more-to-explore-button-right {
+    right: 12px;
+    top: 50%;
+    transform: translate(23%);
+}
 }
 
 @media (max-width: 768px) {
@@ -1025,6 +1101,22 @@ input:invalid {
 	.features li {
 		font-size: 14px;
 	}
+
+.more-to-explore-button-left {
+    left: 10px;
+    top: 50%;
+    transform: translate(-23%);
+}
+
+.more-to-explore-button-right {
+    right: 12px;
+    top: 50%;
+    transform: translate(23%);
+}
+}
+
+@media screen {
+	
 }
 
 /* End Media Queries */
