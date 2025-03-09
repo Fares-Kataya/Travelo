@@ -54,7 +54,6 @@ function createCard() {
 		carouselInner.appendChild(carouselItem);
 	}
 
-	let responseNumber = 5;
 
 	const buttonPrev = createElement('button', ['carousel-control-prev'], {
 		type: 'button',
@@ -309,39 +308,40 @@ let container = document.querySelector(".more-to-explore-wrapper");
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    function scrollCards(direction) {
-        let scrollAmount = container.clientWidth * direction;
-        container.scrollLeft += scrollAmount;
-    }
+	function scrollCards(direction) {
+		let scrollAmount = container.clientWidth * direction;
+		container.scrollLeft += scrollAmount;
+	}
 
-    leftButton.addEventListener("click", () => scrollCards(-1));
-    rightButton.addEventListener("click", () => scrollCards(1));
+	leftButton.addEventListener("click", () => scrollCards(-1));
+	rightButton.addEventListener("click", () => scrollCards(1));
 });
 
 
 function updateButtonsVisibility() {
-    let container = document.querySelector(".more-to-explore-wrapper");
-    let leftButton = document.querySelector(".more-to-explore-button-left");
-    let rightButton = document.querySelector(".more-to-explore-button-right");
+	let container = document.querySelector(".more-to-explore-wrapper");
+	let leftButton = document.querySelector(".more-to-explore-button-left");
+	let rightButton = document.querySelector(".more-to-explore-button-right");
 
-    let scrollLeft = container.scrollLeft;
-    let scrollWidth = container.scrollWidth;
-    let clientWidth = container.clientWidth;
+	let scrollLeft = container.scrollLeft;
+	let scrollWidth = container.scrollWidth;
+	let clientWidth = container.clientWidth;
 
-    if (scrollLeft <= 0) {
-        leftButton.style.display = "none";
-    } else {
-        leftButton.style.display = "block";
-    }
+	if (scrollLeft <= 0) {
+		leftButton.style.display = "none";
+	} else {
+		leftButton.style.display = "block";
+	}
 
-    if (scrollLeft + clientWidth >= scrollWidth) {
-        rightButton.style.display = "none";
-    } else {
-        rightButton.style.display = "block";
-    }
+	if (scrollLeft + clientWidth >= scrollWidth - 1) {
+		rightButton.style.display = "none";
+	} else {
+		rightButton.style.display = "block";
+	}
 }
 document.addEventListener("DOMContentLoaded", updateButtonsVisibility);
 
 container.addEventListener("scroll", updateButtonsVisibility);
 
+let signInButton = document.getElementsByClassName("sign-in")
 
