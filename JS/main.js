@@ -1,3 +1,4 @@
+import { categories } from '../data/categories.js';
 import { createElement } from './utility.js';
 
 function createCard() {
@@ -240,7 +241,7 @@ document.querySelectorAll('.category-item').forEach((item) => {
 //     }
 // }
 
-// Importin elements from details page
+// Importing elements from details page
 const imagesDivs = document.querySelectorAll('.images div');
 const rightArrow = document.querySelector('.images .right');
 const leftArrow = document.querySelector('.images .left');
@@ -249,6 +250,17 @@ const dark = document.querySelector('.dark');
 const close = document.querySelector('.close');
 const paymentForm = document.querySelector('.confirm');
 const reserveBtn = document.getElementById('reserve');
+
+/* Importing elements from landing page */
+// arrows in home page
+let leftButton = document.querySelector('.more-to-explore-button-left');
+let rightButton = document.querySelector('.more-to-explore-button-right');
+let container = document.querySelector('.more-to-explore-wrapper');
+
+// Search controls
+const searchDiv = document.querySelector('.search-form div');
+const searchInput = document.getElementById('search');
+const searchBtn = document.querySelector('.search-btn');
 
 let currentImage = 0;
 function MoveImagesToLeft() {
@@ -286,6 +298,179 @@ function togglePaymentForm() {
 	dark.classList.toggle('active');
 }
 
+function updateButtonsVisibility() {
+	let container = document.querySelector('.more-to-explore-wrapper');
+	let leftButton = document.querySelector('.more-to-explore-button-left');
+	let rightButton = document.querySelector('.more-to-explore-button-right');
+
+	let scrollLeft = container.scrollLeft;
+	let scrollWidth = container.scrollWidth;
+	let clientWidth = container.clientWidth;
+
+	if (scrollLeft <= 0) {
+		leftButton.style.display = 'none';
+	} else {
+		leftButton.style.display = 'block';
+	}
+
+	if (scrollLeft + clientWidth >= scrollWidth) {
+		rightButton.style.display = 'none';
+	} else {
+		rightButton.style.display = 'block';
+	}
+}
+
+/*
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 justify-content-center card-container mt-2">
+                    <div class="">
+                        <div id="carouselExampleIndicators1"
+                            class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
+
+                            <div class="carousel-inner position-relative card1">
+                                <i class="fa-solid fa-heart heart"></i>
+                                <div class="carousel-item active ">
+                                    <img class="rounded-3" src="../Assets/images/olive-garden-restaurant.jpg"
+                                        alt="First slide">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body row">
+                            <p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
+                            <div class="d-flex flex-row col-7 justify-content-end rate-div">
+                                <img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
+                                    class="img-rate-star">
+                                <p class="">4.5</p>
+                            </div>
+                            <div class="d-flex flex-column mt-n3 card-details">
+                                <span class="col-12 fw-light place-name">Resturant </span>
+                                <span class="col-12 fw-light period"> 1 - 6 Mars </span>
+
+                                <div class="d-flex flex-row col-12 justify-content-start">
+                                    <img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
+                                    <span> 1.999</span>
+                                    <span class="ms-1 fw-bold">night</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+*/
+
+// Creating the categories list
+function createCategories() {
+	const categoriesWrapper = createElement('div', ['categories-wrapper']);
+	const categoriesContainer = createElement('div', [
+		'category-container',
+		'container-lg',
+		'container-xl',
+		'text-center',
+		'mt-5',
+		'd-flex',
+	]);
+	const categoriesList = createElement('div', ['category-list', 'm-auto']);
+
+	// categories are imported form categories.js file in data directory
+	categories.map((item) => {
+		// creating each div for each category in the list depending on its data
+		const categoryItem = createElement('div', ['category-item']);
+		const iconHTML = item.icon;
+		const p = createElement('p', [], {}, item.name);
+		categoryItem.innerHTML = iconHTML;
+		categoryItem.appendChild(p);
+		categoriesList.appendChild(categoryItem);
+	});
+
+	categoriesContainer.appendChild(categoriesList);
+	categoriesWrapper.appendChild(categoriesContainer);
+
+	return categoriesWrapper; // return the wrapper node
+}
+
+function createSearchItem(name, img, rate, type, price) {
+	let html = `
+		<div class="col-12 col-md-3 card-container mt-2">
+                    <div class="">
+                        <div id="carouselExampleIndicators1"
+                            class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
+
+                            <div class="carousel-inner position-relative card1">
+                                <i class="fa-solid fa-heart heart"></i>
+                                <div class="carousel-item active ">
+                                    <img class="rounded-3" src=${img}
+                                        alt=${name}>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body row">
+                            <p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
+                            <div class="d-flex flex-row col-7 justify-content-end rate-div">
+                                <img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
+                                    class="img-rate-star">
+                                <p class="">${rate}</p>
+                            </div>
+                            <div class="d-flex flex-column mt-n3 card-details">
+                                <span class="col-12 fw-light place-name">${type}</span>
+                                <span class="col-12 fw-light period"> 1 - 6 Mars </span>
+
+                                <div class="d-flex flex-row col-12 justify-content-start">
+                                    <img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
+                                    <span>${price}</span>
+                                    <span class="ms-1 fw-bold">night</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+	`;
+	return html;
+}
+// The div to be inserted into the body to show the search result
+let div;
+
+// Show the search result
+function showSearch() {
+	if (!div) {
+		div = createElement('div', ['show-search', 'overflow-scroll-y']);
+		const wrapper = createCategories();
+		div.appendChild(wrapper);
+		let content = createElement('div', ['p-3']);
+		div.appendChild(content);
+		let row = createElement('div', ['row']);
+		let item = createSearchItem(
+			'Alexandria day trip from cairo',
+			'../Assets/images/olive-garden-restaurant.jpg',
+			4.5,
+			'Restaurant',
+			3000
+		);
+		row.innerHTML += item;
+		row.innerHTML += item;
+		row.innerHTML += item;
+		row.innerHTML += item;
+		row.innerHTML += item;
+		row.innerHTML += item;
+		row.innerHTML += item;
+		content.appendChild(row);
+	}
+
+	if (!searchDiv.classList.contains('active')) {
+		searchDiv.classList.add('active');
+		dark.classList.add('active');
+		document.body.appendChild(div);
+	}
+}
+
+// Hide the search result
+function hideSearch() {
+	document.body.removeChild(div);
+	dark.classList.remove('active');
+	searchDiv.classList.remove('active');
+}
+
 if (imagesDivs && rightArrow && leftArrow && dots) {
 	rightArrow.addEventListener('click', MoveImagesToLeft);
 	leftArrow.addEventListener('click', MoveImagesToRight);
@@ -300,49 +485,25 @@ if (close && dark) {
 	dark.addEventListener('click', togglePaymentForm);
 }
 
-
-
-// arrows in home page
-let leftButton = document.querySelector(".more-to-explore-button-left");
-let rightButton = document.querySelector(".more-to-explore-button-right");
-let container = document.querySelector(".more-to-explore-wrapper");
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    function scrollCards(direction) {
-        let scrollAmount = container.clientWidth * direction;
-        container.scrollLeft += scrollAmount;
-    }
-
-    leftButton.addEventListener("click", () => scrollCards(-1));
-    rightButton.addEventListener("click", () => scrollCards(1));
-});
-
-
-function updateButtonsVisibility() {
-    let container = document.querySelector(".more-to-explore-wrapper");
-    let leftButton = document.querySelector(".more-to-explore-button-left");
-    let rightButton = document.querySelector(".more-to-explore-button-right");
-
-    let scrollLeft = container.scrollLeft;
-    let scrollWidth = container.scrollWidth;
-    let clientWidth = container.clientWidth;
-
-    if (scrollLeft <= 0) {
-        leftButton.style.display = "none";
-    } else {
-        leftButton.style.display = "block";
-    }
-
-    if (scrollLeft + clientWidth >= scrollWidth) {
-        rightButton.style.display = "none";
-    } else {
-        rightButton.style.display = "block";
-    }
+if (dark && searchDiv) {
+	dark.addEventListener('click', hideSearch);
+}
+if (container) {
+	container.addEventListener('scroll', updateButtonsVisibility);
 }
 
-document.addEventListener("DOMContentLoaded", updateButtonsVisibility);
+if (searchInput) {
+	searchInput.addEventListener('focus', showSearch);
+}
 
-container.addEventListener("scroll", updateButtonsVisibility);
+document.addEventListener('DOMContentLoaded', function () {
+	function scrollCards(direction) {
+		let scrollAmount = container.clientWidth * direction;
+		container.scrollLeft += scrollAmount;
+	}
 
+	leftButton.addEventListener('click', () => scrollCards(-1));
+	rightButton.addEventListener('click', () => scrollCards(1));
+});
 
+document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
