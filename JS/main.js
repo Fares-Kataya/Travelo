@@ -340,7 +340,6 @@ function updateButtonsVisibility() {
         rightButton.style.display = "block";
     }
 }
-
 document.addEventListener("DOMContentLoaded", updateButtonsVisibility);
 
 container.addEventListener("scroll", updateButtonsVisibility);
