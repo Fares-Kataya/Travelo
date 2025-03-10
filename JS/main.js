@@ -444,7 +444,6 @@ function createSearchItem(name, img, rate, type, price) {
 // The div to be inserted into the body to show the search result
 let div;
 
-createCard();
 // Show the search result
 function showSearch() {
 	if (!div) {
