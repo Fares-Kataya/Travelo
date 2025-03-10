@@ -1,8 +1,3 @@
-window.addEventListener('load', () => {
-	loadHeaderFooter('header-container', '../HTML/header.html');
-	loadHeaderFooter('footer-container', '../HTML/footer.html');
-});
-
 /**
  * Fetches data from the server using the Fetch API.
  * @param {String} url - The endpoint to be appended to the base API URL (e.g., ":searchNearby").
@@ -12,7 +7,7 @@ window.addEventListener('load', () => {
  */
 export async function getData(
 	url,
-	method = "GET",
+	method = 'GET',
 	body = {},
 	customheaders = {}
 ) {
@@ -21,16 +16,16 @@ export async function getData(
 		const options = {
 			method,
 			headers: {
-				"x-rapidapi-key": "9bc60aca4dmsh266b3af491c2b5dp1040c9jsn037bf8803753",
-				"x-rapidapi-host": "google-map-places-new-v2.p.rapidapi.com",
-				"Content-Type": "application/json",
-				"X-Goog-FieldMask": "*",
+				'x-rapidapi-key': '9bc60aca4dmsh266b3af491c2b5dp1040c9jsn037bf8803753',
+				'x-rapidapi-host': 'google-map-places-new-v2.p.rapidapi.com',
+				'Content-Type': 'application/json',
+				'X-Goog-FieldMask': '*',
 				...customheaders,
 			},
 		};
 
-		if (body && ["POST"].includes(method)) {
-			options["body"] = JSON.stringify(body);
+		if (body && ['POST'].includes(method)) {
+			options['body'] = JSON.stringify(body);
 		}
 
 		const response = await fetch(
@@ -59,10 +54,10 @@ export function createElement(
 	elementName,
 	classes = [],
 	attributes = {},
-	text = ""
+	text = ''
 ) {
-	if (!elementName.trim() && typeof element !== "string") {
-		throw new Error("The element name should be a non-empty string");
+	if (!elementName.trim() && typeof element !== 'string') {
+		throw new Error('The element name should be a non-empty string');
 	}
 	const element = document.createElement(elementName);
 
@@ -88,13 +83,16 @@ export function createElement(
  * @param {string} elementID - The ID of the DOM element where the content will be loaded.
  * @param {string} filePath - The path to the HTML file to load.
  */
-export function loadHeaderFooter(elementID, filePath) {
-     fetch(filePath)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById(elementID).innerHTML = data;
-        })
-        .catch(error => console.error("Error loading component:", error));
+export async function loadHeaderFooter(filePath) {
+	// fetch(filePath)
+	// 	.then((response) => response.text())
+	// 	.then((data) => {
+	// 		document.getElementById(elementID).innerHTML = data;
+	// 	})
+	// 	.catch((error) => console.error('Error loading component:', error));
+
+	let res = await fetch(filePath);
+	return await res.text();
 }
 /**
  * Loads data from local storage.
@@ -104,16 +102,16 @@ export function loadHeaderFooter(elementID, filePath) {
  * @returns {*} The parsed data from local storage, or the default value.
  */
 export function loadFromLocalStorage(key, defaultValue = null) {
-  try {
-    const storedData = localStorage.getItem(key);
-    if (storedData === null) {
-      return defaultValue;
-    }
-    return JSON.parse(storedData);
-  } catch (error) {
-    console.error(`Error loading local storage key "${key}":`, error);
-    return defaultValue;
-  }
+	try {
+		const storedData = localStorage.getItem(key);
+		if (storedData === null) {
+			return defaultValue;
+		}
+		return JSON.parse(storedData);
+	} catch (error) {
+		console.error(`Error loading local storage key "${key}":`, error);
+		return defaultValue;
+	}
 }
 /**
  * Toggles the active/inactive classes between two buttons or elements.
@@ -122,27 +120,26 @@ export function loadFromLocalStorage(key, defaultValue = null) {
  * @param {HTMLElement} inactiveBtn - The element to be set as inactive.
  */
 export function toggleActive(activeBtn, inactiveBtn) {
-  activeBtn.classList.add("active-date");
-  activeBtn.classList.remove("inactive-date");
-  inactiveBtn.classList.add("inactive-date");
-  inactiveBtn.classList.remove("active-date");
+	activeBtn.classList.add('active-date');
+	activeBtn.classList.remove('inactive-date');
+	inactiveBtn.classList.add('inactive-date');
+	inactiveBtn.classList.remove('active-date');
 }
 
-<<<<<<< HEAD
 export function createModal(config, classlist, attributes) {
 	//main Modal Container
-	const modal = createElement("div", classlist, attributes);
+	const modal = createElement('div', classlist, attributes);
 	// header Container
-	const header = createElement("div", ["modal-header"]);
+	const header = createElement('div', ['modal-header']);
 
 	if (config.header && config.header.title) {
-		const title = createElement("h2", [], {}, config.header.title);
+		const title = createElement('h2', [], {}, config.header.title);
 		header.appendChild(title);
 	}
 	if (config.header.closeBtn) {
-		const closeBtn = createElement("span", ["close"], {}, "X");
-		closeBtn.addEventListener("click", () => {
-			if (typeof config.header.onClose === "function") {
+		const closeBtn = createElement('span', ['close'], {}, 'X');
+		closeBtn.addEventListener('click', () => {
+			if (typeof config.header.onClose === 'function') {
 				config.header.onClose();
 			}
 		});
@@ -154,15 +151,15 @@ export function createModal(config, classlist, attributes) {
 				? btnConfig.classes
 				: [];
 			const btnAttr =
-				typeof btnConfig.attributes === "object" ? btnConfig.attributes : {};
+				typeof btnConfig.attributes === 'object' ? btnConfig.attributes : {};
 			const button = createElement(
-				"button",
+				'button',
 				btnClasses,
 				btnAttr,
 				btnConfig.text
 			);
-			if (typeof btnConfig.onClick === "function") {
-				button.addEventListener("click", btnConfig.onClick);
+			if (typeof btnConfig.onClick === 'function') {
+				button.addEventListener('click', btnConfig.onClick);
 			}
 			config.header.buttonsContainer.appendChild(button);
 		});
@@ -171,13 +168,13 @@ export function createModal(config, classlist, attributes) {
 	modal.appendChild(header);
 
 	// body Container
-	const body = createElement("div", ["modal-body"], { id: "trip" });
+	const body = createElement('div', ['modal-body'], { id: 'trip' });
 	let modalContentWrapper;
 	if (config.contentWrapper) {
-		modalContentWrapper = createElement("div", ["content"]);
+		modalContentWrapper = createElement('div', ['content']);
 	}
 	config.body.forEach((div) => {
-		if (typeof div === "string") {
+		if (typeof div === 'string') {
 			body.innerHTML += div;
 		} else if (div instanceof HTMLElement) {
 			body.appendChild(div);
@@ -186,22 +183,22 @@ export function createModal(config, classlist, attributes) {
 	modalContentWrapper.appendChild(body);
 
 	//footer Container
-	const footer = createElement("div", ["modal-footer"]);
+	const footer = createElement('div', ['modal-footer']);
 	if (config.footer && Array.isArray(config.footer.buttons)) {
 		config.footer.buttons.forEach((btnConfig) => {
 			const btnClasses = Array.isArray(btnConfig.classes)
 				? btnConfig.classes
 				: [];
 			const btnAttr =
-				typeof btnConfig.attributes === "object" ? btnConfig.attributes : {};
+				typeof btnConfig.attributes === 'object' ? btnConfig.attributes : {};
 			const button = createElement(
-				"button",
+				'button',
 				btnClasses,
 				btnAttr,
 				btnConfig.text
 			);
-			if (typeof btnConfig.onClick === "function") {
-				button.addEventListener("click", btnConfig.onClick);
+			if (typeof btnConfig.onClick === 'function') {
+				button.addEventListener('click', btnConfig.onClick);
 			}
 			config.footer.buttonsContainer.appendChild(button);
 		});
@@ -212,26 +209,25 @@ export function createModal(config, classlist, attributes) {
 	return modal;
 }
 export function createInput(type, id, placeholder) {
-		if (type === "textarea") {
-			return createElement("textarea", ["trip-in"], {
-				id: id,
-				placeholder: placeholder,
-			});
-		}
-		if (type === "date") {
-			return createElement("input", ["trip-in", "date-in"], {
-				type: type,
-				id: id,
-				placeholder: placeholder,
-			});
-		}
-		return createElement("input", ["trip-in"], {
+	if (type === 'textarea') {
+		return createElement('textarea', ['trip-in'], {
+			id: id,
+			placeholder: placeholder,
+		});
+	}
+	if (type === 'date') {
+		return createElement('input', ['trip-in', 'date-in'], {
 			type: type,
 			id: id,
 			placeholder: placeholder,
 		});
 	}
-=======
+	return createElement('input', ['trip-in'], {
+		type: type,
+		id: id,
+		placeholder: placeholder,
+	});
+}
 /**
  * This Class used to generate an object of the body of the request
  * that should be sent with the Google places API request
@@ -348,4 +344,3 @@ export class RequestBody {
 		return this.rankPreference;
 	}
 }
->>>>>>> feature/search-input

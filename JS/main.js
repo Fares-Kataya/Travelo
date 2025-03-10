@@ -1,5 +1,15 @@
 import { categories } from '../data/categories.js';
-import { createElement, RequestBody } from './utility.js';
+import { createElement, loadHeaderFooter, RequestBody } from './utility.js';
+
+// Loading header and footer
+loadHeaderFooter('../HTML/header.html').then((data) => {
+	document.getElementById('header-container').innerHTML = data;
+	const header = document.getElementById('header-container').childNodes[0];
+});
+loadHeaderFooter('../HTML/footer.html').then((data) => {
+	document.getElementById('footer-container').innerHTML = data;
+	const footer = document.getElementById('footer-container').childNodes[0];
+});
 
 // Importing elements from details page
 const imagesDivs = document.querySelectorAll('.images div');
@@ -321,28 +331,6 @@ function loadDots() {
 function togglePaymentForm() {
 	paymentForm.classList.toggle('active');
 	dark.classList.toggle('active');
-}
-
-function updateButtonsVisibility() {
-	let container = document.querySelector('.more-to-explore-wrapper');
-	let leftButton = document.querySelector('.more-to-explore-button-left');
-	let rightButton = document.querySelector('.more-to-explore-button-right');
-
-	let scrollLeft = container.scrollLeft;
-	let scrollWidth = container.scrollWidth;
-	let clientWidth = container.clientWidth;
-
-	if (scrollLeft <= 0) {
-		leftButton.style.display = 'none';
-	} else {
-		leftButton.style.display = 'block';
-	}
-
-	if (scrollLeft + clientWidth >= scrollWidth) {
-		rightButton.style.display = 'none';
-	} else {
-		rightButton.style.display = 'block';
-	}
 }
 
 /*
