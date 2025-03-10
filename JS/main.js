@@ -1,22 +1,25 @@
 import { createElement } from './utility.js';
-
+let indicatorsCounter = 0
 function createCard() {
+	indicatorsCounter++
 	let imgNumber = 10;
 
-	const card = createElement('div', ['d-flex', 'flex-column', 'col-3']);
+	const card = createElement('div', ['d-flex', 'flex-column', 'col-12', 'col-md-6', 'col-lg-4', 'col-xl-3', 'justify-content-center', 'card-container', 'mt-2']);
 
 	const carouselExample = createElement('div', [
 		'carousel',
 		'slide',
 		'carouselExampleIndicators',
-	]);
+	], {
+		id: `carouselExampleIndicators${indicatorsCounter}`
+	});
 
 	const carouselIndicator = createElement('div', ['carousel-indicators']);
 
 	for (let i = 0; i < imgNumber; i++) {
 		const button = createElement('button', ['carousel-indicators'], {
 			type: 'button',
-			'data-bs-target': `#carouselExampleIndicators${i + 1}`,
+			'data-bs-target': `#carouselExampleIndicators${indicatorsCounter}`,
 			'data-bs-slide-to': `${i}`,
 		});
 
@@ -54,10 +57,9 @@ function createCard() {
 		carouselInner.appendChild(carouselItem);
 	}
 
-
 	const buttonPrev = createElement('button', ['carousel-control-prev'], {
 		type: 'button',
-		'data-bs-target': `#carouselExampleIndicators${k++}`,
+		'data-bs-target': `#carouselExampleIndicators${indicatorsCounter}`,
 		'data-bs-slide': 'prev',
 	});
 
@@ -110,7 +112,7 @@ function createCard() {
 
 	card.appendChild(carouselExample);
 
-	const cardBody = createElement('div', ['row']);
+	const cardBody = createElement('div', ['row', 'card-body']);
 
 	const PCardBody = createElement('p', [
 		'col-5',
@@ -339,9 +341,9 @@ function updateButtonsVisibility() {
 		rightButton.style.display = "block";
 	}
 }
+
 document.addEventListener("DOMContentLoaded", updateButtonsVisibility);
 
 container.addEventListener("scroll", updateButtonsVisibility);
 
-let signInButton = document.getElementsByClassName("sign-in")
 
