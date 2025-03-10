@@ -1,6 +1,28 @@
 import { categories } from '../data/categories.js';
-import { createElement } from './utility.js';
+import { createElement, RequestBody } from './utility.js';
 
+// Importing elements from details page
+const imagesDivs = document.querySelectorAll('.images div');
+const rightArrow = document.querySelector('.images .right');
+const leftArrow = document.querySelector('.images .left');
+const dots = document.querySelector('.dots');
+const dark = document.querySelector('.dark');
+const close = document.querySelector('.close');
+const paymentForm = document.querySelector('.confirm');
+const reserveBtn = document.getElementById('reserve');
+
+/* Importing elements from landing page */
+// arrows in home page
+let leftButton = document.querySelector('.more-to-explore-button-left');
+let rightButton = document.querySelector('.more-to-explore-button-right');
+let container = document.querySelector('.more-to-explore-wrapper');
+
+// Search controls
+const searchDiv = document.querySelector('.search-form div');
+const searchInput = document.getElementById('search');
+const searchBtn = document.querySelector('.search-btn');
+
+// Create Cards showed in the search result
 function createCard() {
 	let imgNumber = 10;
 
@@ -47,13 +69,14 @@ function createCard() {
 		}
 
 		const img = createElement('img', ['rounded-3'], {
-			src: ``,
+			src: `../Assets/images/olive-garden-restaurant.jpg`,
 			alt: `slide_${i + 1}`,
 		});
 
 		carouselItem.appendChild(img);
 		carouselInner.appendChild(carouselItem);
 	}
+	let k = 0;
 
 	let responseNumber = 5;
 
@@ -188,33 +211,33 @@ function createCard() {
 
 	carouselExample.appendChild(cardBody);
 
-	const containCard = document.getElementsByClassName('contain-card')[0];
+	// const containCard = document.getElementsByClassName('contain-card')[0];
+	const containCard = createElement('div', ['contain-card']);
 
 	containCard.appendChild(carouselExample);
+	document.body.appendChild(containCard);
 }
 
-import { getData } from './utility.js';
+// const body = {
+// 	languageCode: 'en',
+// 	regionCode: 'US',
+// 	includedTypes: ['restaurant'],
+// 	maxResultCount: 15,
+// 	locationRestriction: {
+// 		circle: {
+// 			center: {
+// 				latitude: 40.7128,
+// 				longitude: -74.006,
+// 			},
+// 			radius: 5000,
+// 		},
+// 	},
+// 	rankPreference: 0,
+// };
 
-const body = {
-	languageCode: 'en',
-	regionCode: 'US',
-	includedTypes: ['restaurant'],
-	maxResultCount: 15,
-	locationRestriction: {
-		circle: {
-			center: {
-				latitude: 40.7128,
-				longitude: -74.006,
-			},
-			radius: 5000,
-		},
-	},
-	rankPreference: 0,
-};
-
-getData(':searchNearby', 'POST', body)
-	.then((data) => console.log('API Response:', data))
-	.catch((err) => console.error('Fetch Error:', err));
+// getData(':searchNearby', 'POST', body)
+// 	.then((data) => console.log('API Response:', data))
+// 	.catch((err) => console.log('Fetch Error:', err));
 
 document.querySelectorAll('.category-item').forEach((item) => {
 	item.addEventListener('click', () => {
@@ -225,62 +248,51 @@ document.querySelectorAll('.category-item').forEach((item) => {
 	});
 });
 
-// Error in left hand assignment
-// document.getElementById("arrow-right") = function () {
-//     let div1 = document.getElementById("div1");
-//     let div5 = document.getElementById("div5");
+/*
+Error in left hand assignment
+document.getElementById("arrow-right") = function () {
+    let div1 = document.getElementById("div1");
+    let div5 = document.getElementById("div5");
 
-//     if (div1 && div5) {
-//         div1.classList.remove("visible");
-//         div1.classList.add("hidden");
+    if (div1 && div5) {
+        div1.classList.remove("visible");
+        div1.classList.add("hidden");
 
-//         setTimeout(() => {
-//             div5.classList.remove("hidden");
-//             div5.classList.add("visible");
-//         }, 500);
-//     }
-// }
-
-// Importing elements from details page
-const imagesDivs = document.querySelectorAll('.images div');
-const rightArrow = document.querySelector('.images .right');
-const leftArrow = document.querySelector('.images .left');
-const dots = document.querySelector('.dots');
-const dark = document.querySelector('.dark');
-const close = document.querySelector('.close');
-const paymentForm = document.querySelector('.confirm');
-const reserveBtn = document.getElementById('reserve');
-
-/* Importing elements from landing page */
-// arrows in home page
-let leftButton = document.querySelector('.more-to-explore-button-left');
-let rightButton = document.querySelector('.more-to-explore-button-right');
-let container = document.querySelector('.more-to-explore-wrapper');
-
-// Search controls
-const searchDiv = document.querySelector('.search-form div');
-const searchInput = document.getElementById('search');
-const searchBtn = document.querySelector('.search-btn');
+        setTimeout(() => {
+            div5.classList.remove("hidden");
+            div5.classList.add("visible");
+        }, 500);
+    }
+}
+*/
 
 let currentImage = 0;
+
+// Move the images of a place to left in details page
 function MoveImagesToLeft() {
 	if (currentImage + 1 < imagesDivs.length) {
 		imagesDivs[currentImage].classList.remove('active');
 		imagesDivs[currentImage].classList.add('inActive');
 		imagesDivs[++currentImage].classList.add('active');
+
+		// Refresh the dots at the bottom of the carousel
 		loadDots();
 	}
 }
 
+// Move the images of a place to right in details page
 function MoveImagesToRight() {
 	if (currentImage > 0) {
 		imagesDivs[currentImage].classList.remove('active');
 		imagesDivs[--currentImage].classList.remove('inActive');
 		imagesDivs[currentImage].classList.add('active');
+
+		// Refresh the dots at the bottom of the carousel
 		loadDots();
 	}
 }
 
+// Set the dots at the bottom of the carousel according to the number of images
 function loadDots() {
 	dots.innerHTML = '';
 	imagesDivs.forEach((div, index) => {
@@ -293,6 +305,7 @@ function loadDots() {
 	});
 }
 
+// Show/Hide the payment form in the details page
 function togglePaymentForm() {
 	paymentForm.classList.toggle('active');
 	dark.classList.toggle('active');
@@ -431,6 +444,7 @@ function createSearchItem(name, img, rate, type, price) {
 // The div to be inserted into the body to show the search result
 let div;
 
+createCard();
 // Show the search result
 function showSearch() {
 	if (!div) {
@@ -470,6 +484,13 @@ function hideSearch() {
 	dark.classList.remove('active');
 	searchDiv.classList.remove('active');
 }
+
+/**
+ * Handle the event listeners below
+ * CAUTION: This js file is being used inside different pages
+ * so it's better to use if conditions to check for the element
+ * if it exists or not before adding the event listenerto avoid errors
+ */
 
 if (imagesDivs && rightArrow && leftArrow && dots) {
 	rightArrow.addEventListener('click', MoveImagesToLeft);

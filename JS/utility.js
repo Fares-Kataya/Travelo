@@ -66,7 +66,7 @@ export function createElement(
 	}
 	const element = document.createElement(elementName);
 
-	if (attributes && typeof attributes === 'Object') {
+	if (attributes && typeof attributes === 'object') {
 		for (let key in attributes) {
 			element.setAttribute(key, attributes[key]);
 		}
@@ -126,4 +126,121 @@ export function toggleActive(activeBtn, inactiveBtn) {
 	activeBtn.classList.remove('inactive-date');
 	inactiveBtn.classList.add('inactive-date');
 	inactiveBtn.classList.remove('active-date');
+}
+
+/**
+ * This Class used to generate an object of the body of the request
+ * that should be sent with the Google places API request
+ */
+export class RequestBody {
+	constructor(
+		region,
+		types = ['restaurant', 'hotel', 'park'],
+		resultCount = 50,
+		lat = 40.7128,
+		long = -74.006,
+		radius = 5000,
+		preference = 0
+	) {
+		this.languageCode = 'en';
+		this.regionCode = region || '';
+		this.includedTypes = Array.isArray(types) ? [...types] : [];
+		this.maxResultCount =
+			typeof resultCount === 'number' && resultCount > 0 ? resultCount : 50;
+		this.locationRestriction = {
+			circle: {
+				center: {
+					latitude: typeof lat === 'number' ? lat : 40.7128,
+					longitude: typeof long === 'number' ? long : -74.006,
+				},
+				radius: typeof radius === 'number' && radius >= 1000 ? radius : 5000,
+			},
+		};
+		this.rankPreference = preference;
+	}
+
+	setRegion(reg) {
+		try {
+			if (typeof reg === 'string') {
+				this.regionCode = reg;
+			} else {
+				throw new Error('Region should be string');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	getRegion() {
+		return this.regionCode;
+	}
+
+	setTypes(types) {
+		try {
+			if (Array.isArray(types)) {
+				this.includedTypes = [...types];
+			} else {
+				throw new Error('Types should be an array');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	getTypes() {
+		return this.includedTypes;
+	}
+
+	setResultCount(count) {
+		try {
+			if (typeof count === 'number' && count > 0) {
+				this.maxResultCount = count;
+			} else {
+				throw new Error('The count should be bigger than 0 and type of number');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	getResultCount() {
+		return this.maxResultCount;
+	}
+
+	setLocation(lat, long, radius = this.locationRestriction.circle.radius) {
+		try {
+			if (typeof lat !== 'number') {
+				throw new Error('the latitude should be a number');
+			}
+			if (typeof long !== 'number') {
+				throw new Error('the longitude should be a number');
+			}
+			if (typeof radius !== 'number' && radius >= 1000) {
+				throw new Error('the longitude should be a number');
+			}
+			this.locationRestriction = {
+				circle: {
+					center: {
+						latitude: lat,
+						longitude: long,
+					},
+					radius: radius,
+				},
+			};
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	getLocation() {
+		return this.locationRestriction;
+	}
+
+	setPreference(preference) {
+		this.rankPreference = preference;
+	}
+
+	getPreference() {
+		return this.rankPreference;
+	}
 }
