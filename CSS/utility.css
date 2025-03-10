@@ -72,6 +72,10 @@ img {
 	background: #555;
 }
 
+.overflow-scroll-y {
+	overflow-y: scroll;
+}
+
 /* Start Favourite Button */
 .favourite {
 	width: 35px;
