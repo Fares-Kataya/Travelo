@@ -23,33 +23,32 @@ document.addEventListener('DOMContentLoaded', function () {
 		addTrip(trip, false);
 	});
 	document
-		.getElementById('tripbtn')
-		.addEventListener('click', () => new TripModal());
-	getData(':autocomplete', 'POST', {
-		input: 'santiago',
-		locationBias: {
-			circle: {
-				center: {
-					latitude: 30.0443879,
-					longitude: 31.2357257,
-				},
-				radius: 10000,
-			},
-		},
-		includedPrimaryTypes: [],
-		includedRegionCodes: ['EG'],
-		languageCode: '',
-		regionCode: '',
-		origin: {
-			latitude: 0,
-			longitude: 0,
-		},
-		inputOffset: 0,
-		includeQueryPredictions: true,
-		sessionToken: '',
-	})
-		.then((data) => console.log(data))
-		.catch((err) => console.error(err));
+		.getElementById("tripbtn")
+		.addEventListener("click", () => new TripModal());
+	// getData(":autocomplete", "POST", {
+	// 	input: 'santiago',
+	// 	locationBias: {
+	// 		circle: {
+	// 			center: {
+	// 				latitude: 30.0443879,
+	// 				longitude: 31.2357257
+	// 			},
+	// 			radius: 10000
+	// 		}
+	// 	},
+	// 	includedPrimaryTypes: [],
+	// 	includedRegionCodes: ["EG"],
+	// 	languageCode: '',
+	// 	regionCode: '',
+	// 	origin: {
+	// 		latitude: 0,
+	// 		longitude: 0
+	// 	},
+	// 	inputOffset: 0,
+	// 	includeQueryPredictions: true,
+	// 	sessionToken: ''
+	// }).then(data => console.log(data))
+	// 	.catch(err => console.error(err));
 });
 
 class TripModal {
@@ -582,30 +581,30 @@ function addTrip(trip) {
 				cardContainer.style.removeProperty('width');
 				cardContainer.style.removeProperty('height');
 
-				const itinerary = tripCard.querySelector('#itinerary-Container');
-				if (itinerary) itinerary.style.display = 'none';
-				flexContainer.style.height = '150%';
-				document.querySelectorAll('.card').forEach((c) => {
-					c.style.display = 'flex';
-				});
-				arrow.classList.remove('hide');
-				arrow.classList.add('show');
-			}
-		};
-		const expandAnimation = () => {
-			if (currentWidth < containerMaxWidth) {
-				currentWidth += 20;
-				currentHeight += 10;
-				tripCard.style.width = currentWidth + 'px';
-				tripCard.style.height = currentHeight + 'px';
-				cardContainer.style.width = currentWidth + 'px';
-				requestAnimationFrame(expandAnimation);
-			} else {
-				flexContainer.style.width = '100%';
-				flexContainer.style.height = '200%';
-				renderItinerary(tripCard);
-			}
-		};
+    const itinerary = tripCard.querySelector("#itinerary-Container");
+    if (itinerary) itinerary.style.display = "none";
+    flexContainer.style.height = "150%";
+    document.querySelectorAll(".card").forEach((c) => {
+      c.style.display = "flex";
+    });
+    arrow.classList.remove("hide");
+    arrow.classList.add("show");
+  }
+};
+  const expandAnimation = () => {
+    if (currentWidth < containerMaxWidth) {
+      currentWidth += 20;
+      currentHeight += 10;
+      tripCard.style.width = currentWidth + "px";
+      tripCard.style.height = currentHeight + "px";
+      cardContainer.style.width = currentWidth + "px";
+      requestAnimationFrame(expandAnimation);
+    } else {
+      flexContainer.style.width = "100%";
+      flexContainer.style.height = "200%";
+		renderItinerary(tripCard);
+    }
+  };
 
 		if (tripCard.classList.contains('active-card')) {
 			tripCard.classList.remove('active-card');
@@ -675,8 +674,8 @@ function renderItinerary(card) {
 		fromDate = new Date(fromYear, fromMonth, fromDay);
 		toDate = new Date(toYear, toMonth, toDay);
 		console.log(toDate);
-		let diffMs = toDate - fromDate;
-		diffDays = diffMs / (1000 * 60 * 60 * 24);
+	let diffMs = (toDate - fromDate) + 1;
+	diffDays = diffMs / (1000 * 60 * 60 * 24);
 	}
 	if (!card.querySelector('#itinerary-Container')) {
 		var flexContainer = createElement('div', ['Container'], {
@@ -685,12 +684,9 @@ function renderItinerary(card) {
 	} else {
 		card.querySelector('#itinerary-Container').style.display = 'flex';
 	}
-	let itineraryDetails = createElement('div', ['container'], {
-		id: 'itinerary-Details',
-	});
-	let placesPinedMap = createElement('div', ['container'], {
-		id: 'placesPinedMap',
-	});
+	let itineraryDetails = createElement('div', ["container"], { id: "itinerary-Details" });
+	let placesPinedMap = createElement('div', ["container"], { id: "placesPinedMap" });
+	renderMap(card, placePinedMap);
 	flexContainer.appendChild(itineraryDetails);
 	const daysContainer = createElement('div', ['container'], {
 		id: 'daysContainer',
@@ -698,31 +694,25 @@ function renderItinerary(card) {
 	let dayDiv;
 	let addItineraryBtn;
 	for (let i = 0; i < diffDays; i++) {
+		let dayHeader
+		let dispDate = new Date(fromDate)
+
 		if (!fromDate && !toDate) {
-			dayDiv = createElement('div', ['container', 'daysDivs', 'dayFlex'], {
-				id: `day${i + 1}`,
-			});
-			const dayHeader = createElement(
-				'h3',
-				['daysHeader'],
-				{ id: `day${i + 1}-header` },
-				`Day${i + 1}`
-			);
-			const timnelineDiv = createElement('div', ['timelineDiv'], {
-				id: 'timeline',
-			});
-			addItineraryBtn = createElement(
-				'button',
-				['addItinerary'],
-				{ id: `addItineraryBtn${i + 1}` },
-				'+'
-			);
+			dayDiv = createElement('div', ["container","daysDivs", "dayFlex"], { id: `day${i+1}` });
+			dayHeader = createElement("h3", ["daysHeader"], { id: `day${i + 1}-header` }, `Day${i + 1}`);
+		} else {
+			dayDiv = createElement('div', ["container", "daysDivs", "dayFlex"], { id: `day${i + 1}` });
+			dispDate.setDate(fromDate.getDate() + i)
+			dayHeader = createElement("h3", ["daysHeader"], { id: `day${i + 1}-header` }, dispDate.toDateString());
+		}
+			const timnelineDiv = createElement("div", ["timelineDiv"], { id: "timeline" });
+			addItineraryBtn = createElement("button",["addItinerary"], { id: `addItineraryBtn${i+1}` }, '+');
 			dayDiv.appendChild(dayHeader);
 			dayDiv.appendChild(timnelineDiv);
 			dayDiv.appendChild(addItineraryBtn);
 			dayDiv.appendChild(createElement('hr'));
 			daysContainer.appendChild(dayDiv);
-		}
+
 	}
 	itineraryDetails.appendChild(daysContainer);
 	flexContainer.appendChild(placesPinedMap);
@@ -751,41 +741,24 @@ function renderItinerary(card) {
 			itineraryOptions.classList.remove('expand');
 		});
 	});
-	const img = createElement('img', ['OptIcon'], {
-		src: '../Assets/icons/house_16203341.png',
-	});
-	const addActivityBtn = createElement(
-		'button',
-		['it-option'],
-		{ id: 'activityOpt' },
-		'Add Activity'
-	);
-	const addRestaurantBtn = createElement(
-		'button',
-		['it-option'],
-		{ id: 'restaurantOpt' },
-		'Add Restaurant'
-	);
-	const addAccommodationBtn = createElement(
-		'button',
-		['it-option'],
-		{ id: 'accomodationOpt' },
-		'Add Accommodation'
-	);
-	const addTransportBtn = createElement(
-		'button',
-		['it-option'],
-		{ id: 'transportationOpt' },
-		'Add Transportation'
-	);
-	addAccommodationBtn.appendChild(img);
-	const optBtnsDiv = createElement('div', [], { id: 'it-option' });
-	optBtnsDiv.appendChild(addActivityBtn);
-	optBtnsDiv.appendChild(addRestaurantBtn);
-	optBtnsDiv.appendChild(addAccommodationBtn);
-	optBtnsDiv.appendChild(addTransportBtn);
+	const accImg = createElement("img",["OptIcon"], {src: "../Assets/icons/house_16203341.png"});
+	const toDoImg = createElement("img",["OptIcon"], {src: "../Assets/icons/address-location-icon.svg"});
+	const addActivityBtn = createElement("button", ["it-option"], {id: "activityOpt"}, "Things to Do");
+	const addRestaurantBtn = createElement("button", ["it-option"], {id: "restaurantOpt"}, "Food & Drinks");
+const addAccommodationBtn = createElement("button", ["it-option"], {id: "accomodationOpt"}, "Accommodation");
+	const addTransportBtn = createElement("button", ["it-option"], { id: "transportationOpt" }, "Transportation");
+	addAccommodationBtn.appendChild(accImg);
+	addActivityBtn.appendChild(toDoImg);
+	const optBtnsDiv = createElement("div", [], { id: "it-option" });
+optBtnsDiv.appendChild(addActivityBtn);
+optBtnsDiv.appendChild(addRestaurantBtn);	
+optBtnsDiv.appendChild(addAccommodationBtn);
+optBtnsDiv.appendChild(addTransportBtn);
 	itineraryOptions.appendChild(optBtnsDiv);
 }
+// renderMap(card, placePinedMap){
+	
+// }
 
 // async function fetch(){
 // const json = await getData(":searchText", "POST", {
