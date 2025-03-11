@@ -16,7 +16,7 @@ export async function getData(
 		const options = {
 			method,
 			headers: {
-				'x-rapidapi-key': '9bc60aca4dmsh266b3af491c2b5dp1040c9jsn037bf8803753',
+				'x-rapidapi-key': '06c97ba8fbmshcc2f2887477377ep182d49jsn9f11b9aadd19',
 				'x-rapidapi-host': 'google-map-places-new-v2.p.rapidapi.com',
 				'Content-Type': 'application/json',
 				'X-Goog-FieldMask': '*',
@@ -41,6 +41,24 @@ export async function getData(
 		console.error(error.message);
 		throw error;
 	}
+}
+
+/**
+ * This function is used to delay a callback function passed to it as a parameter
+ * (usually used with getData method while being used in search)
+ * @param {Function} callBack
+ * @param {number} delay
+ * @returns new function that delays the callback function
+ */
+export function debounce(callBack, delay = 1000) {
+	let timeout;
+
+	return (...args) => {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			callBack(...args);
+		}, delay);
+	};
 }
 
 /**
@@ -228,6 +246,56 @@ export function createInput(type, id, placeholder) {
 		placeholder: placeholder,
 	});
 }
+
+/**
+ * Extracts important data from the API response object.
+ * @param {Object} obj API response object
+ * @returns {Promise<Object>} A new object with the needed data
+ */
+export async function createObj(obj) {
+	let newObj = {
+		name: obj?.displayName?.text || '',
+		allowsDogs: obj?.allowsDogs || false,
+		currentOpeningHours: obj?.currentOpeningHours || {},
+		openNow: obj?.regularOpeningHours?.openNow || false,
+		periods: obj?.regularOpeningHours?.periods || [],
+		weekdayDescriptions: obj?.regularOpeningHours?.weekdayDescriptions || [],
+		formattedAddress: obj?.formattedAddress || '',
+		id: obj?.id || null,
+		location: obj?.location || {},
+		details: obj?.name || '',
+		parkingOptions: obj?.parkingOptions || {},
+		type: obj?.primaryType || '',
+		rating: obj?.rating || 0,
+		reviews: obj?.reviews || [],
+		userRatingCount: obj?.userRatingCount || 0,
+		photos: [],
+	};
+
+	if (obj?.photos?.length > 0) {
+		const photosRequest = obj.photos
+			.slice(0, 1)
+			.map(async (endPoint, index) => {
+				try {
+					const data = await getData(
+						`/${endPoint.name.slice(
+							endPoint.name.indexOf('/') + 1
+						)}/media?maxWidthPx=400&maxHeightPx=400&skipHttpRedirect=true`
+					);
+
+					return { id: index + 1, src: data.photoUri };
+				} catch (error) {
+					console.log(error);
+					return null;
+				}
+			});
+
+		const photos = await Promise.all(photosRequest); // Resolves all the promises in the photosRequest array (it's an Array of promises)
+		newObj.photos = photos.filter(Boolean); // Removes the null values
+	}
+	return newObj;
+}
+
 /**
  * This Class used to generate an object of the body of the request
  * that should be sent with the Google places API request
@@ -235,10 +303,10 @@ export function createInput(type, id, placeholder) {
 export class RequestBody {
 	constructor(
 		region,
-		types = ['restaurant', 'hotel', 'park'],
-		resultCount = 50,
-		lat = 40.7128,
-		long = -74.006,
+		types = ['restaurant', 'hotel', 'park', 'beach'],
+		resultCount = 1,
+		lat = 30.059482,
+		long = 31.299664,
 		radius = 5000,
 		preference = 0
 	) {
@@ -250,8 +318,8 @@ export class RequestBody {
 		this.locationRestriction = {
 			circle: {
 				center: {
-					latitude: typeof lat === 'number' ? lat : 40.7128,
-					longitude: typeof long === 'number' ? long : -74.006,
+					latitude: typeof lat === 'number' ? lat : 30.059482,
+					longitude: typeof long === 'number' ? long : 31.299664,
 				},
 				radius: typeof radius === 'number' && radius >= 1000 ? radius : 5000,
 			},

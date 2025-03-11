@@ -1,5 +1,11 @@
 import { categories } from '../data/categories.js';
-import { createElement, loadHeaderFooter, RequestBody } from './utility.js';
+import {
+	createElement,
+	createObj,
+	getData,
+	loadHeaderFooter,
+	RequestBody,
+} from './utility.js';
 
 // Loading header and footer
 loadHeaderFooter('../HTML/header.html').then((data) => {
@@ -34,9 +40,8 @@ const searchBtn = document.querySelector('.search-btn');
 
 // Create Cards showed in the search result
 let indicatorsCounter = 0;
-function createCard() {
+function createCard(name, images, rate, period, price) {
 	indicatorsCounter++;
-	let imgNumber = 10;
 
 	const card = createElement('div', [
 		'd-flex',
@@ -52,7 +57,20 @@ function createCard() {
 
 	const carouselExample = createElement(
 		'div',
-		['carousel', 'slide', 'carouselExampleIndicators'],
+		[
+			'carousel',
+			'slide',
+			'carouselExampleIndicators',
+			'd-flex',
+			'flex-column',
+			'col-12',
+			'col-md-6',
+			'col-lg-4',
+			'col-xl-3',
+			'justify-content-center',
+			'card-container',
+			'mt-2',
+		],
 		{
 			id: `carouselExampleIndicators${indicatorsCounter}`,
 		}
@@ -60,21 +78,21 @@ function createCard() {
 
 	const carouselIndicator = createElement('div', ['carousel-indicators']);
 
-	for (let i = 0; i < imgNumber; i++) {
-		const button = createElement('button', ['carousel-indicators'], {
+	// for (let i = 0; i < images.length; i++) {
+	images.map((image, index) => {
+		const button = createElement('button', [], {
 			type: 'button',
 			'data-bs-target': `#carouselExampleIndicators${indicatorsCounter}`,
-			'data-bs-slide-to': `${i}`,
+			'data-bs-slide-to': `${index}`,
 		});
 
-		if (i == 0) {
+		if (index == 0) {
 			button.classList.add('active');
 		}
 
 		carouselIndicator.appendChild(button);
-	}
-
-	carouselExample.appendChild(carouselIndicator);
+	});
+	// }
 
 	const carouselInner = createElement('div', [
 		'carousel-inner',
@@ -85,22 +103,23 @@ function createCard() {
 	const i = createElement('div', ['fa-solid', 'fa-heart', 'heart']);
 
 	carouselInner.appendChild(i);
-	for (let i = 0; i < imgNumber; i++) {
+	// for (let i = 0; i < images.length; i++) {
+	images.map((image, index) => {
 		const carouselItem = createElement('div', ['carousel-item']);
 
-		if (i == 0) {
+		if (index == 0) {
 			carouselItem.classList.add('active');
 		}
 
 		const img = createElement('img', ['rounded-3'], {
-			src: `../Assets/images/olive-garden-restaurant.jpg`,
-			alt: `slide_${i + 1}`,
+			src: image.src,
+			alt: `slide_${index + 1}`,
 		});
 
 		carouselItem.appendChild(img);
 		carouselInner.appendChild(carouselItem);
-	}
-	let k = 0;
+	});
+	// }
 
 	const buttonPrev = createElement('button', ['carousel-control-prev'], {
 		type: 'button',
@@ -128,7 +147,7 @@ function createCard() {
 
 	const buttonNext = createElement('button', ['carousel-control-next'], {
 		type: 'button',
-		'data-bs-target': `#carouselExampleIndicators${k++}`,
+		'data-bs-target': `#carouselExampleIndicators${indicatorsCounter}`,
 		'data-bs-slide': 'next',
 	});
 
@@ -152,19 +171,20 @@ function createCard() {
 
 	carouselInner.appendChild(buttonPrev);
 	carouselInner.appendChild(buttonNext);
+	carouselInner.appendChild(carouselIndicator);
 
 	carouselExample.appendChild(carouselInner);
 
 	card.appendChild(carouselExample);
 
-	const cardBody = createElement('div', ['row', 'card-body']);
+	const cardBody = createElement('div', ['row', 'card-body', 'w-100']);
 
-	const PCardBody = createElement('p', [
-		'col-5',
-		'd-inline-block',
-		'mb-0',
-		'fw-bolder',
-	]);
+	const PCardBody = createElement(
+		'p',
+		['col-5', 'd-inline-block', 'mb-0', 'fw-bolder'],
+		{},
+		name
+	);
 
 	cardBody.appendChild(PCardBody);
 
@@ -176,10 +196,10 @@ function createCard() {
 	]);
 
 	const RateStar = createElement('img', ['img-rate-star'], {
-		src: ``,
+		src: `../Assets/images/star-icon-vector-removebg-preview.png`,
 	});
 
-	const RateText = createElement('p', [], {}, ``);
+	const RateText = createElement('p', [], {}, rate);
 
 	RateCardBody.appendChild(RateStar);
 	RateCardBody.appendChild(RateText);
@@ -188,20 +208,20 @@ function createCard() {
 
 	const CardDetails = createElement('div', ['d-flex', 'flex-column', 'mt-n3']);
 
-	const CardPlaceName = createElement(
-		'span',
-		['col-12', 'fw-light', 'period'],
-		{},
-		``
-	);
+	// const CardPlaceName = createElement(
+	// 	'span',
+	// 	['col-12', 'fw-light', 'period'],
+	// 	{},
+	// 	name
+	// );
 
-	CardDetails.appendChild(CardPlaceName);
+	// CardDetails.appendChild(CardPlaceName);
 
 	const CardPlacePeriod = createElement(
 		'span',
 		['col-12', 'fw-light', 'period'],
 		{},
-		``
+		period
 	);
 
 	CardDetails.appendChild(CardPlacePeriod);
@@ -213,13 +233,13 @@ function createCard() {
 		'justify-content-start',
 	]);
 
-	const PriceIcon = createElement('img', ['mt-1'], {
-		src: ``,
-	});
+	// const PriceIcon = createElement('img', ['mt-1'], {
+	// 	src: ``,
+	// });
 
-	Price.appendChild(PriceIcon);
+	// Price.appendChild(PriceIcon);
 
-	const PriceText = createElement('span', [], {}, ``);
+	const PriceText = createElement('span', [], {}, `${price} $` || '');
 
 	Price.appendChild(PriceText);
 
@@ -234,10 +254,11 @@ function createCard() {
 	carouselExample.appendChild(cardBody);
 
 	// const containCard = document.getElementsByClassName('contain-card')[0];
-	const containCard = createElement('div', ['contain-card']);
+	// const containCard = createElement('div', ['contain-card']);
 
-	containCard.appendChild(carouselExample);
-	document.body.appendChild(containCard);
+	// containCard.appendChild(carouselExample);
+	// document.body.appendChild(containCard);
+	return carouselExample;
 }
 
 // const body = {
@@ -269,24 +290,6 @@ document.querySelectorAll('.category-item').forEach((item) => {
 		item.classList.add('active');
 	});
 });
-
-/*
-Error in left hand assignment
-document.getElementById("arrow-right") = function () {
-    let div1 = document.getElementById("div1");
-    let div5 = document.getElementById("div5");
-
-    if (div1 && div5) {
-        div1.classList.remove("visible");
-        div1.classList.add("hidden");
-
-        setTimeout(() => {
-            div5.classList.remove("hidden");
-            div5.classList.add("visible");
-        }, 500);
-    }
-}
-*/
 
 let currentImage = 0;
 
@@ -333,44 +336,6 @@ function togglePaymentForm() {
 	dark.classList.toggle('active');
 }
 
-/*
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 justify-content-center card-container mt-2">
-                    <div class="">
-                        <div id="carouselExampleIndicators1"
-                            class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
-
-                            <div class="carousel-inner position-relative card1">
-                                <i class="fa-solid fa-heart heart"></i>
-                                <div class="carousel-item active ">
-                                    <img class="rounded-3" src="../Assets/images/olive-garden-restaurant.jpg"
-                                        alt="First slide">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-body row">
-                            <p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
-                            <div class="d-flex flex-row col-7 justify-content-end rate-div">
-                                <img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
-                                    class="img-rate-star">
-                                <p class="">4.5</p>
-                            </div>
-                            <div class="d-flex flex-column mt-n3 card-details">
-                                <span class="col-12 fw-light place-name">Resturant </span>
-                                <span class="col-12 fw-light period"> 1 - 6 Mars </span>
-
-                                <div class="d-flex flex-row col-12 justify-content-start">
-                                    <img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
-                                    <span> 1.999</span>
-                                    <span class="ms-1 fw-bold">night</span>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-*/
-
 // Creating the categories list
 function createCategories() {
 	const categoriesWrapper = createElement('div', ['categories-wrapper']);
@@ -401,46 +366,56 @@ function createCategories() {
 	return categoriesWrapper; // return the wrapper node
 }
 
-function createSearchItem(name, img, rate, type, price) {
-	let html = `
-		<div class="col-12 col-md-3 card-container mt-2">
-                    <div class="">
-                        <div id="carouselExampleIndicators1"
-                            class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
+let placesData;
+function initializeSearchResult() {
+	const body = new RequestBody('eg');
+	let loading = true;
+	if (!placesData) {
+		getData(':searchNearby', 'POST', { ...body })
+			.then((data) => {
+				placesData = data.places;
+				console.log(placesData);
+				let newData = [];
+				placesData.forEach(async (place) => {
+					let obj = await createObj(place);
+					newData.push(obj);
+				});
+				console.log(newData);
+				loading = false;
+			})
+			.catch((error) => {
+				loading = false;
+				console.log(error);
+			});
+	}
 
-                            <div class="carousel-inner position-relative card1">
-                                <i class="fa-solid fa-heart heart"></i>
-                                <div class="carousel-item active ">
-                                    <img class="rounded-3" src=${img}
-                                        alt=${name}>
-                                </div>
-                            </div>
-                        </div>
+	// let row = createElement('div', ['row']);
 
-                        <div class="card-body row">
-                            <p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
-                            <div class="d-flex flex-row col-7 justify-content-end rate-div">
-                                <img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
-                                    class="img-rate-star">
-                                <p class="">${rate}</p>
-                            </div>
-                            <div class="d-flex flex-column mt-n3 card-details">
-                                <span class="col-12 fw-light place-name">${type}</span>
-                                <span class="col-12 fw-light period"> 1 - 6 Mars </span>
-
-                                <div class="d-flex flex-row col-12 justify-content-start">
-                                    <img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
-                                    <span>${price}</span>
-                                    <span class="ms-1 fw-bold">night</span>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-	`;
-	return html;
+	// let card1 = createCard(
+	// 	'Alex',
+	// 	[
+	// 		{ src: '../Assets/images/olive-garden-restaurant.jpg' },
+	// 		{ src: '../Assets/images/olive-garden-restaurant.jpg' },
+	// 	],
+	// 	4,
+	// 	'1 - 4 Days',
+	// 	1000
+	// );
+	// let card2 = createCard(
+	// 	'Alex',
+	// 	[
+	// 		{ src: '../Assets/images/olive-garden-restaurant.jpg' },
+	// 		{ src: '../Assets/images/olive-garden-restaurant.jpg' },
+	// 	],
+	// 	3,
+	// 	'2 - 5 Days',
+	// 	4000
+	// );
+	// row.appendChild(card1);
+	// row.appendChild(card2);
+	// return row;
 }
+
 // The div to be inserted into the body to show the search result
 let div;
 
@@ -452,22 +427,9 @@ function showSearch() {
 		div.appendChild(wrapper);
 		let content = createElement('div', ['p-3']);
 		div.appendChild(content);
-		let row = createElement('div', ['row']);
-		let item = createSearchItem(
-			'Alexandria day trip from cairo',
-			'../Assets/images/olive-garden-restaurant.jpg',
-			4.5,
-			'Restaurant',
-			3000
-		);
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		content.appendChild(row);
+
+		initializeSearchResult();
+		// content.appendChild(row);
 	}
 
 	if (!searchDiv.classList.contains('active')) {
