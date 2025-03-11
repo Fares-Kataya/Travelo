@@ -1,428 +1,478 @@
-import { createElement, loadHeaderFooter } from "../JS/utility.js";
-document.addEventListener("DOMContentLoaded", function () {
+import {
+	createElement,
+	loadHeaderFooter,
+	toggleActive,
+	loadFromLocalStorage,
+	getData,
+	createModal,
+	createInput,
+} from "../JS/utility.js";
+import { setupDestinationMap } from "../JS/Map.js";
+import {
+	setupDateModal,
+	dateDivFromModal,
+	resetDateDivFromModal,
+	startCalDate,
+	endCalDate,
+} from "../JS/Calendar.js";
+document.addEventListener("DOMContentLoaded", loadPage);
+initEvents();
+
+function loadPage() {
 	loadHeaderFooter("header-container", "../HTML/header.html");
 	loadHeaderFooter("footer-container", "../HTML/footer.html");
-	let tripBtn = document.getElementById("tripbtn");
-	tripBtn.addEventListener("click", openTripModal);
-	function openTripModal() {
-		let overlay = createElement("div", ["overlay"]);
-		let modal = createElement("div", ["custom-modal"]);
+	let count = parseInt(loadFromLocalStorage("count")) || 0;
+	let planned_Trips = loadFromLocalStorage("planned-Trips") || [];
+	for (let i = 0; i < count; i++) {
+		planned_Trips.push(loadFromLocalStorage(`planned-Trips ${i}`));
+	}
+	planned_Trips.forEach((trip) => {
+		addTrip(trip);
+	});
+}
+function initEvents() {
+	document.querySelector("#tripbtn").addEventListener("click", createTrip);
+	document.addEventListener("keydown", keyPress);
+	document.body.addEventListener("click", function (e) {
+		if (e.target && e.target.id === "add-Date") {
+			setupDateModal(document.querySelector(".overlay"));
+		}
+	});
+}
+function createTrip() {
+	const overlay = createElement("div", ["overlay"]);
+	const tripDetails = createElement("div", ["container"], {
+		id: "tripdetails",
+	});
+	let dateInput = createElement("div", ["date-input-container"], {});
+	dateInput.append(
+		createInput("date", "start-date", "Start Date"),
+		createInput("date", "end-date", "End Date")
+	);
+	tripDetails.append(
+		createElement("label", [], {}, "Trip Name"),
+		createInput("text", "name", "eg., Summer Vacation in Egypt"),
+		createElement("label", [], {}, "Destination"),
+		createInput("text", "Dest", "Destination"),
+		createElement("label", [], {}, "Description"),
+		createInput("textarea", "Desc", "Description"),
+		createElement("label", [], {}, "Date"),
+		dateInput,
+		createElement("button", [], { id: "add-Date" }, "+ Add dates/days")
+	);
+	let optionBtns = createElement("div", ["option-btns"]);
+	let previewDiv = createElement("div", ["preview"], { id: "preview" });
+	const modalConfig = {
+		header: {
+			title: "Create a New Trip",
+			closeBtn: true,
+			onClose: close,
+		},
+		contentWrapper: true,
+		body: [tripDetails, previewDiv],
+		contentWrapper: true,
+		footer: {
+			buttonsContainer: optionBtns,
+			buttons: [
+				{
+					text: "Clear",
+					classes: ["btn", "clear"],
+					attributes: { id: "clear" },
+					onClick: clear,
+				},
+				{
+					text: "Save",
+					classes: ["btn", "apply"],
+					attributes: { id: "apply" },
+					onClick: () => {
+						save({
+							name: modalConfig.body[0].childNodes[1].value,
+							dest: modalConfig.body[0].childNodes[3].value,
+							desc: modalConfig.body[0].childNodes[5].value,
+							startDate: document.getElementById("start-date").value || startCalDate,
+							endDate: document.getElementById("end-date").value || endCalDate,
+						});
+					},
+				},
+			],
+		},
+	};
 
-		let header = createElement("h2", [], {}, "Create a New Trip");
-		modal.appendChild(header);
-
-		let tripContainer = createElement("div", [], { id: "trip" });
-		modal.appendChild(tripContainer);
-		let tripDetails = createElement("div", ["container"], {
-			id: "tripdetails",
-		});
-		tripContainer.appendChild(tripDetails);
-
-		let tripNameLabel = createElement("label", [], {}, "Trip Name");
-		tripDetails.appendChild(tripNameLabel);
-		let tripNameInput = createElement("input", ["trip-in"], {
-			type: "text",
-			placeholder: "eg., Summer Vacation in Egypt",
-			id: "name",
-		});
-		tripDetails.appendChild(tripNameInput);
-
-		let destinationLabel = createElement("label", [], {}, "Destination");
-		tripDetails.appendChild(destinationLabel);
-		let destinationInput = createElement("input", ["trip-in"], {
-			type: "text",
-			id: "Dest",
-		});
-		tripDetails.appendChild(destinationInput);
-
-		let descriptionLabel = createElement("label", [], {}, "Description");
-		tripDetails.appendChild(descriptionLabel);
-		let descriptionTextarea = createElement(
-			"textarea",
-			["trip-in", "form-control"],
-			{
-				id: "Desc",
-			}
-		);
-		tripDetails.appendChild(descriptionTextarea);
-
-		let addDateButton = createElement(
-			"button",
-			[],
-			{ id: "add-Date" },
-			"+ Add dates/days"
-		);
-		tripDetails.appendChild(addDateButton);
-
-		let createTripButton = createElement(
-			"button",
-			[],
-			{ id: "createbtn" },
-			"Create Trip"
-		);
-		tripDetails.appendChild(createTripButton);
-
-		let closeModalButton = createElement(
-			"button",
-			[],
-			{ id: "closeModal" },
-			"X"
-		);
-		modal.appendChild(closeModalButton);
-
-		overlay.appendChild(modal);
-		document.body.appendChild(overlay);
-
-		let closeModal = document.getElementById("closeModal");
-		closeModal.addEventListener("click", () => {
+	const modalElement = createModal(modalConfig, ["custom-modal"]);
+	setupDestinationMap(modalElement.querySelector("#Dest"));
+	overlay.appendChild(modalElement);
+	document.body.appendChild(overlay);
+}
+function clear() {
+	document.querySelector("#name").value = "";
+	document.querySelector("#Desc").value = "";
+	document.querySelector("#Dest").value = "";
+	document.querySelector("#start-date").value = "";
+	document.querySelector("#end-date").value = "";
+}
+function save(trip) {
+	addTrip(trip);
+	let count = parseInt(loadFromLocalStorage("count")) || 0;
+	count++;
+	localStorage.setItem(`count`, count.toString());
+	close();
+}
+function close() {
+	const modal = document.querySelector(".custom-modal");
+	if (modal.parentElement.classList[0] === "overlay") {
+		modal.parentElement.remove();
+		modal.remove();
+	} else {
+		modal.remove();
+	}
+}
+function keyPress(e) {
+	if (e.key === "Escape") {
+		let dateModal = document.querySelector(".date-modal");
+		let mainModal = document.querySelector(".custom-modal");
+		let overlay = document.querySelector(".overlay");
+		if (dateModal) {
+			overlay.removeChild(dateModal);
+		} else if (mainModal) {
 			document.body.removeChild(overlay);
-		});
-		setupTripCreation(overlay,addDateButton);
-		setupDestinationMap();
-		setupDateModal(overlay, addDateButton);
-		document.addEventListener("keydown", keyPress);
+		}
 	}
-	function keyPress(e) {
-		if (e.key === "Escape") {
-			let dateModal = document.querySelector(".date-modal");
-			let mainModal = document.querySelector(".custom-modal");
-			let overlay = document.querySelector(".overlay");
-			if (dateModal) {
-				overlay.removeChild(dateModal);
-			} else if (mainModal) {
-				document.body.removeChild(overlay);
+}
+function addTrip(trip) {
+	const placeholder = document.getElementById("empty");
+	if (placeholder) placeholder.style.display = "none";
+	const tripCard = buildTripCard(trip);
+	setupTripCardAnimation(tripCard);
+	appendTripCard(tripCard);
+	saveTripToLocalStorage(trip);
+}
+function buildTripCard(trip) {
+	const tripCard = createElement(
+		"div",
+		["card", "trip-card", "inactive-card"],
+		{}
+	);
+	const details = createElement("div", ["card-img-overlay"], { id: "details" });
+	details.appendChild(createElement("h2", [], {}, trip.name));
+	const location = createElement("div", [], { id: "location" });
+	location.appendChild(
+		createElement("img", [], {
+			id: "pinpoint",
+			src: "../Assets/icons/pinpoint-svgrepo-com.svg",
+		})
+	);
+	location.appendChild(createElement("h6", [], {}, trip.dest));
+	const date = createElement("div", [], { id: "date" });
+	date.appendChild(
+		createElement("img", [], {
+			id: "pinpoint",
+			src: "../Assets/icons/calendar.png",
+		})
+	);
+	console.log("first");
+	let daysPara = dateDivFromModal;
+	console.log(trip.startDate);
+	const dateText = daysPara
+		? daysPara.childNodes[1].textContent
+		: `${trip.startDate} - ${trip.endDate}`;
+	date.appendChild(
+		createElement("h6", [], trip.daysPara ? { id: "days-para" } : {}, dateText)
+	);
+	resetDateDivFromModal();
+	details.appendChild(location);
+	details.appendChild(date);
+	details.appendChild(createElement("p", [], {}, trip.desc));
+	details.appendChild(
+		createElement("img", ["arrowDown", "hide"], {
+			id: "arrowDown",
+			src: "../Assets/icons/back-svgrepo-com.svg",
+			style: "",
+		})
+	);
+	const destImg = createElement("img", ["card-img", "img-fluid", "rounded-4"], {
+		id: "destImg",
+	});
+	tripCard.appendChild(imageSelector(trip.dest, destImg));
+	tripCard.appendChild(details);
+
+	return tripCard;
+}
+
+function setupTripCardAnimation(tripCard) {
+	let originalWidth, originalHeight, detailsOriginalHeight;
+
+	tripCard.addEventListener("click", (event) => {
+		if (event.target.closest("#itinerary-Container")) return;
+
+		document.querySelectorAll(".card").forEach((c) => {
+			if (c !== tripCard) c.style.display = "none";
+		});
+		const arrow = tripCard.querySelector(".arrowDown");
+		toggleArrow(arrow, false);
+
+		const cardContainer = tripCard.parentElement;
+		const flexContainer = cardContainer.parentElement;
+		let currentWidth = tripCard.offsetWidth;
+		let currentHeight = tripCard.offsetHeight;
+		const containerMaxWidth = flexContainer.offsetWidth;
+
+		if (!originalWidth) {
+			originalWidth = currentWidth;
+			originalHeight = currentHeight;
+			const computedStyle = window.getComputedStyle(tripCard);
+			if (computedStyle.height !== "auto") {
+				originalHeight = parseInt(computedStyle.height);
 			}
+			const detailsDiv = tripCard.querySelector("#details");
+			const detailsComputedStyle = window.getComputedStyle(detailsDiv);
+			detailsOriginalHeight =
+				detailsComputedStyle.height !== "auto"
+					? parseInt(detailsComputedStyle.height)
+					: detailsDiv.offsetHeight;
 		}
-	}
-	function setupTripCreation(overlay) {
-		let name = document.getElementById("name");
-		let description = document.getElementById("Desc");
-		let destination = document.getElementById("Dest");
-		let addTrip = document.getElementById("createbtn");
-		let trips = document.getElementById("planned-Trips");
-		let placeholder = document.getElementById("empty");
-		addTrip.addEventListener("click", () => {
-			if (placeholder) placeholder.style.display = "none";
-			let tripCard = createElement("div", ["card"], { id: "trip-card" });
-			let title = createElement("h2", [], {}, name.value);
-			let location = createElement("div", [], { id: "location" });
-			let details = createElement("div", ["card-img-overlay"], {
-				id: "details",
-			});
-			let imgDiv = createElement("div", ["image-fade"]);
-			let pinpoint = createElement("img", [], {
-				id: "pinpoint",
-				src: "../Assets/icons/pinpoint-svgrepo-com.svg",
-			});
-			let destImg = createElement(
-				"img",
-				["card-img", "img-fluid", "rounded-4"],
-				{ id: "destImg" }
-			);
-			let dest = createElement("h6", [], {}, destination.value);
-			let desc = createElement("p", [], {}, description.value);
-			imageSelector(dest, destImg);
-			details.appendChild(title);
-			location.appendChild(pinpoint);
-			location.appendChild(dest);
-			details.appendChild(location);
-			details.appendChild(desc);
-			tripCard.appendChild(destImg);
-			tripCard.appendChild(details);
-			trips.appendChild(tripCard);
-			document.body.removeChild(overlay);
-		});
-	}
-	function setupDestinationMap() {
-		let map;
-		let destination = document.getElementById("Dest");
-		destination.addEventListener("input", function () {
-			let destVal = destination.value.trim();
-			fetch(
-				`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-					destVal
-				)}&format=json`
-			)
-				.then((response) => response.json())
-				.then((data) => {
-					if (data && data.length > 0) {
-						let lat = data[0].lat;
-						let lon = data[0].lon;
-						let trip = document.getElementById("trip");
-						let mapDiv = document.getElementById("map");
-						if (!mapDiv) {
-							mapDiv = document.createElement("div");
-							mapDiv.id = "map";
-							trip.appendChild(mapDiv);
-						}
-						if (!map) {
-							map = L.map(mapDiv).setView([lat, lon], 10);
-							L.tileLayer(
-								"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-								{
-									attribution: "&copy; OpenStreetMap contributors",
-								}
-							).addTo(map);
-						} else {
-							map.setView([lat, lon], 10);
-						}
-						L.marker([lat, lon]).addTo(map).bindPopup(destVal).openPopup();
-					} else {
-						alert("Location not found. Please try another destination.");
-					}
-				});
-		});
-	}
-	function setupDateModal(overlay, addDate) {
-		addDate.addEventListener("click", function () {
-			let dateModal = createElement("div", ["date-modal", "container"], {});
-			let header = createElement("h2", [], {}, "Add dates or Trip Length");
-			let dateOptions = createElement("div", ["container"], {
-				id: "date-options",
-			});
-			let datesButton = createElement(
-				"button",
-				["active-date"],
-				{ id: "datesBtn" },
-				"Dates(MM/DD)"
-			);
-			let tripLengthButton = createElement(
-				"button",
-				["inactive-date"],
-				{ id: "tripLenBtn" },
-				"Trip Length"
-			);
-			let buttonsDiv = createElement("div", ["container"], {
-				id: "date-options-buttons",
-			});
-			buttonsDiv.appendChild(datesButton);
-			buttonsDiv.appendChild(tripLengthButton);
-
-			let actionBtn = createElement("div", ["action-btns"]);
-			let clearBtn = createElement(
-				"button",
-				["clear"],
-				{ id: "clear" },
-				"Clear"
-			);
-			let applyBtn = createElement(
-				"button",
-				["apply"],
-				{ id: "apply" },
-				"Apply"
-			);
-			actionBtn.appendChild(clearBtn);
-			actionBtn.appendChild(applyBtn);
-			tripLengthButton.addEventListener("click", () => {
-				datesButton.classList.remove("active-date");
-				datesButton.classList.add("inactive-date");
-				tripLengthButton.classList.remove("inactive-date");
-				tripLengthButton.classList.add("active-date");
-				dateModal.removeChild(dateModal.querySelector("#weekdays"));
-				dateModal.removeChild(dateModal.querySelector("#monthDays"));
-				dateModal.removeChild(dateModal.querySelector("#months"));
-				dateModal.removeChild(hr);
-				dateModal.removeChild(dateModal.querySelector(".action-btns"));
-				let TLcontainer = createElement("div", ["container"], {
-					id: "tripLengthContainer",
-				});
-				let plusButton = createElement("button", ["tripLenBtn"], {}, "+");
-				let minusButton = createElement("button", ["tripLenBtn"], {}, "-");
-				let TLheader = createElement("h5", [], {}, "Number of Days");
-				let pmDays = createElement("div", [], { id: "pmDays" });
-				let daysContainer = createElement("div", [], { id: "daysContainer" });
-				let days = createElement("p", [], {}, "0");
-				let dateDiv = createElement("div", [], { id: "date" });
-
-				plusButton.addEventListener("click", () => {
-					days.textContent = parseInt(days.textContent) + 1;
-				});
-				minusButton.addEventListener("click", () => {
-					if (days.textContent > 0) {
-						days.textContent = parseInt(days.textContent) - 1;
-					}
-				});
-				daysContainer.appendChild(days);
-				pmDays.appendChild(minusButton);
-				pmDays.appendChild(daysContainer);
-				pmDays.appendChild(plusButton);
-				TLcontainer.appendChild(TLheader);
-				TLcontainer.appendChild(pmDays);
-				dateModal.appendChild(TLcontainer);
-				dateModal.appendChild(actionBtn);
-				applyBtn.addEventListener("click", function () {
-					let dayCount = days.textContent;
-					let calIcon = createElement("img", [], {
-						id: "calendar-icon",
-						src: "../Assets/icons/calendar.png",
-					});
-					let tripLengthPara = createElement("p", [], {}, `${dayCount} days`);
-					dateDiv.appendChild(calIcon);
-					dateDiv.appendChild(tripLengthPara);
-					let currentDateModal = document.querySelector(".date-modal");
-					if (currentDateModal) {
-						currentDateModal.classList.remove("open");
-						setTimeout(() => {
-							if (currentDateModal.parentNode) {
-								currentDateModal.parentNode.removeChild(currentDateModal);
-							}
-						}, 300);
-					}
-				});
-			});
-
-			dateOptions.appendChild(header);
-			dateOptions.appendChild(buttonsDiv);
-			dateModal.appendChild(dateOptions);
-			let monthsDiv = createElement("div", [], { id: "months" });
-			let backImg = createElement("img", [], {
-				src: "../Assets/icons/back-svgrepo-com.svg",
-			});
-			let backButton = createElement("button", [], {});
-			backButton.appendChild(backImg);
-			let months = [
-				"January",
-				"February",
-				"March",
-				"April",
-				"May",
-				"June",
-				"July",
-				"August",
-				"September",
-				"October",
-				"November",
-				"December",
-			];
-			let monthHeading = createElement(
-				"h4",
-				[],
-				{},
-				months[new Date().getMonth()]
-			);
-			let weeks = generateCalendar(
-				"2025",
-				months.indexOf(monthHeading.textContent)
-			);
-			let nextImg = createElement("img", [], {
-				src: "../Assets/icons/next-svgrepo-com.svg",
-			});
-			let nextButton = createElement("button", [], {});
-			nextButton.appendChild(nextImg);
-			monthsDiv.appendChild(backButton);
-			monthsDiv.appendChild(monthHeading);
-			monthsDiv.appendChild(nextButton);
-			dateModal.appendChild(monthsDiv);
-			let daysDiv = createElement("div", [], { id: "weekdays" });
-			let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-			days.forEach((day) => {
-				let dayDiv = createElement("div", ["weekDaysDivs"], { id: day }, day);
-				daysDiv.appendChild(dayDiv);
-			});
-			dateModal.appendChild(daysDiv);
-			let hr = createElement("hr");
-			dateModal.appendChild(hr);
-			renderCalendar(weeks, dateModal);
-			dateModal.appendChild(actionBtn);
-			datesButton.addEventListener("click", () => {
-				tripLengthButton.classList.remove("active-date");
-				tripLengthButton.classList.add("inactive-date");
-				datesButton.classList.remove("inactive-date");
-				datesButton.classList.add("active-date");
-				dateModal.removeChild(document.querySelector("#tripLengthContainer"));
-				dateModal.appendChild(dateOptions);
-				dateModal.appendChild(monthsDiv);
-				dateModal.appendChild(daysDiv);
-				dateModal.appendChild(hr);
-				renderCalendar(weeks, dateModal);
-				dateModal.appendChild(actionBtn);
-			});
-			nextButton.addEventListener("click", () => {
-				dateModal.removeChild(document.querySelector("#monthDays"));
-				dateModal.removeChild(document.querySelector(".action-btns"));
-				let monthIndex = months.indexOf(monthHeading.textContent);
-				if (monthIndex === 11) {
-					monthIndex = 0;
-				} else {
-					monthIndex = monthIndex + 1;
-				}
-				monthHeading.textContent = months[monthIndex];
-				let weeks = generateCalendar("2025", monthIndex);
-				renderCalendar(weeks, dateModal);
-				dateModal.appendChild(actionBtn);
-			});
-			backButton.addEventListener("click", () => {
-				dateModal.removeChild(document.querySelector("#monthDays"));
-				dateModal.removeChild(document.querySelector(".action-btns"));
-				let monthIndex = months.indexOf(monthHeading.textContent);
-				if (monthIndex === 0) {
-					monthIndex = 11;
-				} else {
-					monthIndex = monthIndex - 1;
-				}
-				monthHeading.textContent = months[monthIndex];
-				let weeks = generateCalendar("2025", monthIndex);
-				renderCalendar(weeks, dateModal);
-				dateModal.appendChild(actionBtn);
-			});
-			overlay.appendChild(dateModal);
-			setTimeout(() => {
-				dateModal.classList.add("open");
-			}, 10);
-		});
-		return dateDiv;
-	}
-	function generateCalendar(year, month) {
-		let firstDay = new Date(year, month, 1).getDay();
-		let daysInMonth = new Date(year, month + 1, 0).getDate();
-
-		let weeks = [];
-		let week = new Array(7).fill(null);
-		let dayCounter = 1;
-
-		for (let i = firstDay; i < 7; i++) {
-			week[i] = dayCounter++;
-		}
-		weeks.push(week);
-		while (dayCounter <= daysInMonth) {
-			week = new Array(7).fill(null);
-			for (let i = 0; i < 7 && dayCounter <= daysInMonth; i++) {
-				week[i] = dayCounter++;
+		const collapseAnimation = () => {
+			if (currentWidth > originalWidth) {
+				currentWidth -= 20;
+				currentHeight -= 20;
+				updateDimensions(tripCard, cardContainer, currentWidth, originalHeight);
+				const detailsElem = tripCard.querySelector("#details");
+				if (detailsElem) detailsElem.style.height = detailsOriginalHeight;
+				requestAnimationFrame(collapseAnimation);
+			} else {
+				resetDimensions(tripCard, cardContainer);
+				const itinerary = tripCard.querySelector("#itinerary-Container");
+				if (itinerary) itinerary.style.display = "none";
+				flexContainer.style.height = "auto";
+				document
+					.querySelectorAll(".card")
+					.forEach((c) => (c.style.display = "flex"));
+				toggleArrow(arrow, true);
 			}
-			weeks.push(week);
-		}
-
-		return weeks;
-	}
-	function renderCalendar(weeks, dateModal) {
-		let monthDaysBlock = createElement("div", [], { id: "monthDays" });
-		for (let i = 0; i < weeks.length; i++) {
-			let week = createElement("div", ["week"], { id: `week${i}` });
-			for (let j = 0; j < 7; j++) {
-				if (weeks[i][j]) {
-					let day = createElement(
-						"div",
-						["day"],
-						{ id: `day${i}${j}` },
-						weeks[i][j]
-					);
-					week.appendChild(day);
-				} else {
-					let day = createElement("div", ["empty"], { id: `day${i}${j}` });
-					week.appendChild(day);
-				}
+		};
+		const expandAnimation = () => {
+			if (currentWidth < containerMaxWidth) {
+				currentWidth += 20;
+				currentHeight += 10;
+				updateDimensions(tripCard, cardContainer, currentWidth, currentHeight);
+				requestAnimationFrame(expandAnimation);
+			} else {
+				flexContainer.style.width = "100%";
+				flexContainer.style.height = "200%";
+				renderItinerary(tripCard);
 			}
-			monthDaysBlock.appendChild(week);
+		};
+		if (tripCard.classList.contains("active-card")) {
+			tripCard.classList.replace("active-card", "inactive-card");
+			requestAnimationFrame(collapseAnimation);
+		} else {
+			tripCard.classList.replace("inactive-card", "active-card");
+			requestAnimationFrame(expandAnimation);
 		}
-		dateModal.appendChild(monthDaysBlock);
-		return monthDaysBlock;
-	}
-});
+	});
+}
 
-let imageSelector = (destination, image) => {
-	if (destination.textContent.toLowerCase() === "spain") {
+function updateDimensions(card, container, width, height) {
+	card.style.width = `${width}px`;
+	card.style.height = `${height}px`;
+	container.style.width = `${width}px`;
+	container.style.height = `${height}px`;
+}
+
+function resetDimensions(card, container) {
+	card.style.removeProperty("width");
+	card.style.removeProperty("height");
+	container.style.removeProperty("width");
+	container.style.removeProperty("height");
+}
+
+function toggleArrow(arrow, show) {
+	if (arrow) {
+		arrow.classList.toggle("hide", !show);
+		arrow.classList.toggle("show", show);
+	}
+}
+
+function appendTripCard(tripCard) {
+	const plannedTrips = document.getElementById("planned-Trips");
+	plannedTrips.classList.add("active-article");
+	plannedTrips.appendChild(tripCard);
+	plannedTrips.querySelectorAll(".trip-card").forEach((trip) => {
+		trip.addEventListener("mouseover", () => {
+			const arrow = trip.querySelector(".arrowDown");
+			if (arrow && trip.classList.contains("inactive-card")) {
+				toggleArrow(arrow, true);
+			}
+		});
+		trip.addEventListener("mouseout", () => {
+			const arrow = trip.querySelector(".arrowDown");
+			if (arrow) {
+				toggleArrow(arrow, false);
+			}
+		});
+	});
+}
+
+function saveTripToLocalStorage(trip) {
+	let count = parseInt(loadFromLocalStorage("count")) || 0;
+	localStorage.setItem(`planned-Trips ${count}`, JSON.stringify(trip));
+}
+let imageSelector = (destination = "", image) => {
+	if (destination.toLowerCase() === "spain") {
 		image.src = "../Assets/images/logan-armstrong-hVhfqhDYciU-unsplash.jpg";
-	} else if (destination.textContent.toLowerCase() === "united kingdom") {
+	} else if (destination.toLowerCase() === "united kingdom") {
 		image.src = "../Assets/images/marcin-nowak-iXqTqC-f6jI-unsplash.jpg";
+	} else if (destination.toLowerCase() === "egypt") {
+		image.src = "../Assets/images/alex-azabache-MoonoldXeqs-unsplash.jpg";
 	}
+	return image;
 };
+function renderItinerary(card) {
+	let date = card.querySelector("#date");
+	let datetxt = "";
+	let fromDate, toDate;
+	if (date) {
+		datetxt = date.getElementsByTagName("h6")[0].innerHTML;
+	}
+	let dateArr = datetxt.split("-");
+	let diffDays;
+	if (dateArr.length < 2) {
+		diffDays = parseInt(dateArr[0].split(" ")[0], 10);
+	} else {
+		let fromDay = parseInt(dateArr[2], 10);
+		let fromMonth = parseInt(dateArr[1], 10) - 1;
+		let fromYear = parseInt(dateArr[0], 10);
+		let toDay = parseInt(dateArr[5], 10);
+		let toMonth = parseInt(dateArr[4], 10) - 1;
+		let toYear = parseInt(dateArr[3], 10);
+
+		fromDate = new Date(fromYear, fromMonth, fromDay);
+		toDate = new Date(toYear, toMonth, toDay);
+		let diffMs = toDate - fromDate + 1;
+		diffDays = diffMs / (1000 * 60 * 60 * 24);
+	}
+	if (!card.querySelector("#itinerary-Container")) {
+		var flexContainer = createElement("div", ["Container"], {
+			id: "itinerary-Container",
+		});
+	} else {
+		card.querySelector("#itinerary-Container").style.display = "flex";
+	}
+	let itineraryDetails = createElement("div", ["container"], {
+		id: "itinerary-Details",
+	});
+	let placesPinedMap = createElement("div", ["container"], {
+		id: "placesPinedMap",
+	});
+	// renderMap(card, placePinedMap);
+	flexContainer.appendChild(itineraryDetails);
+	const daysContainer = createElement("div", ["container"], {
+		id: "daysContainer",
+	});
+	let dayDiv;
+	let addItineraryBtn;
+	for (let i = 0; i < diffDays; i++) {
+		let dayHeader;
+		let dispDate = new Date(fromDate);
+		if (!fromDate && !toDate) {
+			dayDiv = createElement("div", ["container", "daysDivs", "dayFlex"], {
+				id: `day${i + 1}`,
+			});
+			dayHeader = createElement(
+				"h3",
+				["daysHeader"],
+				{ id: `day${i + 1}-header` },
+				`Day${i + 1}`
+			);
+		} else {
+			dayDiv = createElement("div", ["container", "daysDivs", "dayFlex"], {
+				id: `day${i + 1}`,
+			});
+			dispDate.setDate(fromDate.getDate() + i);
+			dayHeader = createElement(
+				"h3",
+				["daysHeader"],
+				{ id: `day${i + 1}-header` },
+				dispDate.toDateString()
+			);
+		}
+		const timnelineDiv = createElement("div", ["timelineDiv"], {
+			id: "timeline",
+		});
+		addItineraryBtn = createElement(
+			"button",
+			["addItinerary"],
+			{ id: `addItineraryBtn${i + 1}` },
+			"+"
+		);
+		dayDiv.appendChild(dayHeader);
+		dayDiv.appendChild(timnelineDiv);
+		dayDiv.appendChild(addItineraryBtn);
+		dayDiv.appendChild(createElement("hr"));
+		daysContainer.appendChild(dayDiv);
+	}
+	itineraryDetails.appendChild(daysContainer);
+	flexContainer.appendChild(placesPinedMap);
+	flexContainer.style.zIndex = 1;
+	card.querySelector("#details").appendChild(flexContainer);
+	const itineraryOptions = createElement("div", ["it-options"]);
+	const itineraryButtons = card.querySelectorAll(".addItinerary");
+	itineraryButtons.forEach((btn) => {
+		btn.addEventListener("click", (e) => {
+			e.stopPropagation();
+			if (!btn.parentElement.querySelector("#it-options")) {
+				btn.insertAdjacentElement("afterend", itineraryOptions);
+			}
+			if (!itineraryOptions.classList.contains("expand")) {
+				itineraryOptions.style.display = "block";
+				setTimeout(() => {
+					itineraryOptions.classList.remove("collapse");
+					itineraryOptions.classList.add("expand");
+				}, 50);
+			} else {
+				itineraryOptions.classList.remove("expand");
+				itineraryOptions.classList.add("collapse");
+				itineraryOptions.style.display = "none";
+			}
+			itineraryOptions.classList.remove("collapse");
+			itineraryOptions.classList.remove("expand");
+		});
+	});
+	const accImg = createElement("img", ["OptIcon"], {
+		src: "../Assets/icons/house_16203341.png",
+	});
+	const toDoImg = createElement("img", ["OptIcon"], {
+		src: "../Assets/icons/address-location-icon.svg",
+	});
+	const addActivityBtn = createElement(
+		"button",
+		["it-option"],
+		{ id: "activityOpt" },
+		"Things to Do"
+	);
+	const addRestaurantBtn = createElement(
+		"button",
+		["it-option"],
+		{ id: "restaurantOpt" },
+		"Food & Drinks"
+	);
+	const addAccommodationBtn = createElement(
+		"button",
+		["it-option"],
+		{ id: "accomodationOpt" },
+		"Accommodation"
+	);
+	const addTransportBtn = createElement(
+		"button",
+		["it-option"],
+		{ id: "transportationOpt" },
+		"Transportation"
+	);
+	addAccommodationBtn.appendChild(accImg);
+	addActivityBtn.appendChild(toDoImg);
+	const optBtnsDiv = createElement("div", [], { id: "it-option" });
+	optBtnsDiv.appendChild(addActivityBtn);
+	optBtnsDiv.appendChild(addRestaurantBtn);
+	optBtnsDiv.appendChild(addAccommodationBtn);
+	optBtnsDiv.appendChild(addTransportBtn);
+	itineraryOptions.appendChild(optBtnsDiv);
+}

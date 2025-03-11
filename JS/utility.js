@@ -1,8 +1,3 @@
-window.addEventListener('load', () => {
-	loadHeaderFooter('header-container', '../HTML/header.html');
-	loadHeaderFooter('footer-container', '../HTML/footer.html');
-});
-
 /**
  * Fetches data from the server using the Fetch API.
  * @param {String} url - The endpoint to be appended to the base API URL (e.g., ":searchNearby").
@@ -66,7 +61,7 @@ export function createElement(
 	}
 	const element = document.createElement(elementName);
 
-	if (attributes && typeof attributes === 'Object') {
+	if (attributes && typeof attributes === 'object') {
 		for (let key in attributes) {
 			element.setAttribute(key, attributes[key]);
 		}
@@ -88,13 +83,16 @@ export function createElement(
  * @param {string} elementID - The ID of the DOM element where the content will be loaded.
  * @param {string} filePath - The path to the HTML file to load.
  */
-export function loadHeaderFooter(elementID, filePath) {
-	fetch(filePath)
-		.then((response) => response.text())
-		.then((data) => {
-			document.getElementById(elementID).innerHTML = data;
-		})
-		.catch((error) => console.error('Error loading component:', error));
+export async function loadHeaderFooter(filePath) {
+	// fetch(filePath)
+	// 	.then((response) => response.text())
+	// 	.then((data) => {
+	// 		document.getElementById(elementID).innerHTML = data;
+	// 	})
+	// 	.catch((error) => console.error('Error loading component:', error));
+
+	let res = await fetch(filePath);
+	return await res.text();
 }
 /**
  * Loads data from local storage.
@@ -126,4 +124,223 @@ export function toggleActive(activeBtn, inactiveBtn) {
 	activeBtn.classList.remove('inactive-date');
 	inactiveBtn.classList.add('inactive-date');
 	inactiveBtn.classList.remove('active-date');
+}
+
+export function createModal(config, classlist, attributes) {
+	//main Modal Container
+	const modal = createElement('div', classlist, attributes);
+	// header Container
+	const header = createElement('div', ['modal-header']);
+
+	if (config.header && config.header.title) {
+		const title = createElement('h2', [], {}, config.header.title);
+		header.appendChild(title);
+	}
+	if (config.header.closeBtn) {
+		const closeBtn = createElement('span', ['close'], {}, 'X');
+		closeBtn.addEventListener('click', () => {
+			if (typeof config.header.onClose === 'function') {
+				config.header.onClose();
+			}
+		});
+		header.appendChild(closeBtn);
+	}
+	if (config.header && Array.isArray(config.header.buttons)) {
+		config.header.buttons.forEach((btnConfig) => {
+			const btnClasses = Array.isArray(btnConfig.classes)
+				? btnConfig.classes
+				: [];
+			const btnAttr =
+				typeof btnConfig.attributes === 'object' ? btnConfig.attributes : {};
+			const button = createElement(
+				'button',
+				btnClasses,
+				btnAttr,
+				btnConfig.text
+			);
+			if (typeof btnConfig.onClick === 'function') {
+				button.addEventListener('click', btnConfig.onClick);
+			}
+			config.header.buttonsContainer.appendChild(button);
+		});
+		header.appendChild(config.header.buttonsContainer);
+	}
+	modal.appendChild(header);
+
+	// body Container
+	const body = createElement('div', ['modal-body'], { id: 'trip' });
+	let modalContentWrapper;
+	if (config.contentWrapper) {
+		modalContentWrapper = createElement('div', ['content']);
+	}
+	config.body.forEach((div) => {
+		if (typeof div === 'string') {
+			body.innerHTML += div;
+		} else if (div instanceof HTMLElement) {
+			body.appendChild(div);
+		}
+	});
+	modalContentWrapper.appendChild(body);
+
+	//footer Container
+	const footer = createElement('div', ['modal-footer']);
+	if (config.footer && Array.isArray(config.footer.buttons)) {
+		config.footer.buttons.forEach((btnConfig) => {
+			const btnClasses = Array.isArray(btnConfig.classes)
+				? btnConfig.classes
+				: [];
+			const btnAttr =
+				typeof btnConfig.attributes === 'object' ? btnConfig.attributes : {};
+			const button = createElement(
+				'button',
+				btnClasses,
+				btnAttr,
+				btnConfig.text
+			);
+			if (typeof btnConfig.onClick === 'function') {
+				button.addEventListener('click', btnConfig.onClick);
+			}
+			config.footer.buttonsContainer.appendChild(button);
+		});
+		footer.appendChild(config.footer.buttonsContainer);
+	}
+	modal.appendChild(modalContentWrapper);
+	modal.appendChild(footer);
+	return modal;
+}
+export function createInput(type, id, placeholder) {
+	if (type === 'textarea') {
+		return createElement('textarea', ['trip-in'], {
+			id: id,
+			placeholder: placeholder,
+		});
+	}
+	if (type === 'date') {
+		return createElement('input', ['trip-in', 'date-in'], {
+			type: type,
+			id: id,
+			placeholder: placeholder,
+		});
+	}
+	return createElement('input', ['trip-in'], {
+		type: type,
+		id: id,
+		placeholder: placeholder,
+	});
+}
+/**
+ * This Class used to generate an object of the body of the request
+ * that should be sent with the Google places API request
+ */
+export class RequestBody {
+	constructor(
+		region,
+		types = ['restaurant', 'hotel', 'park'],
+		resultCount = 50,
+		lat = 40.7128,
+		long = -74.006,
+		radius = 5000,
+		preference = 0
+	) {
+		this.languageCode = 'en';
+		this.regionCode = region || '';
+		this.includedTypes = Array.isArray(types) ? [...types] : [];
+		this.maxResultCount =
+			typeof resultCount === 'number' && resultCount > 0 ? resultCount : 50;
+		this.locationRestriction = {
+			circle: {
+				center: {
+					latitude: typeof lat === 'number' ? lat : 40.7128,
+					longitude: typeof long === 'number' ? long : -74.006,
+				},
+				radius: typeof radius === 'number' && radius >= 1000 ? radius : 5000,
+			},
+		};
+		this.rankPreference = preference;
+	}
+
+	setRegion(reg) {
+		try {
+			if (typeof reg === 'string') {
+				this.regionCode = reg;
+			} else {
+				throw new Error('Region should be string');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	getRegion() {
+		return this.regionCode;
+	}
+
+	setTypes(types) {
+		try {
+			if (Array.isArray(types)) {
+				this.includedTypes = [...types];
+			} else {
+				throw new Error('Types should be an array');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	getTypes() {
+		return this.includedTypes;
+	}
+
+	setResultCount(count) {
+		try {
+			if (typeof count === 'number' && count > 0) {
+				this.maxResultCount = count;
+			} else {
+				throw new Error('The count should be bigger than 0 and type of number');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	getResultCount() {
+		return this.maxResultCount;
+	}
+
+	setLocation(lat, long, radius = this.locationRestriction.circle.radius) {
+		try {
+			if (typeof lat !== 'number') {
+				throw new Error('the latitude should be a number');
+			}
+			if (typeof long !== 'number') {
+				throw new Error('the longitude should be a number');
+			}
+			if (typeof radius !== 'number' && radius >= 1000) {
+				throw new Error('the longitude should be a number');
+			}
+			this.locationRestriction = {
+				circle: {
+					center: {
+						latitude: lat,
+						longitude: long,
+					},
+					radius: radius,
+				},
+			};
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	getLocation() {
+		return this.locationRestriction;
+	}
+
+	setPreference(preference) {
+		this.rankPreference = preference;
+	}
+
+	getPreference() {
+		return this.rankPreference;
+	}
 }
