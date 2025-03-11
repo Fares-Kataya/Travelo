@@ -3,6 +3,7 @@ import {
 	createElement,
 	createObj,
 	getData,
+	getLatLong,
 	loadHeaderFooter,
 	RequestBody,
 } from './utility.js';

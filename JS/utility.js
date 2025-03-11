@@ -16,7 +16,7 @@ export async function getData(
 		const options = {
 			method,
 			headers: {
-				'x-rapidapi-key': '06c97ba8fbmshcc2f2887477377ep182d49jsn9f11b9aadd19',
+				'x-rapidapi-key': '20b4800490msh4213a96bd695313p1772dcjsn4921896a0a5e',
 				'x-rapidapi-host': 'google-map-places-new-v2.p.rapidapi.com',
 				'Content-Type': 'application/json',
 				'X-Goog-FieldMask': '*',
@@ -296,6 +296,20 @@ export async function createObj(obj) {
 	return newObj;
 }
 
+export function getLatLong() {
+	if ('geolocation' in navigator) {
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				console.log(position.coords.latitude, position.coords.longitude);
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	} else {
+		console.log('Geolocation is not supported on this browser');
+	}
+}
 /**
  * This Class used to generate an object of the body of the request
  * that should be sent with the Google places API request
