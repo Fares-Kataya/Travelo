@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (valid) {
                 let fullName=localStorage.getItem("user_name")
-                let email=localStorage.getItem("email")
+                let email=localStorage.getItem("user_email")
                 let expireDate = new Date();
                 expireDate.setDate(expireDate.getDate() + 30);
                 document.cookie=`user_name=${fullName}; expires=${expireDate.toUTCString()};`;

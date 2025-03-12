@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage.setItem("user_email",email);
                 localStorage.setItem("user_password",password);
                 document.cookie=`user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+                document.cookie=`user_email=${email}; expires=${expireDate.toUTCString()};`;
             }
         });
 });

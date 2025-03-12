@@ -558,3 +558,32 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
+
+document.addEventListener("DOMContentLoaded",function()
+{
+	if (window.location.pathname.endsWith("profile.html")) { 
+		let user_name=find_cookie("user_name");
+		let user_email=find_cookie("user_email");
+		if(user_name&&user_email)
+		{
+			document.getElementById("Name").innerHTML=user_name;
+			document.getElementById("Email").innerHTML=user_email;
+		}
+		else{
+			window.location.href = "../HTML/login.html";
+		}
+    }
+})
+ function find_cookie(cookie_name)
+ {
+	let cookies=document.cookie.split("; ");
+	for(let cookie of cookies)
+	{
+		
+		if(cookie.split("=")[0]===cookie_name)
+		{
+			return cookie.split("=")[1];
+		}
+	}
+	return false;
+ }
