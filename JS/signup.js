@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /*
     -this event fierd after submit the sign up form to validate the signup data then add it to local storge and make cookies 
     */ 
-    document.getElementById('signupForm').addEventListener('submit', function (e) {
+    /* document.getElementById('signupForm').addEventListener('submit', function (e) {
             e.preventDefault();
             let fullName = document.getElementById('fullName').value.trim();
             let email = document.getElementById('email').value.trim();
@@ -44,5 +44,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.cookie=`user_name=${fullName}; expires=${expireDate.toUTCString()};`;
                 document.cookie=`user_email=${email}; expires=${expireDate.toUTCString()};`;
             }
-        });
+        }); */
 });

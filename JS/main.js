@@ -587,3 +587,90 @@ document.addEventListener("DOMContentLoaded",function()
 	}
 	return false;
  }
+ /*****************login and sign up**************** */
+ document.addEventListener("DOMContentLoaded",function()
+{
+	if (window.location.pathname.endsWith("login.html")||window.location.pathname.endsWith("login.html?")) {
+		if(find_cookie("user_name")&&find_cookie("user_email"))
+			window.location.href = "../HTML/index.html";
+		document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let email = document.getElementById('email').value.trim();
+            let password = document.getElementById('password').value.trim();
+            document
+                .querySelectorAll('.error-message')
+                .forEach((el) => el.remove());
+            let valid = true;
+           if(email!==localStorage.getItem("user_email")||password!==localStorage.getItem("user_password")){
+            showError(
+                'email',
+                'Enter valid email and password'
+            )
+            valid=false;
+           }
+            if (valid) {
+                let fullName=localStorage.getItem("user_name")
+                let email=localStorage.getItem("user_email")
+                let expireDate = new Date();
+                expireDate.setDate(expireDate.getDate() + 30);
+                document.cookie=`user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+                document.cookie=`user_email=${email}; expires=${expireDate.toUTCString()};`;
+				window.location.href = "../HTML/index.html";
+            }
+        }); 
+    }
+})
+document.addEventListener("DOMContentLoaded",function()
+{
+	if (window.location.pathname.endsWith("signup.html")||window.location.pathname.endsWith("signup.html?")) {
+		if(find_cookie("user_name")&&find_cookie("user_email"))
+			window.location.href = "../HTML/index.html";
+		document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            let fullName = document.getElementById('fullName').value.trim();
+            let email = document.getElementById('email').value.trim();
+            let password = document.getElementById('password').value.trim();
+            document
+                .querySelectorAll('.error-message')
+                .forEach((el) => el.remove());
+            let valid = true;
+            if (!/^[A-Za-z\s]+$/.test(fullName)) {
+                showError('fullName', 'Full name must contain only letters.');
+                valid = false;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('email', 'Please enter a valid email address.');
+                valid = false;
+            }
+            const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+            if (!passwordPattern.test(password)) {
+                showError(
+                    'password',
+                    'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a symbol (@$#!%*?&) .'
+                );
+                valid = false;
+            }
+            if (valid) {
+                let expireDate = new Date();
+                expireDate.setDate(expireDate.getDate() + 30);
+                localStorage.clear();
+                localStorage.setItem("user_name",fullName);
+                localStorage.setItem("user_email",email);
+                localStorage.setItem("user_password",password);
+                document.cookie=`user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+                document.cookie=`user_email=${email}; expires=${expireDate.toUTCString()};`;
+				window.location.href = "../HTML/index.html";
+            }
+        });
+    }
+})
+//show the error massages
+function showError(inputId, message) { 
+    let inputElement = document.getElementById(inputId);
+    let existingError = inputElement.parentNode.querySelector('.error-message');
+    if (existingError) existingError.remove();
+    let errorElement = document.createElement('div');
+    errorElement.className = 'error-message text-danger mt-1';
+    errorElement.innerText = message;
+    inputElement.parentNode.appendChild(errorElement);
+}

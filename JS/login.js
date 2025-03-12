@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
 
 
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+       /*  document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
             let email = document.getElementById('email').value.trim();
             let password = document.getElementById('password').value.trim();
@@ -35,5 +35,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.cookie=`user_name=${fullName}; expires=${expireDate.toUTCString()};`;
                 document.cookie=`user_email=${email}; expires=${expireDate.toUTCString()};`;
             }
-        });
+        }); */
 });
