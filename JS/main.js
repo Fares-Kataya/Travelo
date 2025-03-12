@@ -1,15 +1,64 @@
 import { categories } from '../data/categories.js';
 import { createElement, loadHeaderFooter, RequestBody } from './utility.js';
 
+
+
+
+
+
 // Loading header and footer
 loadHeaderFooter('../HTML/header.html').then((data) => {
 	document.getElementById('header-container').innerHTML = data;
-	const header = document.getElementById('header-container').childNodes[0];
+	const header = document.getElementById('sign-up')
+	logINOut()
 });
 loadHeaderFooter('../HTML/footer.html').then((data) => {
 	document.getElementById('footer-container').innerHTML = data;
 	const footer = document.getElementById('footer-container').childNodes[0];
 });
+
+
+//get cookie from user
+function getCookie(name) {
+	let cookies = document.cookie.split('; ')
+	for (let i = 0; i < cookies.length; i++) {
+		let cookie = cookies[i].split('=')
+		if (cookie[0] === name) {
+			return cookie[1]
+		}
+	}
+	return null
+}
+
+
+//control user login && logout
+function logINOut() {
+	let SignInButton = document.getElementById('sign-up');
+	let userImg = document.getElementById('user-img');
+	let userName = getCookie('user_name');
+
+	if (SignInButton && userImg) {
+		if (userName) {
+			SignInButton.innerText = 'Log out';
+			userImg.style.display = 'block';
+		} else {
+			SignInButton.innerText = 'Sign Up';
+			userImg.style.display = 'none';
+		}
+
+		SignInButton.addEventListener('click', function () {
+			if (userName) {
+				document.cookie = "user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+				window.location.href = 'signup.html';
+			} else {
+				window.location.href = 'signup.html';
+			}
+		});
+	}
+}
+
+
+
 
 // Importing elements from details page
 const imagesDivs = document.querySelectorAll('.images div');
@@ -273,18 +322,18 @@ document.querySelectorAll('.category-item').forEach((item) => {
 /*
 Error in left hand assignment
 document.getElementById("arrow-right") = function () {
-    let div1 = document.getElementById("div1");
-    let div5 = document.getElementById("div5");
-
-    if (div1 && div5) {
-        div1.classList.remove("visible");
-        div1.classList.add("hidden");
-
-        setTimeout(() => {
-            div5.classList.remove("hidden");
-            div5.classList.add("visible");
-        }, 500);
-    }
+	let div1 = document.getElementById("div1");
+	let div5 = document.getElementById("div5");
+	
+	if (div1 && div5) {
+		div1.classList.remove("visible");
+		div1.classList.add("hidden");
+	
+		setTimeout(() => {
+			div5.classList.remove("hidden");
+			div5.classList.add("visible");
+		}, 500);
+	}
 }
 */
 
@@ -335,40 +384,40 @@ function togglePaymentForm() {
 
 /*
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 justify-content-center card-container mt-2">
-                    <div class="">
-                        <div id="carouselExampleIndicators1"
-                            class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
-
-                            <div class="carousel-inner position-relative card1">
-                                <i class="fa-solid fa-heart heart"></i>
-                                <div class="carousel-item active ">
-                                    <img class="rounded-3" src="../Assets/images/olive-garden-restaurant.jpg"
-                                        alt="First slide">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-body row">
-                            <p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
-                            <div class="d-flex flex-row col-7 justify-content-end rate-div">
-                                <img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
-                                    class="img-rate-star">
-                                <p class="">4.5</p>
-                            </div>
-                            <div class="d-flex flex-column mt-n3 card-details">
-                                <span class="col-12 fw-light place-name">Resturant </span>
-                                <span class="col-12 fw-light period"> 1 - 6 Mars </span>
-
-                                <div class="d-flex flex-row col-12 justify-content-start">
-                                    <img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
-                                    <span> 1.999</span>
-                                    <span class="ms-1 fw-bold">night</span>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+					<div class="">
+						<div id="carouselExampleIndicators1"
+							class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
+	
+							<div class="carousel-inner position-relative card1">
+								<i class="fa-solid fa-heart heart"></i>
+								<div class="carousel-item active ">
+									<img class="rounded-3" src="../Assets/images/olive-garden-restaurant.jpg"
+										alt="First slide">
+								</div>
+							</div>
+						</div>
+	
+						<div class="card-body row">
+							<p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
+							<div class="d-flex flex-row col-7 justify-content-end rate-div">
+								<img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
+									class="img-rate-star">
+								<p class="">4.5</p>
+							</div>
+							<div class="d-flex flex-column mt-n3 card-details">
+								<span class="col-12 fw-light place-name">Resturant </span>
+								<span class="col-12 fw-light period"> 1 - 6 Mars </span>
+	
+								<div class="d-flex flex-row col-12 justify-content-start">
+									<img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
+									<span> 1.999</span>
+									<span class="ms-1 fw-bold">night</span>
+								</div>
+	
+							</div>
+						</div>
+					</div>
+				</div>
 */
 
 // Creating the categories list
