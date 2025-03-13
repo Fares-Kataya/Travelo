@@ -599,9 +599,6 @@ if (searchInput) {
 document.addEventListener('DOMContentLoaded', function () {
 	let hearts = document.querySelectorAll('.heart');
 	let userName = getCookie('user_name');
-
-	if (!userName) return;
-
 	let favorites = JSON.parse(localStorage.getItem(`favorites_${userName}`)) || {};
 
 	hearts.forEach((heart, index) => {
@@ -616,6 +613,19 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		heart.addEventListener('click', function () {
+			if (!userName) {
+				Swal.fire({
+					title: "Login Required",
+					text: "Please login to add your favorites ❤️",
+					icon: "warning",
+					confirmButtonText: "OK",
+					confirmButtonColor: "#ff4757",
+					customClass: {
+						popup: 'custom-alert'
+					}
+				});
+				return;
+			}
 			if (favorites[cardId]) {
 				delete favorites[cardId];
 				heart.style.color = '';

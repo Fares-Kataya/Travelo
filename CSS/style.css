@@ -395,6 +395,8 @@
 
 }
 
+
+/* heart and  */
 .heart {
 	transition: 0.4s ease-in-out all;
 }
@@ -403,6 +405,13 @@
 	transform: scale(1.1);
 	cursor: pointer;
 }
+
+.custom-alert {
+	border-radius: 15px;
+	box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+	padding: 20px;
+}
+
 
 .sponsored-label1 {
 	display: inline-block;
