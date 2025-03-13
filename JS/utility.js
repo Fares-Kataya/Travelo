@@ -16,8 +16,8 @@ export async function getData(
 		const options = {
 			method,
 			headers: {
-				"x-rapidapi-key": "9bc60aca4dmsh266b3af491c2b5dp1040c9jsn037bf8803753",
-				"x-rapidapi-host": "google-map-places-new-v2.p.rapidapi.com",
+				"x-rapidapi-key": "06c97ba8fbmshcc2f2887477377ep182d49jsn9f11b9aadd19",
+				"x-rapidapi-host": "x-rapidapi-host: maps-data.p.rapidapi.com",
 				"Content-Type": "application/json",
 				"X-Goog-FieldMask": "*",
 				...customheaders,
@@ -165,18 +165,23 @@ export function createModal(config, classlist, attributes) {
 	modal.appendChild(header);
 
 	// body Container
-	const body = createElement("div", ["modal-body"], { id: "trip" });
+	const body = createElement("div", ["modal-body"], { id: config.body.id });
 	let modalContentWrapper;
-	if (config.contentWrapper) {
-		modalContentWrapper = createElement("div", ["content"]);
+	if (config.contentWrapper[0]) {
+		modalContentWrapper = createElement("div", [config.contentWrapper[1]]);
 	}
-	config.body.forEach((div) => {
-		if (typeof div === "string") {
-			body.innerHTML += div;
-		} else if (div instanceof HTMLElement) {
-			body.appendChild(div);
-		}
-	});
+	if (config.body.divs.length > 1) {
+		config.body.divs.forEach((div) => {
+			if (typeof div === "string") {
+				body.innerHTML += div;
+			} else if (div instanceof HTMLElement) {
+				body.appendChild(div);
+			}
+		});
+	} else {
+		body.appendChild(config.body.divs[0]);
+	}
+	
 	modalContentWrapper.appendChild(body);
 
 	//footer Container
@@ -206,22 +211,94 @@ export function createModal(config, classlist, attributes) {
 	return modal;
 }
 export function createInput(type, id, placeholder) {
-		if (type === "textarea") {
-			return createElement("textarea", ["trip-in"], {
-				id: id,
-				placeholder: placeholder,
-			});
-		}
-		if (type === "date") {
-			return createElement("input", ["trip-in", "date-in"], {
-				type: type,
-				id: id,
-				placeholder: placeholder,
-			});
-		}
-		return createElement("input", ["trip-in"], {
+	if (type === "textarea") {
+		return createElement("textarea", ["trip-in"], {
+			id: id,
+			placeholder: placeholder,
+		});
+	}
+	if (type === "date") {
+		return createElement("input", ["trip-in", "date-in"], {
 			type: type,
 			id: id,
 			placeholder: placeholder,
 		});
 	}
+	return createElement("input", ["trip-in"], {
+		type: type,
+		id: id,
+		placeholder: placeholder,
+	});
+}
+/**
+ * Searches for places using the Maps Data API via RapidAPI.
+ *
+ * @param {string} query - The search term (e.g., "restaurant").
+ * @param {string} country - The country code (e.g., "us").
+ * @param {number} lat - Latitude of the location.
+ * @param {number} lng - Longitude of the location.
+ * @param {number} [limit=20] - Maximum number of results.
+ * @param {number} [offset=0] - Offset for pagination.
+ * @param {number} [zoom=13] - Zoom level (affects the search area).
+ * @param {string} [lang="en"] - Language for the results.
+ * @returns {Promise<Object>} The API response parsed as JSON.
+ */
+export async function searchPlacesData(
+  query,
+  country,
+  lat,
+  lng,
+  limit = 20,
+  offset = 0,
+  zoom = 13,
+  lang = "en"
+) {
+  const apiKey = "06c97ba8fbmshcc2f2887477377ep182d49jsn9f11b9aadd19";
+  const url = `https://maps-data.p.rapidapi.com/searchmaps.php?query=${encodeURIComponent(query)}&limit=${limit}&country=${country}&lang=${lang}&lat=${lat}&lng=${lng}&offset=${offset}&zoom=${zoom}`;
+
+  const headers = {
+    "x-rapidapi-host": "maps-data.p.rapidapi.com",
+    "x-rapidapi-key": apiKey,
+  };
+
+  try {
+    const response = await fetch(url, { headers });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching search data:", error);
+    return null;
+  }
+}
+/**
+ * Fetches place photos using the Maps Data API via RapidAPI.
+ *
+ * @param {string} businessId - The business_id for the place.
+ * @param {string} [lang="en"] - The language for the response.
+ * @param {string} [country="us"] - The country code.
+ * @returns {Promise<Object|null>} A promise that resolves with the photo data (or null on error).
+ */
+export async function getPlacePhotos(businessId) {
+  const apiKey = "06c97ba8fbmshcc2f2887477377ep182d49jsn9aadd19";
+  const url = `https://maps-data.p.rapidapi.com/photos.php?business_id=${encodeURIComponent(businessId)}&lang=en`;
+  
+  const headers = {
+    "x-rapidapi-host": "maps-data.p.rapidapi.com",
+    "x-rapidapi-key": apiKey,
+  };
+
+  try {
+    const response = await fetch(url, { headers });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching place photos:", error);
+    return null;
+  }
+}

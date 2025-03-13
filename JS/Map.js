@@ -37,4 +37,77 @@ export async function setupDestinationMap(destination) {
 					}
 				});
 		});
+}
+export async function getCoordinates(destinationName) {
+	let url = `https://api.mapbox.com/search/geocode/v6/forward?q=${destinationName}&access_token=pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ`;
+	try {
+		let response = await fetch(url);
+		let data = await response.json();
+		let coords = data.features[0].geometry.coordinates;
+		console.log("Fetched Coordinates:", coords);
+		return coords;
+	} catch (error) {
+		console.error("Error fetching coordinates:", error);
 	}
+}
+export async function createInteractiveMap(coordinates) {
+	mapboxgl.accessToken =
+		"pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ";
+
+	// Initialize the map
+	const map = new mapboxgl.Map({
+		container: "placesPinedMap", // The ID of the div where the map will be rendered
+		style: "mapbox://styles/mapbox/streets-v12",
+		center: coordinates, // Cairo, Egypt
+		zoom: 5,
+	});
+
+	// Add a custom marker with a popup
+	const marker = new mapboxgl.Marker()
+		.setLngLat(coordinates)
+		.setPopup(new mapboxgl.Popup().setText("Cairo, Egypt"))
+		.addTo(map);
+
+	// Show user's current location
+	map.addControl(
+		new mapboxgl.GeolocateControl({
+			positionOptions: { enableHighAccuracy: true },
+			trackUserLocation: true,
+		})
+	);
+
+	// Add GeoJSON data layer
+	map.on("load", () => {
+		map.addSource("places", {
+			type: "geojson",
+			data: {
+				type: "FeatureCollection",
+				features: [
+					{
+						type: "Feature",
+						geometry: { type: "Point", coordinates: coordinates },
+						properties: { title: "Sample Location" },
+					},
+				],
+			},
+		});
+
+		map.addLayer({
+			id: "places-layer",
+			type: "circle",
+			source: "places",
+			paint: {
+				"circle-radius": 8,
+				"circle-color": "#007cbf",
+			},
+		});
+	});
+
+	// Add search functionality
+	// map.addControl(
+	// 	new MapboxGeocoder({
+	// 		accessToken: mapboxgl.accessToken,
+	// 		mapboxgl: mapboxgl,
+	// 	})
+	// );
+}

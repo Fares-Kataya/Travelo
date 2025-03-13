@@ -6,14 +6,21 @@ import {
 	getData,
 	createModal,
 	createInput,
+	searchPlacesData,
+	getPlacePhotos,
 } from "../JS/utility.js";
-import { setupDestinationMap } from "../JS/Map.js";
+import {
+	setupDestinationMap,
+	createInteractiveMap,
+	getCoordinates,
+} from "../JS/Map.js";
 import {
 	setupDateModal,
 	dateDivFromModal,
 	resetDateDivFromModal,
 	startCalDate,
 	endCalDate,
+	generateCalendar,
 } from "../JS/Calendar.js";
 document.addEventListener("DOMContentLoaded", loadPage);
 initEvents();
@@ -69,8 +76,8 @@ function createTrip() {
 			onClose: close,
 		},
 		contentWrapper: true,
-		body: [tripDetails, previewDiv],
-		contentWrapper: true,
+		body: { divs: [tripDetails, previewDiv], id: "trip" },
+		contentWrapper: [true, "content"],
 		footer: {
 			buttonsContainer: optionBtns,
 			buttons: [
@@ -89,7 +96,8 @@ function createTrip() {
 							name: modalConfig.body[0].childNodes[1].value,
 							dest: modalConfig.body[0].childNodes[3].value,
 							desc: modalConfig.body[0].childNodes[5].value,
-							startDate: document.getElementById("start-date").value || startCalDate,
+							startDate:
+								document.getElementById("start-date").value || startCalDate,
 							endDate: document.getElementById("end-date").value || endCalDate,
 						});
 					},
@@ -248,6 +256,7 @@ function setupTripCardAnimation(tripCard) {
 					.forEach((c) => (c.style.display = "flex"));
 				toggleArrow(arrow, true);
 			}
+			// document.querySelector("#placesPinedMap").childNodes = [];
 		};
 		const expandAnimation = () => {
 			if (currentWidth < containerMaxWidth) {
@@ -258,7 +267,9 @@ function setupTripCardAnimation(tripCard) {
 			} else {
 				flexContainer.style.width = "100%";
 				flexContainer.style.height = "200%";
-				renderItinerary(tripCard);
+				const destination =
+					document.querySelector("#location").childNodes[1].textContent;
+				renderItinerary(tripCard, destination);
 			}
 		};
 		if (tripCard.classList.contains("active-card")) {
@@ -326,7 +337,7 @@ let imageSelector = (destination = "", image) => {
 	}
 	return image;
 };
-function renderItinerary(card) {
+function renderItinerary(card, destination) {
 	let date = card.querySelector("#date");
 	let datetxt = "";
 	let fromDate, toDate;
@@ -435,13 +446,92 @@ function renderItinerary(card) {
 			}
 			itineraryOptions.classList.remove("collapse");
 			itineraryOptions.classList.remove("expand");
+			document.querySelectorAll(".it-option").forEach((itineraryOption) => {
+				itineraryOption.addEventListener("mouseover", () => {
+					itineraryOption.childNodes[1].setAttribute(
+						"src",
+						`../Assets/icons/${itineraryOption.childNodes[0].textContent}-light.svg`
+					);
+				});
+			});
+			document.querySelectorAll(".it-option").forEach((itineraryOption) => {
+				itineraryOption.addEventListener("mouseout", () => {
+					itineraryOption.childNodes[1].setAttribute(
+						"src",
+						`../Assets/icons/${itineraryOption.childNodes[0].textContent}-dark.svg`
+					);
+				});
+			});
+			document.querySelectorAll(".it-option").forEach((itineraryOption) => {
+				itineraryOption.addEventListener("click", () => {
+					const overlay = createElement("div", ["overlay","z"]);
+					const searchBar = createInput("text", "search", "search");
+					const hr = createElement("hr");
+					const modalConfig = {
+						header: {
+							title: `search for ${itineraryOption.textContent}`,
+							closeBtn: false,
+							onClose: close,
+						},
+						contentWrapper: [true, "search"],
+						body: { divs: [searchBar, hr], id: "search-div"},
+						footer: {
+							
+						},
+					};
+					const modalElement = createModal(modalConfig, ["search-modal"]);
+					overlay.appendChild(modalElement);
+					document.body.appendChild(overlay);
+					document.addEventListener("keydown", function escListener(e) {
+						if (e.key === "Escape") {
+							const overlay = document.querySelector(".overlay");
+							if (overlay) {
+								overlay.remove();
+								// Optionally remove this listener if only needed while the modal is open:
+								document.removeEventListener("keydown", escListener);
+							}
+						}
+					});
+					searchPlacesData(`${itineraryOption.textContent}`, "es", false, false, 10, false, 13, "en").then((places) => {
+						getPlacePhotos(places.data[0].business_id)
+					});
+					// searchPlaces(
+					// 	itineraryOption.textContent,
+					// 	destination
+					// ).then((places) => {
+					// 	for (const place of places) { 
+					// 		placeDetails(place.place_id).then((details) => {
+					// 			console.log(details);
+					// 		})
+					// 	}
+						// let photoReference = results[0].photos[0].photo_reference;
+						// placePhoto(photoReference).then((photoUrl) => { 
+						// 	if (photoUrl) {
+						// 		const imgElement = createElement("img", [], { src: photoUrl });
+						// 		itineraryOption.parentElement.parentElement.parentElement.appendChild(
+						// 			imgElement
+						// 		);
+						// 	}
+						// });
+
+					});
+				});
+			});
 		});
-	});
 	const accImg = createElement("img", ["OptIcon"], {
-		src: "../Assets/icons/house_16203341.png",
+		src: "../Assets/icons/Accommodation-dark.svg",
 	});
 	const toDoImg = createElement("img", ["OptIcon"], {
-		src: "../Assets/icons/address-location-icon.svg",
+		src: "../Assets/icons/Things to Do-dark.svg",
+	});
+	const foodDrinks = createElement("img", ["OptIcon"], {
+		src: "../Assets/icons/Food & Drinks-dark.svg",
+	});
+	const transportationImg = createElement("img", ["OptIcon"], {
+		src: "../Assets/icons/Transportation-dark.svg",
+	});
+	const entertainmentImg = createElement("img", ["OptIcon"], {
+		src: "../Assets/icons/Entertainment-dark.svg",
 	});
 	const addActivityBtn = createElement(
 		"button",
@@ -467,12 +557,29 @@ function renderItinerary(card) {
 		{ id: "transportationOpt" },
 		"Transportation"
 	);
+	const addEntertainmentBtn = createElement(
+		"button",
+		["it-option"],
+		{ id: "entertainmentOpt" },
+		"Entertainment"
+	);
 	addAccommodationBtn.appendChild(accImg);
 	addActivityBtn.appendChild(toDoImg);
+	addRestaurantBtn.appendChild(foodDrinks);
+	addEntertainmentBtn.appendChild(entertainmentImg);
+	addTransportBtn.appendChild(transportationImg);
 	const optBtnsDiv = createElement("div", [], { id: "it-option" });
 	optBtnsDiv.appendChild(addActivityBtn);
 	optBtnsDiv.appendChild(addRestaurantBtn);
 	optBtnsDiv.appendChild(addAccommodationBtn);
+	optBtnsDiv.appendChild(addEntertainmentBtn);
 	optBtnsDiv.appendChild(addTransportBtn);
 	itineraryOptions.appendChild(optBtnsDiv);
+	// generateMap(card.querySelector("#details").childNodes[1].childNodes[1].textContent);
 }
+// async function generateMap(destName) {
+// 	console.log(destName)
+// 	let coords = await getCoordinates(destName);
+// 	console.log(coords)
+// 	createInteractiveMap(coords)
+// }
