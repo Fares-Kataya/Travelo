@@ -1178,6 +1178,6 @@ input:invalid {
 	border-radius:350px ;
 }
 .res_img{
-	width:250px;
+	width:100%;
 	height: 250px;
 }
