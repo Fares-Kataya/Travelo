@@ -111,3 +111,22 @@ export async function createInteractiveMap(coordinates) {
 	// 	})
 	// );
 }
+export async function getCountryCodeFromName(countryName) {
+		mapboxgl.accessToken =
+			"pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ";
+	const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+		countryName
+	)}.json?types=country&access_token=${mapboxgl.accessToken}`;
+
+	try {
+		const response = await fetch(url);
+		const data = await response.json();
+		if (data.features && data.features.length > 0) {
+			return data.features[0].properties.short_code;
+		}
+		return null;
+	} catch (error) {
+		console.error("Error fetching country code:", error);
+		return null;
+	}
+}

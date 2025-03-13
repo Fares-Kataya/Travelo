@@ -13,6 +13,7 @@ import {
 	setupDestinationMap,
 	createInteractiveMap,
 	getCoordinates,
+	getCountryCodeFromName,
 } from "../JS/Map.js";
 import {
 	setupDateModal,
@@ -93,9 +94,9 @@ function createTrip() {
 					attributes: { id: "apply" },
 					onClick: () => {
 						save({
-							name: modalConfig.body[0].childNodes[1].value,
-							dest: modalConfig.body[0].childNodes[3].value,
-							desc: modalConfig.body[0].childNodes[5].value,
+							name: modalConfig.body.divs[0].childNodes[1].value,
+							dest: modalConfig.body.divs[0].childNodes[3].value,
+							desc: modalConfig.body.divs[0].childNodes[5].value,
 							startDate:
 								document.getElementById("start-date").value || startCalDate,
 							endDate: document.getElementById("end-date").value || endCalDate,
@@ -256,7 +257,6 @@ function setupTripCardAnimation(tripCard) {
 					.forEach((c) => (c.style.display = "flex"));
 				toggleArrow(arrow, true);
 			}
-			// document.querySelector("#placesPinedMap").childNodes = [];
 		};
 		const expandAnimation = () => {
 			if (currentWidth < containerMaxWidth) {
@@ -269,6 +269,7 @@ function setupTripCardAnimation(tripCard) {
 				flexContainer.style.height = "200%";
 				const destination =
 					document.querySelector("#location").childNodes[1].textContent;
+				console.log(event.target.closest("#location, h6"))//.childNodes[1].innerHTML)
 				renderItinerary(tripCard, destination);
 			}
 		};
@@ -374,7 +375,6 @@ function renderItinerary(card, destination) {
 	let placesPinedMap = createElement("div", ["container"], {
 		id: "placesPinedMap",
 	});
-	// renderMap(card, placePinedMap);
 	flexContainer.appendChild(itineraryDetails);
 	const daysContainer = createElement("div", ["container"], {
 		id: "daysContainer",
@@ -409,6 +409,8 @@ function renderItinerary(card, destination) {
 		const timnelineDiv = createElement("div", ["timelineDiv"], {
 			id: "timeline",
 		});
+		const timelineditiDiv = createElement("div", ["timelineditiDiv"], {})
+		timelineditiDiv.appendChild(timnelineDiv)
 		addItineraryBtn = createElement(
 			"button",
 			["addItinerary"],
@@ -416,7 +418,7 @@ function renderItinerary(card, destination) {
 			"+"
 		);
 		dayDiv.appendChild(dayHeader);
-		dayDiv.appendChild(timnelineDiv);
+		dayDiv.appendChild(timelineditiDiv);
 		dayDiv.appendChild(addItineraryBtn);
 		dayDiv.appendChild(createElement("hr"));
 		daysContainer.appendChild(dayDiv);
@@ -476,48 +478,30 @@ function renderItinerary(card, destination) {
 						contentWrapper: [true, "search"],
 						body: { divs: [searchBar, hr], id: "search-div"},
 						footer: {
-							
 						},
 					};
 					const modalElement = createModal(modalConfig, ["search-modal"]);
 					overlay.appendChild(modalElement);
 					document.body.appendChild(overlay);
+					itineraryOptions.classList.remove("expand");
+					itineraryOptions.classList.add("collapse");
+					itineraryOptions.style.display = "none";
 					document.addEventListener("keydown", function escListener(e) {
 						if (e.key === "Escape") {
 							const overlay = document.querySelector(".overlay");
 							if (overlay) {
 								overlay.remove();
-								// Optionally remove this listener if only needed while the modal is open:
 								document.removeEventListener("keydown", escListener);
 							}
 						}
+						
 					});
-					searchPlacesData(`${itineraryOption.textContent}`, "es", false, false, 10, false, 13, "en").then((places) => {
-						getPlacePhotos(places.data[0].business_id)
-					});
-					// searchPlaces(
-					// 	itineraryOption.textContent,
-					// 	destination
-					// ).then((places) => {
-					// 	for (const place of places) { 
-					// 		placeDetails(place.place_id).then((details) => {
-					// 			console.log(details);
-					// 		})
-					// 	}
-						// let photoReference = results[0].photos[0].photo_reference;
-						// placePhoto(photoReference).then((photoUrl) => { 
-						// 	if (photoUrl) {
-						// 		const imgElement = createElement("img", [], { src: photoUrl });
-						// 		itineraryOption.parentElement.parentElement.parentElement.appendChild(
-						// 			imgElement
-						// 		);
-						// 	}
-						// });
-
+					handleSearch(itineraryOption);
+					
 					});
 				});
 			});
-		});
+	});
 	const accImg = createElement("img", ["OptIcon"], {
 		src: "../Assets/icons/Accommodation-dark.svg",
 	});
@@ -575,11 +559,94 @@ function renderItinerary(card, destination) {
 	optBtnsDiv.appendChild(addEntertainmentBtn);
 	optBtnsDiv.appendChild(addTransportBtn);
 	itineraryOptions.appendChild(optBtnsDiv);
-	// generateMap(card.querySelector("#details").childNodes[1].childNodes[1].textContent);
+	generateMap(card.querySelector("#details").childNodes[1].childNodes[1].textContent);
 }
-// async function generateMap(destName) {
-// 	console.log(destName)
-// 	let coords = await getCoordinates(destName);
-// 	console.log(coords)
-// 	createInteractiveMap(coords)
-// }
+async function generateMap(destName) {
+	console.log(destName)
+	let coords = await getCoordinates(destName);
+	createInteractiveMap(coords)
+}
+function createPlaceCard(place) {
+	console.log(place)
+	const card = createElement("div");
+	card.classList.add("place-card");
+	const cardflex = createElement("div", [], { id: "place-card-flex" });
+	const cardDeets = createElement("div", [], { id: "place-card-Deets" });
+	const imgElement = createElement("img");
+	cardflex.appendChild(imgElement);
+	const name = createElement("h4");
+	name.textContent = place.name;
+	cardDeets.appendChild(name);
+
+	const city = createElement("h6");
+	city.textContent = place.city;
+	cardDeets.appendChild(city);
+
+
+
+	getPlacePhotos(place.business_id).then((places) => {
+	if (places && places.data && places.data.photos && places.data.photos[0]) {
+		imgElement.setAttribute("src", places.data.photos[0]);
+	}
+});
+	const rating = createElement("p");
+	rating.textContent = `Rating: ${place.rating || ""} (${
+		place.review_count || 0
+	} reviews)`;
+	cardDeets.appendChild(rating);
+	cardflex.appendChild(cardDeets);
+	card.appendChild(cardflex);
+	card.addEventListener("click", () => { addItinerary(card,place) });
+	return card;
+}
+
+function addItinerary(card, place) {
+	const itinerary = document.querySelector(".timelineditiDiv");
+	itinerary.appendChild(card);
+}
+async function handleSearch(itineraryOption) {
+
+	const destinationElem = document.querySelector("#location h6");
+
+	const destination = destinationElem.textContent.trim();
+	console.log("Destination:", destination);
+
+	const countryCode = await getCountryCodeFromName(destination);
+
+	const places = await searchPlacesData(
+		itineraryOption.textContent,
+		countryCode,
+		10,
+		0,
+		13,
+		"en"
+	);
+	console.log("Search Results:", places);
+
+	const resultsContainer = document.getElementsByClassName("modal-footer")[0];
+	if (resultsContainer) {
+		resultsContainer.innerHTML = "";
+		if (places && places.data && places.data.length > 0) {
+			places.data.forEach((place) => {
+				const placeObj = {
+					business_id: place.business_id,
+					name: place.name,
+					price_level: place.price_level,
+					phone_number: place.phone_number,
+					rating: place.rating,
+					review_count: place.review_count,
+					types: place.types,
+					working_hours: place.working_hours,
+					city: place.city,
+					full_address_array: place.full_address_array,
+					latitude: place.latitude,
+					longitude: place.longitude,
+				};
+				const placeCard = createPlaceCard(placeObj);
+				resultsContainer.appendChild(placeCard);
+			});
+		} else {
+			resultsContainer.innerHTML = "<p>No results found.</p>";
+		}
+	}
+}

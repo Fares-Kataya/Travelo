@@ -282,7 +282,7 @@ export async function searchPlacesData(
  * @returns {Promise<Object|null>} A promise that resolves with the photo data (or null on error).
  */
 export async function getPlacePhotos(businessId) {
-  const apiKey = "06c97ba8fbmshcc2f2887477377ep182d49jsn9aadd19";
+  const apiKey = "06c97ba8fbmshcc2f2887477377ep182d49jsn9f11b9aadd19";
   const url = `https://maps-data.p.rapidapi.com/photos.php?business_id=${encodeURIComponent(businessId)}&lang=en`;
   
   const headers = {
@@ -302,3 +302,4 @@ export async function getPlacePhotos(businessId) {
     return null;
   }
 }
+
