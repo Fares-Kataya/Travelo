@@ -569,6 +569,49 @@ document.addEventListener("DOMContentLoaded",function()
 		{
 			document.getElementById("Name").innerHTML=user_name;
 			document.getElementById("Email").innerHTML=user_email;
+			document.getElementById("edit_button").addEventListener("click",function(){
+			document.getElementById("editName").value=user_name;
+			document.getElementById("editEmail").value=user_email;
+		});
+		document.getElementById("editForm").addEventListener("submit",function(e){
+			e.preventDefault();
+            let fullName = document.getElementById('editName').value.trim();
+            let email = document.getElementById('editEmail').value.trim();
+            let password = document.getElementById('editPassowrd').value.trim();
+            document
+                .querySelectorAll('.error-message')
+                .forEach((el) => el.remove());
+            let valid = true;
+            if (!/^[A-Za-z\s]+$/.test(fullName)) {
+                showError('editName', 'Full name must contain only letters.');
+                valid = false;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('editEmail', 'Please enter a valid email address.');
+                valid = false;
+            }
+            if (password!==localStorage.getItem("user_password")) {
+                showError(
+                    'editPassowrd',
+                    'the password is incorrect'
+                );
+                valid = false;
+            }
+            if (valid) {
+                let expireDate = new Date();
+                expireDate.setDate(expireDate.getDate() + 30);
+                localStorage.setItem("user_name",fullName);
+                localStorage.setItem("user_email",email);
+                document.cookie=`user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+                document.cookie=`user_email=${email}; expires=${expireDate.toUTCString()};`;
+				window.location.href = "../HTML/profile.html";
+            }
+
+	})
+		document.getElementById("planers").addEventListener('click', function()
+	{
+		window.location.href = "../HTML/planner.html";
+	})
 		}
 		else{
 			window.location.href = "../HTML/login.html";
@@ -622,6 +665,10 @@ document.addEventListener("DOMContentLoaded",function()
         }); 
     }
 })
+
+
+
+
 document.addEventListener("DOMContentLoaded",function()
 {
 	if (window.location.pathname.endsWith("signup.html")||window.location.pathname.endsWith("signup.html?")) {
@@ -676,3 +723,4 @@ function showError(inputId, message) {
     errorElement.innerText = message;
     inputElement.parentNode.appendChild(errorElement);
 }
+
