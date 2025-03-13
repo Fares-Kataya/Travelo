@@ -1,12 +1,19 @@
+const keys = [
+	'20b4800490msh4213a96bd695313p1772dcjsn4921896a0a5e',
+	'9bc60aca4dmsh266b3af491c2b5dp1040c9jsn037bf8803753',
+];
+let currentKey = 0;
 /**
  * Fetches data from the server using the Fetch API.
  * @param {String} url - The endpoint to be appended to the base API URL (e.g., ":searchNearby").
  * @param {String} method - The HTTP method to use (e.g., "GET", "POST").
+ * @param {String} params - The parameters to be sent with the GET request.
  * @param {Object} [body] - The request body (required for methods like "POST").
  * @returns {Promise<Object>} The parsed JSON response from the API.
  */
 export async function getData(
 	url,
+	params = '',
 	method = 'GET',
 	body = {},
 	customheaders = {}
@@ -16,10 +23,8 @@ export async function getData(
 		const options = {
 			method,
 			headers: {
-				'x-rapidapi-key': '20b4800490msh4213a96bd695313p1772dcjsn4921896a0a5e',
-				'x-rapidapi-host': 'google-map-places-new-v2.p.rapidapi.com',
-				'Content-Type': 'application/json',
-				'X-Goog-FieldMask': '*',
+				'x-rapidapi-key': keys[currentKey],
+				'x-rapidapi-host': 'maps-data.p.rapidapi.com',
 				...customheaders,
 			},
 		};
@@ -28,12 +33,24 @@ export async function getData(
 			options['body'] = JSON.stringify(body);
 		}
 
+		if (!params) {
+			throw new Error('There must be parameters');
+		}
+
 		const response = await fetch(
-			`https://google-map-places-new-v2.p.rapidapi.com/v1/places${url}`,
+			`https://maps-data.p.rapidapi.com/${url}?${params}`,
 			options
 		);
 
 		if (!response.ok) {
+			if (response.status === 429) {
+				if (currentKey === keys.length - 1) {
+					currentKey = 0;
+				} else {
+					currentKey++;
+				}
+				getData();
+			}
 			throw new Error(`Error: ${response.status} - ${response.statusText}`);
 		}
 		return await response.json();
@@ -61,6 +78,19 @@ export function debounce(callBack, delay = 1000) {
 	};
 }
 
+export function getURLQueries() {
+	const queries = location.search
+		.slice(1)
+		.split('&')
+		.map((item) => {
+			let key_value = item.split('=');
+			let key = key_value[0];
+			let value = key_value[1];
+			return { [key]: value };
+		});
+
+	return queries;
+}
 /**
  * Creates and returns an HTML element with specified classes and attributes.
  * @param {String} elementName - The tag name of the element (e.g., "div", "span").
@@ -248,39 +278,55 @@ export function createInput(type, id, placeholder) {
 }
 
 /**
+ * When you use it add class position-relative to its parent first
+ * @returns Spinner node for loading
+ */
+export function generateSpinner() {
+	const container = createElement('div', [
+		'position-absolute',
+		'start-50',
+		'top-50',
+		'translate-middle',
+	]);
+	const div = createElement('div', ['spinner-border', 'text-danger'], {
+		role: 'status',
+	});
+	let span = createElement('span', ['visually-hidden']);
+	container.appendChild(div);
+	div.appendChild(span);
+	return container;
+}
+
+/**
+ * NOTE: Use it with placeDetails endpoint only
  * Extracts important data from the API response object.
  * @param {Object} obj API response object
  * @returns {Promise<Object>} A new object with the needed data
  */
 export async function createObj(obj) {
 	let newObj = {
-		name: obj?.displayName?.text || '',
-		allowsDogs: obj?.allowsDogs || false,
-		currentOpeningHours: obj?.currentOpeningHours || {},
-		openNow: obj?.regularOpeningHours?.openNow || false,
-		periods: obj?.regularOpeningHours?.periods || [],
-		weekdayDescriptions: obj?.regularOpeningHours?.weekdayDescriptions || [],
-		formattedAddress: obj?.formattedAddress || '',
-		id: obj?.id || null,
-		location: obj?.location || {},
-		details: obj?.name || '',
-		parkingOptions: obj?.parkingOptions || {},
-		type: obj?.primaryType || '',
+		name: obj?.name || '',
+		current_opening_hours: obj?.current_opening_hours || {},
+		formatted_address: obj?.formatted_address || '',
+		formatted_phone_number: obj?.formatted_phone_number || '',
+		id: obj?.place_id || null,
+		location: obj?.geometry?.location || {},
+		wheelchair_accessible_entrance:
+			obj?.wheelchair_accessible_entrance || false,
+		types: obj?.types || '',
 		rating: obj?.rating || 0,
 		reviews: obj?.reviews || [],
-		userRatingCount: obj?.userRatingCount || 0,
+		user_ratings_total: obj?.user_ratings_total || 0,
 		photos: [],
 	};
 
 	if (obj?.photos?.length > 0) {
 		const photosRequest = obj.photos
-			.slice(0, 1)
-			.map(async (endPoint, index) => {
+			.slice(0, 1) // number of photos needed (Change the second argument)
+			.map(async (photo, index) => {
 				try {
 					const data = await getData(
-						`/${endPoint.name.slice(
-							endPoint.name.indexOf('/') + 1
-						)}/media?maxWidthPx=400&maxHeightPx=400&skipHttpRedirect=true`
+						`/photo?photo_reference=${photo.photo_reference}`
 					);
 
 					return { id: index + 1, src: data.photoUri };

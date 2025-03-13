@@ -2,6 +2,8 @@ import { categories } from '../data/categories.js';
 import {
 	createElement,
 	createObj,
+	debounce,
+	generateSpinner,
 	getData,
 	getLatLong,
 	loadHeaderFooter,
@@ -41,7 +43,7 @@ const searchBtn = document.querySelector('.search-btn');
 
 // Create Cards showed in the search result
 let indicatorsCounter = 0;
-function createCard(name, images, rate, period, price) {
+function createCard(id, name, images, rate, period, price) {
 	indicatorsCounter++;
 
 	const card = createElement('div', [
@@ -71,12 +73,22 @@ function createCard(name, images, rate, period, price) {
 			'justify-content-center',
 			'card-container',
 			'mt-2',
+			'position-relative',
 		],
 		{
 			id: `carouselExampleIndicators${indicatorsCounter}`,
 		}
 	);
 
+	const a = createElement(
+		'a',
+		['position-absolute', 'start-0', 'top-0', 'w-100', 'h-100'],
+		{
+			href: `../HTML/details.html?business_id=${id}`,
+			style: 'z-index:3;',
+		}
+	);
+	carouselExample.appendChild(a);
 	const carouselIndicator = createElement('div', ['carousel-indicators']);
 
 	// for (let i = 0; i < images.length; i++) {
@@ -108,7 +120,7 @@ function createCard(name, images, rate, period, price) {
 	images.map((image, index) => {
 		const carouselItem = createElement('div', ['carousel-item']);
 
-		if (index == 0) {
+		if (index == 1) {
 			carouselItem.classList.add('active');
 		}
 
@@ -182,7 +194,7 @@ function createCard(name, images, rate, period, price) {
 
 	const PCardBody = createElement(
 		'p',
-		['col-5', 'd-inline-block', 'mb-0', 'fw-bolder'],
+		['col-9', 'd-inline-block', 'mb-0', 'fw-bolder'],
 		{},
 		name
 	);
@@ -192,7 +204,7 @@ function createCard(name, images, rate, period, price) {
 	const RateCardBody = createElement('div', [
 		'd-flex',
 		'flex-row',
-		'col-7',
+		'col-3',
 		'justify-content-end',
 	]);
 
@@ -240,7 +252,12 @@ function createCard(name, images, rate, period, price) {
 
 	// Price.appendChild(PriceIcon);
 
-	const PriceText = createElement('span', [], {}, `${price} $` || '');
+	const PriceText = createElement(
+		'span',
+		[],
+		{},
+		`${price || Math.trunc(Math.random() * 400)} $`
+	);
 
 	Price.appendChild(PriceText);
 
@@ -366,71 +383,77 @@ function createCategories() {
 
 	return categoriesWrapper; // return the wrapper node
 }
-
 let placesData;
-function initializeSearchResult() {
-	const body = new RequestBody('eg');
-	let loading = true;
-	if (!placesData) {
-		getData(':searchNearby', 'POST', { ...body })
-			.then((data) => {
-				placesData = data.places;
-				console.log(placesData);
-				let newData = [];
-				placesData.forEach(async (place) => {
-					let obj = await createObj(place);
-					newData.push(obj);
-				});
-				console.log(newData);
-				loading = false;
-			})
-			.catch((error) => {
-				loading = false;
-				console.log(error);
-			});
+let isFetching = false;
+
+async function initializeSearchResult() {
+	if (placesData || isFetching) return placesData;
+	isFetching = true;
+
+	const params = new URLSearchParams();
+	params.append('query', 'hotel');
+	params.append('lat', 30.059482);
+	params.append('lng', 31.299664);
+	params.append('limit', 20);
+	params.append('country', 'eg');
+
+	try {
+		let data = await getData('nearby.php', params);
+		placesData = data?.data || [];
+	} catch (error) {
+		console.log(error);
+		placesData = [];
+	} finally {
+		isFetching = false;
 	}
 
-	// let row = createElement('div', ['row']);
-
-	// let card1 = createCard(
-	// 	'Alex',
-	// 	[
-	// 		{ src: '../Assets/images/olive-garden-restaurant.jpg' },
-	// 		{ src: '../Assets/images/olive-garden-restaurant.jpg' },
-	// 	],
-	// 	4,
-	// 	'1 - 4 Days',
-	// 	1000
-	// );
-	// let card2 = createCard(
-	// 	'Alex',
-	// 	[
-	// 		{ src: '../Assets/images/olive-garden-restaurant.jpg' },
-	// 		{ src: '../Assets/images/olive-garden-restaurant.jpg' },
-	// 	],
-	// 	3,
-	// 	'2 - 5 Days',
-	// 	4000
-	// );
-	// row.appendChild(card1);
-	// row.appendChild(card2);
-	// return row;
+	return placesData;
 }
 
 // The div to be inserted into the body to show the search result
 let div;
 
+let rowOfPlaces;
 // Show the search result
-function showSearch() {
+async function showSearch() {
 	if (!div) {
+		const loading = generateSpinner();
 		div = createElement('div', ['show-search', 'overflow-scroll-y']);
 		const wrapper = createCategories();
 		div.appendChild(wrapper);
 		let content = createElement('div', ['p-3']);
 		div.appendChild(content);
+		content.appendChild(loading);
+		rowOfPlaces = createElement('div', ['row']);
 
-		initializeSearchResult();
-		// content.appendChild(row);
+		initializeSearchResult()
+			.then((places) => {
+				if (places) {
+					places.forEach((place) => {
+						const node = createCard(
+							place.business_id,
+							place.name,
+							place.photos,
+							place.rating,
+							place.state,
+							place.price_level
+						);
+						rowOfPlaces.appendChild(node);
+					});
+				}
+				content.removeChild(loading);
+			})
+			.catch((error) => {
+				console.log(error);
+				content.removeChild(loading);
+			});
+
+		content.appendChild(rowOfPlaces);
+	} else {
+		// If data is already available, remove loading immediately
+		if (placesData) {
+			document.querySelector('.loading-spinner')?.remove();
+		}
 	}
 
 	if (!searchDiv.classList.contains('active')) {
@@ -445,6 +468,41 @@ function hideSearch() {
 	document.body.removeChild(div);
 	dark.classList.remove('active');
 	searchDiv.classList.remove('active');
+}
+
+async function searchByType(text) {
+	console.log(text);
+	const params = new URLSearchParams();
+	params.append('query', text);
+	params.append('lat', 30.059482);
+	params.append('lng', 31.299664);
+	params.append('limit', 40);
+	rowOfPlaces.innerHTML = '';
+	const loading = generateSpinner();
+	const loadingContainer = createElement('div', [
+		'col-12',
+		'position-relative',
+	]);
+	rowOfPlaces.appendChild(loadingContainer);
+	loadingContainer.appendChild(loading);
+	try {
+		let data = await getData('nearby.php', params);
+		data?.data.forEach((place) => {
+			const node = createCard(
+				place.business_id,
+				place.name,
+				place.photos,
+				place.rating,
+				place.state,
+				place.price_level
+			);
+			rowOfPlaces.appendChild(node);
+		});
+		rowOfPlaces.removeChild(loadingContainer);
+	} catch (error) {
+		rowOfPlaces.removeChild(loadingContainer);
+		console.log(error);
+	}
 }
 
 /**
@@ -473,30 +531,38 @@ document.addEventListener('DOMContentLoaded', function () {
 		let scrollAmount = container.clientWidth * direction;
 		container.scrollLeft += scrollAmount;
 	}
-
-	leftButton.addEventListener('click', () => scrollCards(-1));
-	rightButton.addEventListener('click', () => scrollCards(1));
+	if (leftButton && rightButton) {
+		leftButton.addEventListener('click', () => scrollCards(-1));
+		rightButton.addEventListener('click', () => scrollCards(1));
+	}
 });
 
 function updateButtonsVisibility() {
 	let container = document.querySelector('.more-to-explore-wrapper');
 	let leftButton = document.querySelector('.more-to-explore-button-left');
 	let rightButton = document.querySelector('.more-to-explore-button-right');
-
-	let scrollLeft = container.scrollLeft;
-	let scrollWidth = container.scrollWidth;
-	let clientWidth = container.clientWidth;
-
-	if (scrollLeft <= 0) {
-		leftButton.style.display = 'none';
-	} else {
-		leftButton.style.display = 'block';
+	let scrollLeft;
+	let scrollWidth;
+	let clientWidth;
+	if (container) {
+		scrollLeft = container.scrollLeft;
+		scrollWidth = container.scrollWidth;
+		clientWidth = container.clientWidth;
 	}
 
-	if (scrollLeft + clientWidth >= scrollWidth - 1) {
-		rightButton.style.display = 'none';
-	} else {
-		rightButton.style.display = 'block';
+	if (leftButton) {
+		if (scrollLeft <= 0) {
+			leftButton.style.display = 'none';
+		} else {
+			leftButton.style.display = 'block';
+		}
+	}
+	if (rightButton) {
+		if (scrollLeft + clientWidth >= scrollWidth - 1) {
+			rightButton.style.display = 'none';
+		} else {
+			rightButton.style.display = 'block';
+		}
 	}
 }
 if (dark && searchDiv) {
@@ -508,6 +574,11 @@ if (container) {
 
 if (searchInput) {
 	searchInput.addEventListener('focus', showSearch);
+	searchInput.addEventListener('input', (e) => {
+		debounce(() => {
+			searchByType(e.target.value);
+		})();
+	});
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -515,9 +586,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		let scrollAmount = container.clientWidth * direction;
 		container.scrollLeft += scrollAmount;
 	}
-
-	leftButton.addEventListener('click', () => scrollCards(-1));
-	rightButton.addEventListener('click', () => scrollCards(1));
+	if (leftButton && rightButton) {
+		leftButton.addEventListener('click', () => scrollCards(-1));
+		rightButton.addEventListener('click', () => scrollCards(1));
+	}
 });
 
 document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
