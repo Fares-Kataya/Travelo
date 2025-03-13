@@ -597,13 +597,37 @@ if (searchInput) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-	function scrollCards(direction) {
-		let scrollAmount = container.clientWidth * direction;
-		container.scrollLeft += scrollAmount;
-	}
+	let hearts = document.querySelectorAll('.heart');
+	let userName = getCookie('user_name');
 
-	leftButton.addEventListener('click', () => scrollCards(-1));
-	rightButton.addEventListener('click', () => scrollCards(1));
+	if (!userName) return;
+
+	let favorites = JSON.parse(localStorage.getItem(`favorites_${userName}`)) || {};
+
+	hearts.forEach((heart, index) => {
+		if (!heart.dataset.id) {
+			heart.dataset.id = `card-${index}`;
+		}
+
+		let cardId = heart.dataset.id;
+
+		if (favorites[cardId]) {
+			heart.style.color = 'red';
+		}
+
+		heart.addEventListener('click', function () {
+			if (favorites[cardId]) {
+				delete favorites[cardId];
+				heart.style.color = '';
+			} else {
+				favorites[cardId] = true;
+				heart.style.color = 'red';
+			}
+
+			localStorage.setItem(`favorites_${userName}`, JSON.stringify(favorites));
+		});
+	});
 });
 
-document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
+
+

@@ -33,6 +33,7 @@
 	background-color: white;
 	transition: all 1s cubic-bezier(0.18, 0.89, 0.31, 1.01);
 }
+
 .search-form div.active {
 	position: fixed;
 	z-index: 5;
@@ -41,6 +42,7 @@
 	animation-duration: 1s;
 	animation-timing-function: cubic-bezier(0.18, 0.89, 0.31, 1.01);
 }
+
 .show-search {
 	position: fixed;
 	left: 0;
@@ -58,6 +60,7 @@
 .search-form div input {
 	width: 80%;
 }
+
 .search-btn {
 	outline: none;
 	border: none;
@@ -388,8 +391,17 @@
 
 .top-destinations-h3 {
 
-	left: 2% ;
+	left: 2%;
 
+}
+
+.heart {
+	transition: 0.4s ease-in-out all;
+}
+
+.heart:hover {
+	transform: scale(1.1);
+	cursor: pointer;
 }
 
 .sponsored-label1 {
@@ -811,7 +823,7 @@ input:invalid {
 	font-size: 17px;
 }
 
-.features > li + li::before {
+.features>li+li::before {
 	content: '•';
 	position: absolute;
 	left: -0.6rem;
@@ -935,6 +947,7 @@ input:invalid {
 
 		transform: translateY(-20%);
 	}
+
 	100% {
 		position: fixed;
 		z-index: 5;
@@ -946,10 +959,12 @@ input:invalid {
 	0% {
 		transform: translateY(100%);
 	}
+
 	100% {
 		transform: translateY(0%);
 	}
 }
+
 /* End Keyframes */
 
 /* Start Media Queries */
@@ -957,12 +972,15 @@ input:invalid {
 	.trip-container-home {
 		width: 90%;
 	}
+
 	.image-container1 {
 		width: 80%;
 	}
+
 	.back-ground .login {
 		width: 80%;
 	}
+
 	.images {
 		position: relative;
 		overflow: hidden;
@@ -1176,4 +1194,5 @@ input:invalid {
 		width: 20rem;
 	}
 }
+
 /* End Media Queries */
