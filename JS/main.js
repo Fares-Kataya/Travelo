@@ -573,18 +573,28 @@ function updateButtonsVisibility() {
 	let scrollWidth = container.scrollWidth;
 	let clientWidth = container.clientWidth;
 
-	if (scrollLeft <= 0) {
+	let threshold = 5;
+
+	if (scrollLeft <= threshold) {
 		leftButton.style.display = 'none';
 	} else {
 		leftButton.style.display = 'block';
 	}
 
-	if (scrollLeft + clientWidth >= scrollWidth - 1) {
+	if (scrollLeft + clientWidth >= scrollWidth - threshold) {
 		rightButton.style.display = 'none';
 	} else {
 		rightButton.style.display = 'block';
 	}
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+	updateButtonsVisibility();
+});
+
+
+
 if (dark && searchDiv) {
 	dark.addEventListener('click', hideSearch);
 }
