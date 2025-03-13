@@ -1177,3 +1177,7 @@ input:invalid {
 	height: 150px;
 	border-radius:350px ;
 }
+.res_img{
+	width:250px;
+	height: 250px;
+}

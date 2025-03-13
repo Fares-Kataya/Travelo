@@ -559,6 +559,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
 
+// load the user information from local storage
 document.addEventListener("DOMContentLoaded",function()
 {
 	if (window.location.pathname.endsWith("profile.html")) { 
@@ -574,6 +575,7 @@ document.addEventListener("DOMContentLoaded",function()
 		}
     }
 })
+// check if cookie exists
  function find_cookie(cookie_name)
  {
 	let cookies=document.cookie.split("; ");
@@ -587,7 +589,7 @@ document.addEventListener("DOMContentLoaded",function()
 	}
 	return false;
  }
- /*****************login and sign up**************** */
+ /*****************login and signup**************** */
  document.addEventListener("DOMContentLoaded",function()
 {
 	if (window.location.pathname.endsWith("login.html")||window.location.pathname.endsWith("login.html?")) {
