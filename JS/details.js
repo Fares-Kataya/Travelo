@@ -38,6 +38,8 @@ const closeBtn = document.querySelector('.btn-close-white');
 const paymentForm = document.querySelector('.confirm');
 const rightArrow = document.querySelector('.images .right');
 const leftArrow = document.querySelector('.images .left');
+const heart = document.querySelector('.heart-icon');
+
 let currentImage = 0;
 let imagesDivs = [];
 let calcBill = {
@@ -123,6 +125,9 @@ function setData(data) {
 	imagesContainer.appendChild(dots);
 }
 
+let place;
+let hearted = false;
+let favourites = [];
 async function loadData() {
 	const queries = getURLQueries();
 	const params = new URLSearchParams();
@@ -133,6 +138,21 @@ async function loadData() {
 		let data = await getData('photos.php', params);
 		console.log(data);
 		setData(data.data);
+		place = data.data;
+
+		favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+
+		favourites.forEach((item) => {
+			if (item['business_id'] === place['business_id']) {
+				hearted = true;
+			}
+		});
+		if (hearted) {
+			heart.style.color = 'red';
+			hearted = true;
+			favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+			favourites = [...favourites, place];
+		}
 	} catch (error) {
 		console.log(error);
 	}
@@ -341,6 +361,49 @@ if (leftArrow) {
 	leftArrow.addEventListener('click', MoveImagesToRight);
 	loadDots();
 }
+
+function getCookie(name) {
+	let cookies = document.cookie.split('; ');
+	for (let i = 0; i < cookies.length; i++) {
+		let cookie = cookies[i].split('=');
+		if (cookie[0] === name) {
+			return cookie[1];
+		}
+	}
+	return null;
+}
+
+heart.addEventListener('click', function () {
+	let userName = getCookie('user_name');
+	if (!userName) {
+		Swal.fire({
+			title: 'Login Required',
+			text: 'Please login to add your favorites ❤️',
+			icon: 'warning',
+			confirmButtonText: 'OK',
+			confirmButtonColor: '#ff4757',
+			customClass: {
+				popup: 'custom-alert',
+			},
+		});
+		return;
+	}
+
+	if (!hearted) {
+		heart.style.color = 'red';
+		hearted = true;
+		favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+		favourites = [...favourites, place];
+	} else {
+		heart.style.color = '';
+		hearted = false;
+		favourites = JSON.parse(localStorage.getItem('favourites')) || [];
+		favourites = favourites.filter(
+			(item) => item['business_id'] != place['business_id']
+		);
+	}
+	localStorage.setItem(`favourites`, JSON.stringify(favourites));
+});
 
 loadReviews();
 document.addEventListener('DOMContentLoaded', loadData);
