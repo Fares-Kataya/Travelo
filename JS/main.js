@@ -1,5 +1,14 @@
 import { categories } from '../data/categories.js';
-import { createElement, loadHeaderFooter, RequestBody } from './utility.js';
+import {
+	createElement,
+	createObj,
+	debounce,
+	generateSpinner,
+	getData,
+	getLatLong,
+	loadHeaderFooter,
+	RequestBody,
+} from './utility.js';
 
 // Loading header and footer
 loadHeaderFooter('../HTML/header.html').then((data) => {
@@ -49,6 +58,7 @@ function logINOut() {
 		});
 	}
 }
+let geo = await getLatLong();
 
 // Importing elements from details page
 const imagesDivs = document.querySelectorAll('.images div');
@@ -59,6 +69,8 @@ const dark = document.querySelector('.dark');
 const close = document.querySelector('.close');
 const paymentForm = document.querySelector('.confirm');
 const reserveBtn = document.getElementById('reserve');
+const choseLoaction = document.querySelector('.show-map');
+const mapElement = document.querySelector('.index-map');
 
 /* Importing elements from landing page */
 // arrows in home page
@@ -71,11 +83,11 @@ const searchDiv = document.querySelector('.search-form div');
 const searchInput = document.getElementById('search');
 const searchBtn = document.querySelector('.search-btn');
 
+let map;
 // Create Cards showed in the search result
 let indicatorsCounter = 0;
-function createCard() {
+function createCard(id, name, images, rate, period, price) {
 	indicatorsCounter++;
-	let imgNumber = 10;
 
 	const card = createElement('div', [
 		'd-flex',
@@ -91,29 +103,52 @@ function createCard() {
 
 	const carouselExample = createElement(
 		'div',
-		['carousel', 'slide', 'carouselExampleIndicators'],
+		[
+			'carousel',
+			'slide',
+			'carouselExampleIndicators',
+			'd-flex',
+			'flex-column',
+			'col-12',
+			'col-md-6',
+			'col-lg-4',
+			'col-xl-3',
+			'justify-content-center',
+			'card-container',
+			'mt-2',
+			'position-relative',
+		],
 		{
 			id: `carouselExampleIndicators${indicatorsCounter}`,
 		}
 	);
 
+	const a = createElement(
+		'a',
+		['position-absolute', 'start-0', 'top-0', 'w-100', 'h-100'],
+		{
+			href: `../HTML/details.html?business_id=${id}`,
+			style: 'z-index:3;',
+		}
+	);
+	carouselExample.appendChild(a);
 	const carouselIndicator = createElement('div', ['carousel-indicators']);
 
-	for (let i = 0; i < imgNumber; i++) {
-		const button = createElement('button', ['carousel-indicators'], {
+	// for (let i = 0; i < images.length; i++) {
+	images.map((image, index) => {
+		const button = createElement('button', [], {
 			type: 'button',
 			'data-bs-target': `#carouselExampleIndicators${indicatorsCounter}`,
-			'data-bs-slide-to': `${i}`,
+			'data-bs-slide-to': `${index}`,
 		});
 
-		if (i == 0) {
+		if (index == 0) {
 			button.classList.add('active');
 		}
 
 		carouselIndicator.appendChild(button);
-	}
-
-	carouselExample.appendChild(carouselIndicator);
+	});
+	// }
 
 	const carouselInner = createElement('div', [
 		'carousel-inner',
@@ -124,22 +159,24 @@ function createCard() {
 	const i = createElement('div', ['fa-solid', 'fa-heart', 'heart']);
 
 	carouselInner.appendChild(i);
-	for (let i = 0; i < imgNumber; i++) {
+	// for (let i = 0; i < images.length; i++) {
+	images.map((image, index) => {
 		const carouselItem = createElement('div', ['carousel-item']);
 
-		if (i == 0) {
+		if (index == 1) {
 			carouselItem.classList.add('active');
 		}
 
 		const img = createElement('img', ['rounded-3'], {
-			src: `../Assets/images/olive-garden-restaurant.jpg`,
-			alt: `slide_${i + 1}`,
+			src: image.src,
+			alt: `slide_${index + 1}`,
+			loading: 'lazy',
 		});
 
 		carouselItem.appendChild(img);
 		carouselInner.appendChild(carouselItem);
-	}
-	let k = 0;
+	});
+	// }
 
 	const buttonPrev = createElement('button', ['carousel-control-prev'], {
 		type: 'button',
@@ -167,7 +204,7 @@ function createCard() {
 
 	const buttonNext = createElement('button', ['carousel-control-next'], {
 		type: 'button',
-		'data-bs-target': `#carouselExampleIndicators${k++}`,
+		'data-bs-target': `#carouselExampleIndicators${indicatorsCounter}`,
 		'data-bs-slide': 'next',
 	});
 
@@ -191,34 +228,35 @@ function createCard() {
 
 	carouselInner.appendChild(buttonPrev);
 	carouselInner.appendChild(buttonNext);
+	carouselInner.appendChild(carouselIndicator);
 
 	carouselExample.appendChild(carouselInner);
 
 	card.appendChild(carouselExample);
 
-	const cardBody = createElement('div', ['row', 'card-body']);
+	const cardBody = createElement('div', ['row', 'card-body', 'w-100']);
 
-	const PCardBody = createElement('p', [
-		'col-5',
-		'd-inline-block',
-		'mb-0',
-		'fw-bolder',
-	]);
+	const PCardBody = createElement(
+		'p',
+		['col-9', 'd-inline-block', 'mb-0', 'fw-bolder'],
+		{},
+		name
+	);
 
 	cardBody.appendChild(PCardBody);
 
 	const RateCardBody = createElement('div', [
 		'd-flex',
 		'flex-row',
-		'col-7',
+		'col-3',
 		'justify-content-end',
 	]);
 
 	const RateStar = createElement('img', ['img-rate-star'], {
-		src: ``,
+		src: `../Assets/images/star-icon-vector-removebg-preview.png`,
 	});
 
-	const RateText = createElement('p', [], {}, ``);
+	const RateText = createElement('p', [], {}, rate);
 
 	RateCardBody.appendChild(RateStar);
 	RateCardBody.appendChild(RateText);
@@ -227,20 +265,20 @@ function createCard() {
 
 	const CardDetails = createElement('div', ['d-flex', 'flex-column', 'mt-n3']);
 
-	const CardPlaceName = createElement(
-		'span',
-		['col-12', 'fw-light', 'period'],
-		{},
-		``
-	);
+	// const CardPlaceName = createElement(
+	// 	'span',
+	// 	['col-12', 'fw-light', 'period'],
+	// 	{},
+	// 	name
+	// );
 
-	CardDetails.appendChild(CardPlaceName);
+	// CardDetails.appendChild(CardPlaceName);
 
 	const CardPlacePeriod = createElement(
 		'span',
 		['col-12', 'fw-light', 'period'],
 		{},
-		``
+		period
 	);
 
 	CardDetails.appendChild(CardPlacePeriod);
@@ -252,13 +290,18 @@ function createCard() {
 		'justify-content-start',
 	]);
 
-	const PriceIcon = createElement('img', ['mt-1'], {
-		src: ``,
-	});
+	// const PriceIcon = createElement('img', ['mt-1'], {
+	// 	src: ``,
+	// });
 
-	Price.appendChild(PriceIcon);
+	// Price.appendChild(PriceIcon);
 
-	const PriceText = createElement('span', [], {}, ``);
+	const PriceText = createElement(
+		'span',
+		[],
+		{},
+		`${price || Math.trunc(Math.random() * 400)} $`
+	);
 
 	Price.appendChild(PriceText);
 
@@ -273,10 +316,11 @@ function createCard() {
 	carouselExample.appendChild(cardBody);
 
 	// const containCard = document.getElementsByClassName('contain-card')[0];
-	const containCard = createElement('div', ['contain-card']);
+	// const containCard = createElement('div', ['contain-card']);
 
-	containCard.appendChild(carouselExample);
-	document.body.appendChild(containCard);
+	// containCard.appendChild(carouselExample);
+	// document.body.appendChild(containCard);
+	return carouselExample;
 }
 
 // const body = {
@@ -309,106 +353,49 @@ document.querySelectorAll('.category-item').forEach((item) => {
 	});
 });
 
-/*
-Error in left hand assignment
-document.getElementById("arrow-right") = function () {
-	let div1 = document.getElementById("div1");
-	let div5 = document.getElementById("div5");
-	
-	if (div1 && div5) {
-		div1.classList.remove("visible");
-		div1.classList.add("hidden");
-	
-		setTimeout(() => {
-			div5.classList.remove("hidden");
-			div5.classList.add("visible");
-		}, 500);
-	}
-}
-*/
+// // Move the images of a place to left in details page
+// function MoveImagesToLeft() {
+// 	if (currentImage + 1 < imagesDivs.length) {
+// 		imagesDivs[currentImage].classList.remove('active');
+// 		imagesDivs[currentImage].classList.add('inActive');
+// 		imagesDivs[++currentImage].classList.add('active');
 
-let currentImage = 0;
+// 		// Refresh the dots at the bottom of the carousel
+// 		loadDots();
+// 	}
+// }
 
-// Move the images of a place to left in details page
-function MoveImagesToLeft() {
-	if (currentImage + 1 < imagesDivs.length) {
-		imagesDivs[currentImage].classList.remove('active');
-		imagesDivs[currentImage].classList.add('inActive');
-		imagesDivs[++currentImage].classList.add('active');
+// // Move the images of a place to right in details page
+// function MoveImagesToRight() {
+// 	console.log('hi');
+// 	if (currentImage > 0) {
+// 		imagesDivs[currentImage].classList.remove('active');
+// 		imagesDivs[--currentImage].classList.remove('inActive');
+// 		imagesDivs[currentImage].classList.add('active');
 
-		// Refresh the dots at the bottom of the carousel
-		loadDots();
-	}
-}
+// 		// Refresh the dots at the bottom of the carousel
+// 		loadDots();
+// 	}
+// }
 
-// Move the images of a place to right in details page
-function MoveImagesToRight() {
-	if (currentImage > 0) {
-		imagesDivs[currentImage].classList.remove('active');
-		imagesDivs[--currentImage].classList.remove('inActive');
-		imagesDivs[currentImage].classList.add('active');
-
-		// Refresh the dots at the bottom of the carousel
-		loadDots();
-	}
-}
-
-// Set the dots at the bottom of the carousel according to the number of images
-function loadDots() {
-	dots.innerHTML = '';
-	imagesDivs.forEach((div, index) => {
-		let classes = ['dot'];
-		if (div.classList.contains('active')) {
-			classes.push('active');
-		}
-		const dot = createElement('span', [...classes]);
-		dots.appendChild(dot);
-	});
-}
+// // Set the dots at the bottom of the carousel according to the number of images
+// function loadDots() {
+// 	dots.innerHTML = '';
+// 	imagesDivs.forEach((div, index) => {
+// 		let classes = ['dot'];
+// 		if (div.classList.contains('active')) {
+// 			classes.push('active');
+// 		}
+// 		const dot = createElement('span', [...classes]);
+// 		dots.appendChild(dot);
+// 	});
+// }
 
 // Show/Hide the payment form in the details page
 function togglePaymentForm() {
 	paymentForm.classList.toggle('active');
 	dark.classList.toggle('active');
 }
-
-/*
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 justify-content-center card-container mt-2">
-					<div class="">
-						<div id="carouselExampleIndicators1"
-							class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
-	
-							<div class="carousel-inner position-relative card1">
-								<i class="fa-solid fa-heart heart"></i>
-								<div class="carousel-item active ">
-									<img class="rounded-3" src="../Assets/images/olive-garden-restaurant.jpg"
-										alt="First slide">
-								</div>
-							</div>
-						</div>
-	
-						<div class="card-body row">
-							<p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
-							<div class="d-flex flex-row col-7 justify-content-end rate-div">
-								<img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
-									class="img-rate-star">
-								<p class="">4.5</p>
-							</div>
-							<div class="d-flex flex-column mt-n3 card-details">
-								<span class="col-12 fw-light place-name">Resturant </span>
-								<span class="col-12 fw-light period"> 1 - 6 Mars </span>
-	
-								<div class="d-flex flex-row col-12 justify-content-start">
-									<img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
-									<span> 1.999</span>
-									<span class="ms-1 fw-bold">night</span>
-								</div>
-	
-							</div>
-						</div>
-					</div>
-				</div>
-*/
 
 // Creating the categories list
 function createCategories() {
@@ -439,74 +426,83 @@ function createCategories() {
 
 	return categoriesWrapper; // return the wrapper node
 }
+let placesData;
+let isFetching = false;
 
-function createSearchItem(name, img, rate, type, price) {
-	let html = `
-		<div class="col-12 col-md-3 card-container mt-2">
-                    <div class="">
-                        <div id="carouselExampleIndicators1"
-                            class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
+async function initializeSearchResult() {
+	if (placesData || isFetching) return placesData;
+	isFetching = true;
 
-                            <div class="carousel-inner position-relative card1">
-                                <i class="fa-solid fa-heart heart"></i>
-                                <div class="carousel-item active ">
-                                    <img class="rounded-3" src=${img}
-                                        alt=${name}>
-                                </div>
-                            </div>
-                        </div>
+	const params = new URLSearchParams();
+	params.append('query', 'hotel');
+	params.append('lat', geo.latitude);
+	params.append('lng', geo.longitude);
+	params.append('limit', 20);
+	params.append('country', 'eg');
 
-                        <div class="card-body row">
-                            <p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
-                            <div class="d-flex flex-row col-7 justify-content-end rate-div">
-                                <img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
-                                    class="img-rate-star">
-                                <p class="">${rate}</p>
-                            </div>
-                            <div class="d-flex flex-column mt-n3 card-details">
-                                <span class="col-12 fw-light place-name">${type}</span>
-                                <span class="col-12 fw-light period"> 1 - 6 Mars </span>
+	try {
+		let data = await getData('nearby.php', params);
+		placesData = data?.data || [];
+	} catch (error) {
+		console.log(error);
+		placesData = [];
+	} finally {
+		isFetching = false;
+	}
 
-                                <div class="d-flex flex-row col-12 justify-content-start">
-                                    <img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
-                                    <span>${price}</span>
-                                    <span class="ms-1 fw-bold">night</span>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-	`;
-	return html;
+	return placesData;
 }
+
 // The div to be inserted into the body to show the search result
 let div;
 
+let rowOfPlaces;
 // Show the search result
-function showSearch() {
+async function showSearch() {
 	if (!div) {
+		const { lng, lat } = map.getCenter();
+		geo.latitude = lat;
+		geo.longitude = lng;
+		console.log(geo);
+		const loading = generateSpinner();
 		div = createElement('div', ['show-search', 'overflow-scroll-y']);
-		const wrapper = createCategories();
-		div.appendChild(wrapper);
+		// const wrapper = createCategories();
+		// div.appendChild(wrapper);
 		let content = createElement('div', ['p-3']);
 		div.appendChild(content);
-		let row = createElement('div', ['row']);
-		let item = createSearchItem(
-			'Alexandria day trip from cairo',
-			'../Assets/images/olive-garden-restaurant.jpg',
-			4.5,
-			'Restaurant',
-			3000
-		);
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		content.appendChild(row);
+		content.appendChild(loading);
+		rowOfPlaces = createElement('div', ['row']);
+
+		initializeSearchResult()
+			.then((places) => {
+				if (places) {
+					places.slice(0, 20).forEach((place) => {
+						if (place.photos.length > 0) {
+							const node = createCard(
+								place.business_id,
+								place.name,
+								place.photos,
+								place.rating,
+								place.state,
+								place.price_level
+							);
+							rowOfPlaces.appendChild(node);
+						}
+					});
+				}
+				content.removeChild(loading);
+			})
+			.catch((error) => {
+				console.log(error);
+				content.removeChild(loading);
+			});
+
+		content.appendChild(rowOfPlaces);
+	} else {
+		// If data is already available, remove loading immediately
+		if (placesData) {
+			document.querySelector('.loading-spinner')?.remove();
+		}
 	}
 
 	if (!searchDiv.classList.contains('active')) {
@@ -568,28 +564,32 @@ async function searchByType(text) {
  * if it exists or not before adding the event listenerto avoid errors
  */
 
-if (imagesDivs && rightArrow && leftArrow && dots) {
-	rightArrow.addEventListener('click', MoveImagesToLeft);
-	leftArrow.addEventListener('click', MoveImagesToRight);
-	loadDots();
-}
+// if (rightArrow) {
+// 	rightArrow.addEventListener('click', MoveImagesToLeft);
+// 	loadDots();
+// }
+// if (leftArrow) {
+// 	leftArrow.addEventListener('click', MoveImagesToRight);
+// 	loadDots();
+// }
 
 if (reserveBtn) {
 	reserveBtn.addEventListener('click', togglePaymentForm);
 }
-if (close && dark) {
-	close.addEventListener('click', togglePaymentForm);
-	dark.addEventListener('click', togglePaymentForm);
-}
+// if (close && dark) {
+// 	close.addEventListener('click', togglePaymentForm);
+// 	dark.addEventListener('click', togglePaymentForm);
+// }
 
 document.addEventListener('DOMContentLoaded', function () {
 	function scrollCards(direction) {
 		let scrollAmount = container.clientWidth * direction;
 		container.scrollLeft += scrollAmount;
 	}
-
-	leftButton.addEventListener('click', () => scrollCards(-1));
-	rightButton.addEventListener('click', () => scrollCards(1));
+	if (leftButton && rightButton) {
+		leftButton.addEventListener('click', () => scrollCards(-1));
+		rightButton.addEventListener('click', () => scrollCards(1));
+	}
 });
 
 function updateButtonsVisibility() {
@@ -616,9 +616,76 @@ function updateButtonsVisibility() {
 	}
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-	updateButtonsVisibility();
-});
+async function createInteractiveMap(coordinates) {
+	mapboxgl.accessToken =
+		'pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ';
+
+	// Initialize the map
+	map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/mapbox/streets-v12',
+		center: coordinates,
+		zoom: 10,
+	});
+
+	// Add a custom marker with a popup
+	const marker = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+
+	// Show user's current location
+	map.addControl(
+		new mapboxgl.GeolocateControl({
+			positionOptions: { enableHighAccuracy: true },
+			trackUserLocation: true,
+		})
+	);
+
+	// Add GeoJSON data layer
+	map.on('load', () => {
+		map.addSource('places', {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: [
+					{
+						type: 'Feature',
+						geometry: { type: 'Point', coordinates: coordinates },
+						properties: { title: 'Sample Location' },
+					},
+				],
+			},
+		});
+
+		map.addLayer({
+			id: 'places-layer',
+			type: 'circle',
+			source: 'places',
+			paint: {
+				'circle-radius': 8,
+				'circle-color': '#007cbf',
+			},
+		});
+	});
+
+	window.addEventListener('load', () => {
+		const searchBox = new MapboxSearchBox();
+		searchBox.accessToken =
+			'pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ';
+
+		searchBox.marker = true;
+		searchBox.mapboxgl = mapboxgl;
+		map.addControl(searchBox);
+	});
+	// Access longitude and latitude values directly.
+	// map.addControl(
+	// 	new MapboxGeocoder({
+	// 		accessToken: mapboxgl.accessToken,
+	// 		mapboxgl: mapboxgl,
+	// 	})
+	// );
+}
+
+console.log(geo.latitude, geo.longitude);
+createInteractiveMap([geo.longitude, geo.latitude]);
 
 if (dark && searchDiv) {
 	dark.addEventListener('click', hideSearch);
@@ -629,48 +696,229 @@ if (container) {
 
 if (searchInput) {
 	searchInput.addEventListener('focus', showSearch);
+	searchInput.addEventListener('input', (e) => {
+		debounce(() => {
+			searchByType(e.target.value);
+		})();
+	});
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-	let hearts = document.querySelectorAll('.heart');
-	let userName = getCookie('user_name');
-	let favorites =
-		JSON.parse(localStorage.getItem(`favorites_${userName}`)) || {};
+if (mapElement && choseLoaction) {
+	choseLoaction.onclick = () => {
+		mapElement.classList.add('active');
+		dark.classList.add('active');
+		setTimeout(() => {
+			map.resize();
+		}, 500);
+	};
 
-	hearts.forEach((heart, index) => {
-		if (!heart.dataset.id) {
-			heart.dataset.id = `card-${index}`;
+	dark.onclick = () => {
+		mapElement.classList.remove('active');
+		dark.classList.remove('active');
+	};
+}
+
+let hearts = document.querySelectorAll('.heart');
+let userName = getCookie('user_name');
+let favorites = JSON.parse(localStorage.getItem(`favorites_${userName}`)) || {};
+
+hearts.forEach((heart, index) => {
+	if (!heart.dataset.id) {
+		heart.dataset.id = `card-${index}`;
+	}
+
+	let cardId = heart.dataset.id;
+
+	if (favorites[cardId]) {
+		heart.style.color = 'red';
+	}
+
+	heart.addEventListener('click', function () {
+		if (!userName) {
+			Swal.fire({
+				title: 'Login Required',
+				text: 'Please login to add your favorites ❤️',
+				icon: 'warning',
+				confirmButtonText: 'OK',
+				confirmButtonColor: '#ff4757',
+				customClass: {
+					popup: 'custom-alert',
+				},
+			});
+			return;
 		}
-
-		let cardId = heart.dataset.id;
-
 		if (favorites[cardId]) {
+			delete favorites[cardId];
+			heart.style.color = '';
+		} else {
+			favorites[cardId] = true;
 			heart.style.color = 'red';
 		}
 
-		heart.addEventListener('click', function () {
-			if (!userName) {
-				Swal.fire({
-					title: 'Login Required',
-					text: 'Please login to add your favorites ❤️',
-					icon: 'warning',
-					confirmButtonText: 'OK',
-					confirmButtonColor: '#ff4757',
-					customClass: {
-						popup: 'custom-alert',
-					},
-				});
-				return;
-			}
-			if (favorites[cardId]) {
-				delete favorites[cardId];
-				heart.style.color = '';
-			} else {
-				favorites[cardId] = true;
-				heart.style.color = 'red';
-			}
-
-			localStorage.setItem(`favorites_${userName}`, JSON.stringify(favorites));
-		});
+		localStorage.setItem(`favorites_${userName}`, JSON.stringify(favorites));
 	});
 });
+function scrollCards(direction) {
+	let scrollAmount = container.clientWidth * direction;
+	container.scrollLeft += scrollAmount;
+}
+if (leftButton && rightButton) {
+	leftButton.addEventListener('click', () => scrollCards(-1));
+	rightButton.addEventListener('click', () => scrollCards(1));
+}
+
+document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
+
+// load the user information from local storage
+
+if (window.location.pathname.endsWith('profile.html')) {
+	let user_name = find_cookie('user_name');
+	let user_email = find_cookie('user_email');
+	if (user_name && user_email) {
+		document.getElementById('Name').innerHTML = user_name;
+		document.getElementById('Email').innerHTML = user_email;
+		document
+			.getElementById('edit_button')
+			.addEventListener('click', function () {
+				document.getElementById('editName').value = user_name;
+				document.getElementById('editEmail').value = user_email;
+			});
+		document
+			.getElementById('editForm')
+			.addEventListener('submit', function (e) {
+				e.preventDefault();
+				let fullName = document.getElementById('editName').value.trim();
+				let email = document.getElementById('editEmail').value.trim();
+				let password = document.getElementById('editPassowrd').value.trim();
+				document
+					.querySelectorAll('.error-message')
+					.forEach((el) => el.remove());
+				let valid = true;
+				if (!/^[A-Za-z\s]+$/.test(fullName)) {
+					showError('editName', 'Full name must contain only letters.');
+					valid = false;
+				}
+				if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+					showError('editEmail', 'Please enter a valid email address.');
+					valid = false;
+				}
+				if (password !== localStorage.getItem('user_password')) {
+					showError('editPassowrd', 'the password is incorrect');
+					valid = false;
+				}
+				if (valid) {
+					let expireDate = new Date();
+					expireDate.setDate(expireDate.getDate() + 30);
+					localStorage.setItem('user_name', fullName);
+					localStorage.setItem('user_email', email);
+					document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+					document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
+					window.location.href = '../HTML/profile.html';
+				}
+			});
+		document.getElementById('planers').addEventListener('click', function () {
+			window.location.href = '../HTML/planner.html';
+		});
+	} else {
+		window.location.href = '../HTML/login.html';
+	}
+}
+
+// check if cookie exists
+function find_cookie(cookie_name) {
+	let cookies = document.cookie.split('; ');
+	for (let cookie of cookies) {
+		if (cookie.split('=')[0] === cookie_name) {
+			return cookie.split('=')[1];
+		}
+	}
+	return false;
+}
+/*****************login and signup**************** */
+if (
+	window.location.pathname.endsWith('login.html') ||
+	window.location.pathname.endsWith('login.html?')
+) {
+	if (find_cookie('user_name') && find_cookie('user_email'))
+		window.location.href = '../HTML/index.html';
+	document.getElementById('loginForm').addEventListener('submit', function (e) {
+		e.preventDefault();
+		let email = document.getElementById('email').value.trim();
+		let password = document.getElementById('password').value.trim();
+		document.querySelectorAll('.error-message').forEach((el) => el.remove());
+		let valid = true;
+		if (
+			email !== localStorage.getItem('user_email') ||
+			password !== localStorage.getItem('user_password')
+		) {
+			showError('email', 'Enter valid email and password');
+			valid = false;
+		}
+		if (valid) {
+			let fullName = localStorage.getItem('user_name');
+			let email = localStorage.getItem('user_email');
+			let expireDate = new Date();
+			expireDate.setDate(expireDate.getDate() + 30);
+			document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+			document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
+			window.location.href = '../HTML/index.html';
+		}
+	});
+}
+
+if (
+	window.location.pathname.endsWith('signup.html') ||
+	window.location.pathname.endsWith('signup.html?')
+) {
+	if (find_cookie('user_name') && find_cookie('user_email'))
+		window.location.href = '../HTML/index.html';
+	document
+		.getElementById('signupForm')
+		.addEventListener('submit', function (e) {
+			e.preventDefault();
+			let fullName = document.getElementById('fullName').value.trim();
+			let email = document.getElementById('email').value.trim();
+			let password = document.getElementById('password').value.trim();
+			document.querySelectorAll('.error-message').forEach((el) => el.remove());
+			let valid = true;
+			if (!/^[A-Za-z\s]+$/.test(fullName)) {
+				showError('fullName', 'Full name must contain only letters.');
+				valid = false;
+			}
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+				showError('email', 'Please enter a valid email address.');
+				valid = false;
+			}
+			const passwordPattern =
+				/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+			if (!passwordPattern.test(password)) {
+				showError(
+					'password',
+					'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a symbol (@$#!%*?&) .'
+				);
+				valid = false;
+			}
+			if (valid) {
+				let expireDate = new Date();
+				expireDate.setDate(expireDate.getDate() + 30);
+				localStorage.clear();
+				localStorage.setItem('user_name', fullName);
+				localStorage.setItem('user_email', email);
+				localStorage.setItem('user_password', password);
+				document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+				document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
+				window.location.href = '../HTML/index.html';
+			}
+		});
+}
+
+//show the error massages
+function showError(inputId, message) {
+	let inputElement = document.getElementById(inputId);
+	let existingError = inputElement.parentNode.querySelector('.error-message');
+	if (existingError) existingError.remove();
+	let errorElement = document.createElement('div');
+	errorElement.className = 'error-message text-danger mt-1';
+	errorElement.innerText = message;
+	inputElement.parentNode.appendChild(errorElement);
+}
