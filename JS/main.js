@@ -20,6 +20,8 @@ loadHeaderFooter('../HTML/footer.html').then((data) => {
 	const footer = document.getElementById('footer-container').childNodes[0];
 });
 
+let geo = await getLatLong();
+
 // Importing elements from details page
 const imagesDivs = document.querySelectorAll('.images div');
 const rightArrow = document.querySelector('.images .right');
@@ -29,6 +31,8 @@ const dark = document.querySelector('.dark');
 const close = document.querySelector('.close');
 const paymentForm = document.querySelector('.confirm');
 const reserveBtn = document.getElementById('reserve');
+const choseLoaction = document.querySelector('.show-map');
+const mapElement = document.querySelector('.index-map');
 
 /* Importing elements from landing page */
 // arrows in home page
@@ -41,6 +45,7 @@ const searchDiv = document.querySelector('.search-form div');
 const searchInput = document.getElementById('search');
 const searchBtn = document.querySelector('.search-btn');
 
+let map;
 // Create Cards showed in the search result
 let indicatorsCounter = 0;
 function createCard(id, name, images, rate, period, price) {
@@ -127,6 +132,7 @@ function createCard(id, name, images, rate, period, price) {
 		const img = createElement('img', ['rounded-3'], {
 			src: image.src,
 			alt: `slide_${index + 1}`,
+			loading: 'lazy',
 		});
 
 		carouselItem.appendChild(img);
@@ -325,6 +331,7 @@ function MoveImagesToLeft() {
 
 // Move the images of a place to right in details page
 function MoveImagesToRight() {
+	console.log('hi');
 	if (currentImage > 0) {
 		imagesDivs[currentImage].classList.remove('active');
 		imagesDivs[--currentImage].classList.remove('inActive');
@@ -392,8 +399,8 @@ async function initializeSearchResult() {
 
 	const params = new URLSearchParams();
 	params.append('query', 'hotel');
-	params.append('lat', 30.059482);
-	params.append('lng', 31.299664);
+	params.append('lat', geo.latitude);
+	params.append('lng', geo.longitude);
 	params.append('limit', 20);
 	params.append('country', 'eg');
 
@@ -417,6 +424,10 @@ let rowOfPlaces;
 // Show the search result
 async function showSearch() {
 	if (!div) {
+		const { lng, lat } = map.getCenter();
+		geo.latitude = lat;
+		geo.longitude = lng;
+		console.log(geo);
 		const loading = generateSpinner();
 		div = createElement('div', ['show-search', 'overflow-scroll-y']);
 		const wrapper = createCategories();
@@ -430,15 +441,17 @@ async function showSearch() {
 			.then((places) => {
 				if (places) {
 					places.forEach((place) => {
-						const node = createCard(
-							place.business_id,
-							place.name,
-							place.photos,
-							place.rating,
-							place.state,
-							place.price_level
-						);
-						rowOfPlaces.appendChild(node);
+						if (place.photos.length > 0) {
+							const node = createCard(
+								place.business_id,
+								place.name,
+								place.photos,
+								place.rating,
+								place.state,
+								place.price_level
+							);
+							rowOfPlaces.appendChild(node);
+						}
 					});
 				}
 				content.removeChild(loading);
@@ -474,8 +487,8 @@ async function searchByType(text) {
 	console.log(text);
 	const params = new URLSearchParams();
 	params.append('query', text);
-	params.append('lat', 30.059482);
-	params.append('lng', 31.299664);
+	params.append('lat', geo.latitude);
+	params.append('lng', geo.longitude);
 	params.append('limit', 40);
 	rowOfPlaces.innerHTML = '';
 	const loading = generateSpinner();
@@ -488,15 +501,17 @@ async function searchByType(text) {
 	try {
 		let data = await getData('nearby.php', params);
 		data?.data.forEach((place) => {
-			const node = createCard(
-				place.business_id,
-				place.name,
-				place.photos,
-				place.rating,
-				place.state,
-				place.price_level
-			);
-			rowOfPlaces.appendChild(node);
+			if (place.photos.length > 0) {
+				const node = createCard(
+					place.business_id,
+					place.name,
+					place.photos,
+					place.rating,
+					place.state,
+					place.price_level
+				);
+				rowOfPlaces.appendChild(node);
+			}
 		});
 		rowOfPlaces.removeChild(loadingContainer);
 	} catch (error) {
@@ -512,8 +527,11 @@ async function searchByType(text) {
  * if it exists or not before adding the event listenerto avoid errors
  */
 
-if (imagesDivs && rightArrow && leftArrow && dots) {
+if (rightArrow) {
 	rightArrow.addEventListener('click', MoveImagesToLeft);
+	loadDots();
+}
+if (leftArrow) {
 	leftArrow.addEventListener('click', MoveImagesToRight);
 	loadDots();
 }
@@ -521,10 +539,10 @@ if (imagesDivs && rightArrow && leftArrow && dots) {
 if (reserveBtn) {
 	reserveBtn.addEventListener('click', togglePaymentForm);
 }
-if (close && dark) {
-	close.addEventListener('click', togglePaymentForm);
-	dark.addEventListener('click', togglePaymentForm);
-}
+// if (close && dark) {
+// 	close.addEventListener('click', togglePaymentForm);
+// 	dark.addEventListener('click', togglePaymentForm);
+// }
 
 document.addEventListener('DOMContentLoaded', function () {
 	function scrollCards(direction) {
@@ -565,6 +583,78 @@ function updateButtonsVisibility() {
 		}
 	}
 }
+
+async function createInteractiveMap(coordinates) {
+	mapboxgl.accessToken =
+		'pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ';
+
+	// Initialize the map
+	map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/mapbox/streets-v12',
+		center: coordinates,
+		zoom: 10,
+	});
+
+	// Add a custom marker with a popup
+	const marker = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+
+	// Show user's current location
+	map.addControl(
+		new mapboxgl.GeolocateControl({
+			positionOptions: { enableHighAccuracy: true },
+			trackUserLocation: true,
+		})
+	);
+
+	// Add GeoJSON data layer
+	map.on('load', () => {
+		map.addSource('places', {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: [
+					{
+						type: 'Feature',
+						geometry: { type: 'Point', coordinates: coordinates },
+						properties: { title: 'Sample Location' },
+					},
+				],
+			},
+		});
+
+		map.addLayer({
+			id: 'places-layer',
+			type: 'circle',
+			source: 'places',
+			paint: {
+				'circle-radius': 8,
+				'circle-color': '#007cbf',
+			},
+		});
+	});
+
+	window.addEventListener('load', () => {
+		const searchBox = new MapboxSearchBox();
+		searchBox.accessToken =
+			'pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ';
+
+		searchBox.marker = true;
+		searchBox.mapboxgl = mapboxgl;
+		map.addControl(searchBox);
+	});
+	// Access longitude and latitude values directly.
+	// map.addControl(
+	// 	new MapboxGeocoder({
+	// 		accessToken: mapboxgl.accessToken,
+	// 		mapboxgl: mapboxgl,
+	// 	})
+	// );
+}
+
+console.log(geo.latitude, geo.longitude);
+createInteractiveMap([geo.longitude, geo.latitude]);
+
 if (dark && searchDiv) {
 	dark.addEventListener('click', hideSearch);
 }
@@ -579,6 +669,21 @@ if (searchInput) {
 			searchByType(e.target.value);
 		})();
 	});
+}
+
+if (mapElement && choseLoaction) {
+	choseLoaction.onclick = () => {
+		mapElement.classList.add('active');
+		dark.classList.add('active');
+		setTimeout(() => {
+			map.resize();
+		}, 500);
+	};
+
+	dark.onclick = () => {
+		mapElement.classList.remove('active');
+		dark.classList.remove('active');
+	};
 }
 
 document.addEventListener('DOMContentLoaded', function () {

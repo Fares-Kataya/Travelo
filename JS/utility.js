@@ -2,7 +2,7 @@ const keys = [
 	'20b4800490msh4213a96bd695313p1772dcjsn4921896a0a5e',
 	'9bc60aca4dmsh266b3af491c2b5dp1040c9jsn037bf8803753',
 ];
-let currentKey = 0;
+let currentKey = 1;
 /**
  * Fetches data from the server using the Fetch API.
  * @param {String} url - The endpoint to be appended to the base API URL (e.g., ":searchNearby").
@@ -49,7 +49,6 @@ export async function getData(
 				} else {
 					currentKey++;
 				}
-				getData();
 			}
 			throw new Error(`Error: ${response.status} - ${response.statusText}`);
 		}
@@ -343,18 +342,26 @@ export async function createObj(obj) {
 }
 
 export function getLatLong() {
-	if ('geolocation' in navigator) {
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				console.log(position.coords.latitude, position.coords.longitude);
-			},
-			(error) => {
-				console.log(error);
-			}
-		);
-	} else {
-		console.log('Geolocation is not supported on this browser');
-	}
+	return new Promise((resolve, reject) => {
+		let geo = {
+			latitude: 30.059482,
+			longitude: 31.299664,
+		};
+		if ('geolocation' in navigator) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					geo.latitude = position.coords.latitude;
+					geo.longitude = position.coords.longitude;
+					resolve(geo); // Return the updated geo object after the position is retrieved
+				},
+				(error) => {
+					reject(error); // Reject the promise if there is an error
+				}
+			);
+		} else {
+			reject(new Error('Geolocation is not supported on this browser'));
+		}
+	});
 }
 /**
  * This Class used to generate an object of the body of the request
