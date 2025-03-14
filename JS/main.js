@@ -1,5 +1,14 @@
 import { categories } from '../data/categories.js';
-import { createElement, loadHeaderFooter, RequestBody } from './utility.js';
+import {
+	createElement,
+	createObj,
+	debounce,
+	generateSpinner,
+	getData,
+	getLatLong,
+	loadHeaderFooter,
+	RequestBody,
+} from './utility.js';
 
 // Loading header and footer
 loadHeaderFooter('../HTML/header.html').then((data) => {
@@ -49,6 +58,7 @@ function logINOut() {
 		});
 	}
 }
+let geo = await getLatLong();
 
 // Importing elements from details page
 const imagesDivs = document.querySelectorAll('.images div');
@@ -59,6 +69,8 @@ const dark = document.querySelector('.dark');
 const close = document.querySelector('.close');
 const paymentForm = document.querySelector('.confirm');
 const reserveBtn = document.getElementById('reserve');
+const choseLoaction = document.querySelector('.show-map');
+const mapElement = document.querySelector('.index-map');
 
 /* Importing elements from landing page */
 // arrows in home page
@@ -71,11 +83,11 @@ const searchDiv = document.querySelector('.search-form div');
 const searchInput = document.getElementById('search');
 const searchBtn = document.querySelector('.search-btn');
 
+let map;
 // Create Cards showed in the search result
 let indicatorsCounter = 0;
-function createCard() {
+function createCard(id, name, images, rate, period, price) {
 	indicatorsCounter++;
-	let imgNumber = 10;
 
 	const card = createElement('div', [
 		'd-flex',
@@ -91,29 +103,52 @@ function createCard() {
 
 	const carouselExample = createElement(
 		'div',
-		['carousel', 'slide', 'carouselExampleIndicators'],
+		[
+			'carousel',
+			'slide',
+			'carouselExampleIndicators',
+			'd-flex',
+			'flex-column',
+			'col-12',
+			'col-md-6',
+			'col-lg-4',
+			'col-xl-3',
+			'justify-content-center',
+			'card-container',
+			'mt-2',
+			'position-relative',
+		],
 		{
 			id: `carouselExampleIndicators${indicatorsCounter}`,
 		}
 	);
 
+	const a = createElement(
+		'a',
+		['position-absolute', 'start-0', 'top-0', 'w-100', 'h-100'],
+		{
+			href: `../HTML/details.html?business_id=${id}`,
+			style: 'z-index:3;',
+		}
+	);
+	carouselExample.appendChild(a);
 	const carouselIndicator = createElement('div', ['carousel-indicators']);
 
-	for (let i = 0; i < imgNumber; i++) {
-		const button = createElement('button', ['carousel-indicators'], {
+	// for (let i = 0; i < images.length; i++) {
+	images.map((image, index) => {
+		const button = createElement('button', [], {
 			type: 'button',
 			'data-bs-target': `#carouselExampleIndicators${indicatorsCounter}`,
-			'data-bs-slide-to': `${i}`,
+			'data-bs-slide-to': `${index}`,
 		});
 
-		if (i == 0) {
+		if (index == 0) {
 			button.classList.add('active');
 		}
 
 		carouselIndicator.appendChild(button);
-	}
-
-	carouselExample.appendChild(carouselIndicator);
+	});
+	// }
 
 	const carouselInner = createElement('div', [
 		'carousel-inner',
@@ -124,22 +159,24 @@ function createCard() {
 	const i = createElement('div', ['fa-solid', 'fa-heart', 'heart']);
 
 	carouselInner.appendChild(i);
-	for (let i = 0; i < imgNumber; i++) {
+	// for (let i = 0; i < images.length; i++) {
+	images.map((image, index) => {
 		const carouselItem = createElement('div', ['carousel-item']);
 
-		if (i == 0) {
+		if (index == 1) {
 			carouselItem.classList.add('active');
 		}
 
 		const img = createElement('img', ['rounded-3'], {
-			src: `../Assets/images/olive-garden-restaurant.jpg`,
-			alt: `slide_${i + 1}`,
+			src: image.src,
+			alt: `slide_${index + 1}`,
+			loading: 'lazy',
 		});
 
 		carouselItem.appendChild(img);
 		carouselInner.appendChild(carouselItem);
-	}
-	let k = 0;
+	});
+	// }
 
 	const buttonPrev = createElement('button', ['carousel-control-prev'], {
 		type: 'button',
@@ -167,7 +204,7 @@ function createCard() {
 
 	const buttonNext = createElement('button', ['carousel-control-next'], {
 		type: 'button',
-		'data-bs-target': `#carouselExampleIndicators${k++}`,
+		'data-bs-target': `#carouselExampleIndicators${indicatorsCounter}`,
 		'data-bs-slide': 'next',
 	});
 
@@ -191,34 +228,35 @@ function createCard() {
 
 	carouselInner.appendChild(buttonPrev);
 	carouselInner.appendChild(buttonNext);
+	carouselInner.appendChild(carouselIndicator);
 
 	carouselExample.appendChild(carouselInner);
 
 	card.appendChild(carouselExample);
 
-	const cardBody = createElement('div', ['row', 'card-body']);
+	const cardBody = createElement('div', ['row', 'card-body', 'w-100']);
 
-	const PCardBody = createElement('p', [
-		'col-5',
-		'd-inline-block',
-		'mb-0',
-		'fw-bolder',
-	]);
+	const PCardBody = createElement(
+		'p',
+		['col-9', 'd-inline-block', 'mb-0', 'fw-bolder'],
+		{},
+		name
+	);
 
 	cardBody.appendChild(PCardBody);
 
 	const RateCardBody = createElement('div', [
 		'd-flex',
 		'flex-row',
-		'col-7',
+		'col-3',
 		'justify-content-end',
 	]);
 
 	const RateStar = createElement('img', ['img-rate-star'], {
-		src: ``,
+		src: `../Assets/images/star-icon-vector-removebg-preview.png`,
 	});
 
-	const RateText = createElement('p', [], {}, ``);
+	const RateText = createElement('p', [], {}, rate);
 
 	RateCardBody.appendChild(RateStar);
 	RateCardBody.appendChild(RateText);
@@ -227,20 +265,20 @@ function createCard() {
 
 	const CardDetails = createElement('div', ['d-flex', 'flex-column', 'mt-n3']);
 
-	const CardPlaceName = createElement(
-		'span',
-		['col-12', 'fw-light', 'period'],
-		{},
-		``
-	);
+	// const CardPlaceName = createElement(
+	// 	'span',
+	// 	['col-12', 'fw-light', 'period'],
+	// 	{},
+	// 	name
+	// );
 
-	CardDetails.appendChild(CardPlaceName);
+	// CardDetails.appendChild(CardPlaceName);
 
 	const CardPlacePeriod = createElement(
 		'span',
 		['col-12', 'fw-light', 'period'],
 		{},
-		``
+		period
 	);
 
 	CardDetails.appendChild(CardPlacePeriod);
@@ -252,13 +290,18 @@ function createCard() {
 		'justify-content-start',
 	]);
 
-	const PriceIcon = createElement('img', ['mt-1'], {
-		src: ``,
-	});
+	// const PriceIcon = createElement('img', ['mt-1'], {
+	// 	src: ``,
+	// });
 
-	Price.appendChild(PriceIcon);
+	// Price.appendChild(PriceIcon);
 
-	const PriceText = createElement('span', [], {}, ``);
+	const PriceText = createElement(
+		'span',
+		[],
+		{},
+		`${price || Math.trunc(Math.random() * 400)} $`
+	);
 
 	Price.appendChild(PriceText);
 
@@ -273,10 +316,11 @@ function createCard() {
 	carouselExample.appendChild(cardBody);
 
 	// const containCard = document.getElementsByClassName('contain-card')[0];
-	const containCard = createElement('div', ['contain-card']);
+	// const containCard = createElement('div', ['contain-card']);
 
-	containCard.appendChild(carouselExample);
-	document.body.appendChild(containCard);
+	// containCard.appendChild(carouselExample);
+	// document.body.appendChild(containCard);
+	return carouselExample;
 }
 
 // const body = {
@@ -309,106 +353,49 @@ document.querySelectorAll('.category-item').forEach((item) => {
 	});
 });
 
-/*
-Error in left hand assignment
-document.getElementById("arrow-right") = function () {
-	let div1 = document.getElementById("div1");
-	let div5 = document.getElementById("div5");
-	
-	if (div1 && div5) {
-		div1.classList.remove("visible");
-		div1.classList.add("hidden");
-	
-		setTimeout(() => {
-			div5.classList.remove("hidden");
-			div5.classList.add("visible");
-		}, 500);
-	}
-}
-*/
+// // Move the images of a place to left in details page
+// function MoveImagesToLeft() {
+// 	if (currentImage + 1 < imagesDivs.length) {
+// 		imagesDivs[currentImage].classList.remove('active');
+// 		imagesDivs[currentImage].classList.add('inActive');
+// 		imagesDivs[++currentImage].classList.add('active');
 
-let currentImage = 0;
+// 		// Refresh the dots at the bottom of the carousel
+// 		loadDots();
+// 	}
+// }
 
-// Move the images of a place to left in details page
-function MoveImagesToLeft() {
-	if (currentImage + 1 < imagesDivs.length) {
-		imagesDivs[currentImage].classList.remove('active');
-		imagesDivs[currentImage].classList.add('inActive');
-		imagesDivs[++currentImage].classList.add('active');
+// // Move the images of a place to right in details page
+// function MoveImagesToRight() {
+// 	console.log('hi');
+// 	if (currentImage > 0) {
+// 		imagesDivs[currentImage].classList.remove('active');
+// 		imagesDivs[--currentImage].classList.remove('inActive');
+// 		imagesDivs[currentImage].classList.add('active');
 
-		// Refresh the dots at the bottom of the carousel
-		loadDots();
-	}
-}
+// 		// Refresh the dots at the bottom of the carousel
+// 		loadDots();
+// 	}
+// }
 
-// Move the images of a place to right in details page
-function MoveImagesToRight() {
-	if (currentImage > 0) {
-		imagesDivs[currentImage].classList.remove('active');
-		imagesDivs[--currentImage].classList.remove('inActive');
-		imagesDivs[currentImage].classList.add('active');
-
-		// Refresh the dots at the bottom of the carousel
-		loadDots();
-	}
-}
-
-// Set the dots at the bottom of the carousel according to the number of images
-function loadDots() {
-	dots.innerHTML = '';
-	imagesDivs.forEach((div, index) => {
-		let classes = ['dot'];
-		if (div.classList.contains('active')) {
-			classes.push('active');
-		}
-		const dot = createElement('span', [...classes]);
-		dots.appendChild(dot);
-	});
-}
+// // Set the dots at the bottom of the carousel according to the number of images
+// function loadDots() {
+// 	dots.innerHTML = '';
+// 	imagesDivs.forEach((div, index) => {
+// 		let classes = ['dot'];
+// 		if (div.classList.contains('active')) {
+// 			classes.push('active');
+// 		}
+// 		const dot = createElement('span', [...classes]);
+// 		dots.appendChild(dot);
+// 	});
+// }
 
 // Show/Hide the payment form in the details page
 function togglePaymentForm() {
 	paymentForm.classList.toggle('active');
 	dark.classList.toggle('active');
 }
-
-/*
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 justify-content-center card-container mt-2">
-					<div class="">
-						<div id="carouselExampleIndicators1"
-							class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
-	
-							<div class="carousel-inner position-relative card1">
-								<i class="fa-solid fa-heart heart"></i>
-								<div class="carousel-item active ">
-									<img class="rounded-3" src="../Assets/images/olive-garden-restaurant.jpg"
-										alt="First slide">
-								</div>
-							</div>
-						</div>
-	
-						<div class="card-body row">
-							<p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
-							<div class="d-flex flex-row col-7 justify-content-end rate-div">
-								<img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
-									class="img-rate-star">
-								<p class="">4.5</p>
-							</div>
-							<div class="d-flex flex-column mt-n3 card-details">
-								<span class="col-12 fw-light place-name">Resturant </span>
-								<span class="col-12 fw-light period"> 1 - 6 Mars </span>
-	
-								<div class="d-flex flex-row col-12 justify-content-start">
-									<img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
-									<span> 1.999</span>
-									<span class="ms-1 fw-bold">night</span>
-								</div>
-	
-							</div>
-						</div>
-					</div>
-				</div>
-*/
 
 // Creating the categories list
 function createCategories() {
@@ -439,74 +426,83 @@ function createCategories() {
 
 	return categoriesWrapper; // return the wrapper node
 }
+let placesData;
+let isFetching = false;
 
-function createSearchItem(name, img, rate, type, price) {
-	let html = `
-		<div class="col-12 col-md-3 card-container mt-2">
-                    <div class="">
-                        <div id="carouselExampleIndicators1"
-                            class="carousel slide carouselExampleIndicators justify-content" data-bs-interval="100">
+async function initializeSearchResult() {
+	if (placesData || isFetching) return placesData;
+	isFetching = true;
 
-                            <div class="carousel-inner position-relative card1">
-                                <i class="fa-solid fa-heart heart"></i>
-                                <div class="carousel-item active ">
-                                    <img class="rounded-3" src=${img}
-                                        alt=${name}>
-                                </div>
-                            </div>
-                        </div>
+	const params = new URLSearchParams();
+	params.append('query', 'hotel');
+	params.append('lat', geo.latitude);
+	params.append('lng', geo.longitude);
+	params.append('limit', 20);
+	params.append('country', 'eg');
 
-                        <div class="card-body row">
-                            <p class="col-5 d-inline-block mb-0 fw-bolder ">Alexandria Day Trip From Cairo</p>
-                            <div class="d-flex flex-row col-7 justify-content-end rate-div">
-                                <img src="../Assets/images/star-icon-vector-removebg-preview.png" alt=""
-                                    class="img-rate-star">
-                                <p class="">${rate}</p>
-                            </div>
-                            <div class="d-flex flex-column mt-n3 card-details">
-                                <span class="col-12 fw-light place-name">${type}</span>
-                                <span class="col-12 fw-light period"> 1 - 6 Mars </span>
+	try {
+		let data = await getData('nearby.php', params);
+		placesData = data?.data || [];
+	} catch (error) {
+		console.log(error);
+		placesData = [];
+	} finally {
+		isFetching = false;
+	}
 
-                                <div class="d-flex flex-row col-12 justify-content-start">
-                                    <img src="../Assets/images/Euro-icon.png" class="mt-1 Price-icon">
-                                    <span>${price}</span>
-                                    <span class="ms-1 fw-bold">night</span>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-	`;
-	return html;
+	return placesData;
 }
+
 // The div to be inserted into the body to show the search result
 let div;
 
+let rowOfPlaces;
 // Show the search result
-function showSearch() {
+async function showSearch() {
 	if (!div) {
+		const { lng, lat } = map.getCenter();
+		geo.latitude = lat;
+		geo.longitude = lng;
+		console.log(geo);
+		const loading = generateSpinner();
 		div = createElement('div', ['show-search', 'overflow-scroll-y']);
-		const wrapper = createCategories();
-		div.appendChild(wrapper);
+		// const wrapper = createCategories();
+		// div.appendChild(wrapper);
 		let content = createElement('div', ['p-3']);
 		div.appendChild(content);
-		let row = createElement('div', ['row']);
-		let item = createSearchItem(
-			'Alexandria day trip from cairo',
-			'../Assets/images/olive-garden-restaurant.jpg',
-			4.5,
-			'Restaurant',
-			3000
-		);
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		row.innerHTML += item;
-		content.appendChild(row);
+		content.appendChild(loading);
+		rowOfPlaces = createElement('div', ['row']);
+
+		initializeSearchResult()
+			.then((places) => {
+				if (places) {
+					places.slice(0, 20).forEach((place) => {
+						if (place.photos.length > 0) {
+							const node = createCard(
+								place.business_id,
+								place.name,
+								place.photos,
+								place.rating,
+								place.state,
+								place.price_level
+							);
+							rowOfPlaces.appendChild(node);
+						}
+					});
+				}
+				content.removeChild(loading);
+			})
+			.catch((error) => {
+				console.log(error);
+				content.removeChild(loading);
+			});
+
+		content.appendChild(rowOfPlaces);
+	} else {
+		// If data is already available, remove loading immediately
+		if (placesData) {
+			document.querySelector('.loading-spinner')?.remove();
+		}
 	}
 
 	if (!searchDiv.classList.contains('active')) {
@@ -523,6 +519,43 @@ function hideSearch() {
 	searchDiv.classList.remove('active');
 }
 
+async function searchByType(text) {
+	console.log(text);
+	const params = new URLSearchParams();
+	params.append('query', text);
+	params.append('lat', geo.latitude);
+	params.append('lng', geo.longitude);
+	params.append('limit', 40);
+	rowOfPlaces.innerHTML = '';
+	const loading = generateSpinner();
+	const loadingContainer = createElement('div', [
+		'col-12',
+		'position-relative',
+	]);
+	rowOfPlaces.appendChild(loadingContainer);
+	loadingContainer.appendChild(loading);
+	try {
+		let data = await getData('nearby.php', params);
+		data?.data.forEach((place) => {
+			if (place.photos.length > 0) {
+				const node = createCard(
+					place.business_id,
+					place.name,
+					place.photos,
+					place.rating,
+					place.state,
+					place.price_level
+				);
+				rowOfPlaces.appendChild(node);
+			}
+		});
+		rowOfPlaces.removeChild(loadingContainer);
+	} catch (error) {
+		rowOfPlaces.removeChild(loadingContainer);
+		console.log(error);
+	}
+}
+
 /**
  * Handle the event listeners below
  * CAUTION: This js file is being used inside different pages
@@ -530,57 +563,133 @@ function hideSearch() {
  * if it exists or not before adding the event listenerto avoid errors
  */
 
-if (imagesDivs && rightArrow && leftArrow && dots) {
-	rightArrow.addEventListener('click', MoveImagesToLeft);
-	leftArrow.addEventListener('click', MoveImagesToRight);
-	loadDots();
-}
+// if (rightArrow) {
+// 	rightArrow.addEventListener('click', MoveImagesToLeft);
+// 	loadDots();
+// }
+// if (leftArrow) {
+// 	leftArrow.addEventListener('click', MoveImagesToRight);
+// 	loadDots();
+// }
 
 if (reserveBtn) {
 	reserveBtn.addEventListener('click', togglePaymentForm);
 }
-if (close && dark) {
-	close.addEventListener('click', togglePaymentForm);
-	dark.addEventListener('click', togglePaymentForm);
-}
+// if (close && dark) {
+// 	close.addEventListener('click', togglePaymentForm);
+// 	dark.addEventListener('click', togglePaymentForm);
+// }
 
 document.addEventListener('DOMContentLoaded', function () {
 	function scrollCards(direction) {
 		let scrollAmount = container.clientWidth * direction;
 		container.scrollLeft += scrollAmount;
 	}
-
-	leftButton.addEventListener('click', () => scrollCards(-1));
-	rightButton.addEventListener('click', () => scrollCards(1));
+	if (leftButton && rightButton) {
+		leftButton.addEventListener('click', () => scrollCards(-1));
+		rightButton.addEventListener('click', () => scrollCards(1));
+	}
 });
 
 function updateButtonsVisibility() {
 	let container = document.querySelector('.more-to-explore-wrapper');
 	let leftButton = document.querySelector('.more-to-explore-button-left');
 	let rightButton = document.querySelector('.more-to-explore-button-right');
-
-	let scrollLeft = container.scrollLeft;
-	let scrollWidth = container.scrollWidth;
-	let clientWidth = container.clientWidth;
-
-	let threshold = 5;
-
-	if (scrollLeft <= threshold) {
-		leftButton.style.display = 'none';
-	} else {
-		leftButton.style.display = 'block';
+	let scrollLeft;
+	let scrollWidth;
+	let clientWidth;
+	if (container) {
+		scrollLeft = container.scrollLeft;
+		scrollWidth = container.scrollWidth;
+		clientWidth = container.clientWidth;
 	}
 
-	if (scrollLeft + clientWidth >= scrollWidth - threshold) {
-		rightButton.style.display = 'none';
-	} else {
-		rightButton.style.display = 'block';
+	if (leftButton) {
+		if (scrollLeft <= 0) {
+			leftButton.style.display = 'none';
+		} else {
+			leftButton.style.display = 'block';
+		}
+	}
+	if (rightButton) {
+		if (scrollLeft + clientWidth >= scrollWidth - 1) {
+			rightButton.style.display = 'none';
+		} else {
+			rightButton.style.display = 'block';
+		}
 	}
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-	updateButtonsVisibility();
-});
+async function createInteractiveMap(coordinates) {
+	mapboxgl.accessToken =
+		'pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ';
+
+	// Initialize the map
+	map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/mapbox/streets-v12',
+		center: coordinates,
+		zoom: 10,
+	});
+
+	// Add a custom marker with a popup
+	const marker = new mapboxgl.Marker().setLngLat(coordinates).addTo(map);
+
+	// Show user's current location
+	map.addControl(
+		new mapboxgl.GeolocateControl({
+			positionOptions: { enableHighAccuracy: true },
+			trackUserLocation: true,
+		})
+	);
+
+	// Add GeoJSON data layer
+	map.on('load', () => {
+		map.addSource('places', {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: [
+					{
+						type: 'Feature',
+						geometry: { type: 'Point', coordinates: coordinates },
+						properties: { title: 'Sample Location' },
+					},
+				],
+			},
+		});
+
+		map.addLayer({
+			id: 'places-layer',
+			type: 'circle',
+			source: 'places',
+			paint: {
+				'circle-radius': 8,
+				'circle-color': '#007cbf',
+			},
+		});
+	});
+
+	window.addEventListener('load', () => {
+		const searchBox = new MapboxSearchBox();
+		searchBox.accessToken =
+			'pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ';
+
+		searchBox.marker = true;
+		searchBox.mapboxgl = mapboxgl;
+		map.addControl(searchBox);
+	});
+	// Access longitude and latitude values directly.
+	// map.addControl(
+	// 	new MapboxGeocoder({
+	// 		accessToken: mapboxgl.accessToken,
+	// 		mapboxgl: mapboxgl,
+	// 	})
+	// );
+}
+
+console.log(geo.latitude, geo.longitude);
+createInteractiveMap([geo.longitude, geo.latitude]);
 
 if (dark && searchDiv) {
 	dark.addEventListener('click', hideSearch);
@@ -591,6 +700,26 @@ if (container) {
 
 if (searchInput) {
 	searchInput.addEventListener('focus', showSearch);
+	searchInput.addEventListener('input', (e) => {
+		debounce(() => {
+			searchByType(e.target.value);
+		})();
+	});
+}
+
+if (mapElement && choseLoaction) {
+	choseLoaction.onclick = () => {
+		mapElement.classList.add('active');
+		dark.classList.add('active');
+		setTimeout(() => {
+			map.resize();
+		}, 500);
+	};
+
+	dark.onclick = () => {
+		mapElement.classList.remove('active');
+		dark.classList.remove('active');
+	};
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -635,6 +764,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			localStorage.setItem(`favorites_${userName}`, JSON.stringify(favorites));
 		});
 	});
+	function scrollCards(direction) {
+		let scrollAmount = container.clientWidth * direction;
+		container.scrollLeft += scrollAmount;
+	}
+	if (leftButton && rightButton) {
+		leftButton.addEventListener('click', () => scrollCards(-1));
+		rightButton.addEventListener('click', () => scrollCards(1));
+	}
 });
 
 document.addEventListener('DOMContentLoaded', updateButtonsVisibility);

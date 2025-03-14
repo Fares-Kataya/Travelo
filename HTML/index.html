@@ -21,6 +21,17 @@
 			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<link
+			href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css"
+			rel="stylesheet" />
+		<script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+		<link
+			href="https://api.mapbox.com/mapbox-assembly/v1.3.0/assembly.min.css"
+			rel="stylesheet" />
+		<script
+			id="search-js"
+			defer=""
+			src="https://api.mapbox.com/search-js/v1.0.0/web.js"></script>
 	</head>
 
 	<body class="">
@@ -39,7 +50,9 @@
 							id="search"
 							type="text"
 							placeholder="Search for Hotels, Resturants, Places, etc." />
-						<button class="search-btn">
+						<button
+							class="search-btn"
+							type="button">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="20"
@@ -725,6 +738,25 @@
 				<button class="contact-btn">Contact Us</button>
 			</div>
 		</div>
+		<div class="index-map">
+			<div
+				id="map"
+				style="width: 100%; height: 100%"></div>
+		</div>
+		<button class="show-map">
+			<span
+				><svg
+					style="fill: white"
+					width="25"
+					height="25"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 576 512">
+					<!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+					<path
+						d="M384 476.1L192 421.2l0-385.3L384 90.8l0 385.3zm32-1.2l0-386.5L543.1 37.5c15.8-6.3 32.9 5.3 32.9 22.3l0 334.8c0 9.8-6 18.6-15.1 22.3L416 474.8zM15.1 95.1L160 37.2l0 386.5L32.9 474.5C17.1 480.8 0 469.2 0 452.2L0 117.4c0-9.8 6-18.6 15.1-22.3z" /></svg
+			></span>
+			Choose a location
+		</button>
 		<div id="footer-container"></div>
 		<script
 			src="../JS/utility.js"

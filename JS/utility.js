@@ -1,12 +1,19 @@
+const keys = [
+	'20b4800490msh4213a96bd695313p1772dcjsn4921896a0a5e',
+	'9bc60aca4dmsh266b3af491c2b5dp1040c9jsn037bf8803753',
+];
+let currentKey = 1;
 /**
  * Fetches data from the server using the Fetch API.
  * @param {String} url - The endpoint to be appended to the base API URL (e.g., ":searchNearby").
  * @param {String} method - The HTTP method to use (e.g., "GET", "POST").
+ * @param {String} params - The parameters to be sent with the GET request.
  * @param {Object} [body] - The request body (required for methods like "POST").
  * @returns {Promise<Object>} The parsed JSON response from the API.
  */
 export async function getData(
 	url,
+	params = '',
 	method = 'GET',
 	body = {},
 	customheaders = {}
@@ -16,10 +23,8 @@ export async function getData(
 		const options = {
 			method,
 			headers: {
-				'x-rapidapi-key': '9bc60aca4dmsh266b3af491c2b5dp1040c9jsn037bf8803753',
-				'x-rapidapi-host': 'google-map-places-new-v2.p.rapidapi.com',
-				'Content-Type': 'application/json',
-				'X-Goog-FieldMask': '*',
+				'x-rapidapi-key': keys[currentKey],
+				'x-rapidapi-host': 'maps-data.p.rapidapi.com',
 				...customheaders,
 			},
 		};
@@ -28,12 +33,23 @@ export async function getData(
 			options['body'] = JSON.stringify(body);
 		}
 
+		if (!params) {
+			throw new Error('There must be parameters');
+		}
+
 		const response = await fetch(
-			`https://google-map-places-new-v2.p.rapidapi.com/v1/places${url}`,
+			`https://maps-data.p.rapidapi.com/${url}?${params}`,
 			options
 		);
 
 		if (!response.ok) {
+			if (response.status === 429) {
+				if (currentKey === keys.length - 1) {
+					currentKey = 0;
+				} else {
+					currentKey++;
+				}
+			}
 			throw new Error(`Error: ${response.status} - ${response.statusText}`);
 		}
 		return await response.json();
@@ -43,6 +59,37 @@ export async function getData(
 	}
 }
 
+/**
+ * This function is used to delay a callback function passed to it as a parameter
+ * (usually used with getData method while being used in search)
+ * @param {Function} callBack
+ * @param {number} delay
+ * @returns new function that delays the callback function
+ */
+export function debounce(callBack, delay = 1000) {
+	let timeout;
+
+	return (...args) => {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			callBack(...args);
+		}, delay);
+	};
+}
+
+export function getURLQueries() {
+	const queries = location.search
+		.slice(1)
+		.split('&')
+		.map((item) => {
+			let key_value = item.split('=');
+			let key = key_value[0];
+			let value = key_value[1];
+			return { [key]: value };
+		});
+
+	return queries;
+}
 /**
  * Creates and returns an HTML element with specified classes and attributes.
  * @param {String} elementName - The tag name of the element (e.g., "div", "span").
@@ -233,6 +280,94 @@ export function createInput(type, id, placeholder) {
 		placeholder: placeholder,
 	});
 }
+
+/**
+ * When you use it add class position-relative to its parent first
+ * @returns Spinner node for loading
+ */
+export function generateSpinner() {
+	const container = createElement('div', [
+		'position-absolute',
+		'start-50',
+		'top-50',
+		'translate-middle',
+	]);
+	const div = createElement('div', ['spinner-border', 'text-danger'], {
+		role: 'status',
+	});
+	let span = createElement('span', ['visually-hidden']);
+	container.appendChild(div);
+	div.appendChild(span);
+	return container;
+}
+
+/**
+ * NOTE: Use it with placeDetails endpoint only
+ * Extracts important data from the API response object.
+ * @param {Object} obj API response object
+ * @returns {Promise<Object>} A new object with the needed data
+ */
+export async function createObj(obj) {
+	let newObj = {
+		name: obj?.name || '',
+		current_opening_hours: obj?.current_opening_hours || {},
+		formatted_address: obj?.formatted_address || '',
+		formatted_phone_number: obj?.formatted_phone_number || '',
+		id: obj?.place_id || null,
+		location: obj?.geometry?.location || {},
+		wheelchair_accessible_entrance:
+			obj?.wheelchair_accessible_entrance || false,
+		types: obj?.types || '',
+		rating: obj?.rating || 0,
+		reviews: obj?.reviews || [],
+		user_ratings_total: obj?.user_ratings_total || 0,
+		photos: [],
+	};
+
+	if (obj?.photos?.length > 0) {
+		const photosRequest = obj.photos
+			.slice(0, 1) // number of photos needed (Change the second argument)
+			.map(async (photo, index) => {
+				try {
+					const data = await getData(
+						`/photo?photo_reference=${photo.photo_reference}`
+					);
+
+					return { id: index + 1, src: data.photoUri };
+				} catch (error) {
+					console.log(error);
+					return null;
+				}
+			});
+
+		const photos = await Promise.all(photosRequest); // Resolves all the promises in the photosRequest array (it's an Array of promises)
+		newObj.photos = photos.filter(Boolean); // Removes the null values
+	}
+	return newObj;
+}
+
+export function getLatLong() {
+	return new Promise((resolve, reject) => {
+		let geo = {
+			latitude: 30.059482,
+			longitude: 31.299664,
+		};
+		if ('geolocation' in navigator) {
+			navigator.geolocation.getCurrentPosition(
+				(position) => {
+					geo.latitude = position.coords.latitude;
+					geo.longitude = position.coords.longitude;
+					resolve(geo); // Return the updated geo object after the position is retrieved
+				},
+				(error) => {
+					reject(error); // Reject the promise if there is an error
+				}
+			);
+		} else {
+			reject(new Error('Geolocation is not supported on this browser'));
+		}
+	});
+}
 /**
  * This Class used to generate an object of the body of the request
  * that should be sent with the Google places API request
@@ -240,10 +375,10 @@ export function createInput(type, id, placeholder) {
 export class RequestBody {
 	constructor(
 		region,
-		types = ['restaurant', 'hotel', 'park'],
-		resultCount = 50,
-		lat = 40.7128,
-		long = -74.006,
+		types = ['restaurant', 'hotel', 'park', 'beach'],
+		resultCount = 1,
+		lat = 30.059482,
+		long = 31.299664,
 		radius = 5000,
 		preference = 0
 	) {
@@ -255,8 +390,8 @@ export class RequestBody {
 		this.locationRestriction = {
 			circle: {
 				center: {
-					latitude: typeof lat === 'number' ? lat : 40.7128,
-					longitude: typeof long === 'number' ? long : -74.006,
+					latitude: typeof lat === 'number' ? lat : 30.059482,
+					longitude: typeof long === 'number' ? long : 31.299664,
 				},
 				radius: typeof radius === 'number' && radius >= 1000 ? radius : 5000,
 			},

@@ -14,6 +14,49 @@
 	color: black;
 }
 
+.index-map {
+	width: 90%;
+	height: 500px;
+	display: none;
+	position: fixed !important;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 9;
+	border-radius: 1rem;
+}
+
+/* .mapboxgl-canvas-container.mapboxgl-interactive.mapboxgl-touch-drag-pan.mapboxgl-touch-zoom-rotate {
+	width: 100%;
+	height: 100%;
+} */
+/* .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan,
+.mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan
+	.mapboxgl-canvas {
+	width: 100% !important;
+	height: 100% !important;
+} */
+.index-map.active {
+	display: block;
+}
+
+.show-map {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	position: fixed;
+	bottom: 50px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: black;
+	color: white;
+	border-radius: 2rem;
+	padding: 0.5rem 1rem;
+	outline: none;
+	border: none;
+	z-index: 1;
+}
+
 .search input {
 	border-radius: 50px;
 	width: 70%;
@@ -62,12 +105,20 @@
 }
 
 .search-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	outline: none;
 	border: none;
 	border-radius: 50%;
 	width: 47px;
 	height: 47px;
 	background-color: var(--red);
+	transition: all 0.2s linear;
+}
+
+.search-btn:hover {
+	background-color: #de3949;
 }
 
 .category-container {
@@ -225,6 +276,7 @@
 
 .carousel-inner {
 	width: 100%;
+	height: 300px;
 }
 
 .carousel-control-prev,
@@ -274,11 +326,11 @@
 	filter: invert(1);
 }
 
-.carousel-indicators button {
+/* .carousel-indicators button {
 	width: 5px;
 	height: 5px;
 	border-radius: 50%;
-}
+} */
 
 .card1 {
 	position: relative;
@@ -816,7 +868,7 @@ input:invalid {
 /* End Reservation form */
 
 /* Start Features */
-.features {
+/* .features {
 	display: flex;
 	align-items: center;
 	gap: 1rem;
@@ -834,10 +886,20 @@ input:invalid {
 	left: -0.6rem;
 	top: 50%;
 	transform: translateY(-50%);
-}
+} */
 
+.features {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--text-secondary);
+}
 .rate {
 	font-size: 3rem;
+}
+
+.more-images div {
+	height: 300px;
 }
 
 /* End Features */
@@ -862,16 +924,13 @@ input:invalid {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+	width: 30%;
 }
 
 .person-review div .person-img {
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
-}
-
-.person-review div:last-child p {
-	width: 70%;
 }
 
 .map-container {
@@ -904,6 +963,11 @@ input:invalid {
 	box-shadow: 0 0 20px 4px rgba(0, 0, 0, 0.25);
 }
 
+.confirm-form {
+	position: relative;
+	z-index: 2;
+}
+
 .confirm form input {
 	border: 1px solid #aaa;
 	outline: none;
@@ -919,9 +983,29 @@ input:invalid {
 .dark.active {
 	display: block;
 }
-
-.confirm.active {
+.thanks {
 	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 300px;
+	transition: all 0.4s linear;
+}
+.confirm.active {
+	display: block;
+}
+
+.end {
+	transition: all 0.4s linear;
+}
+
+.star {
+	cursor: pointer;
+	fill: black;
+}
+.star.no-rate {
+	fill: white;
+	stroke: black;
+	stroke-width: 1.2rem;
 }
 
 /* End Confirm Layout */
@@ -1079,9 +1163,9 @@ input:invalid {
 		opacity: 1;
 	}
 
-	.person-review div:last-child p {
+	/* .person-review div:last-child p {
 		width: 80%;
-	}
+	} */
 
 	.reservation-section {
 		position: unset;
@@ -1179,6 +1263,10 @@ input:invalid {
 
 	.features li {
 		font-size: 14px;
+	}
+
+	.person-review {
+		width: 100%;
 	}
 
 	.more-to-explore-button-left {
