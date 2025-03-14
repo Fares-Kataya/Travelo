@@ -465,7 +465,8 @@ function renderItinerary(card, destination) {
 				});
 			});
 			document.querySelectorAll(".it-option").forEach((itineraryOption) => {
-				itineraryOption.addEventListener("click", () => {
+				console.log(itineraryOption)
+				itineraryOption.addEventListener("click", (event) => {
 					const existingOverlays = document.querySelectorAll(".overlay");
 					existingOverlays.forEach(overlay => overlay.remove());
 					const overlay = createElement("div", ["overlay"]);
@@ -497,8 +498,9 @@ function renderItinerary(card, destination) {
 							}
 						}
 
-					});console.log(event.target)
-					handleSearch(itineraryOption,destination,event.target);
+					});
+					const targetDiv = event.target.parentElement.parentElement.parentElement.childNodes[1]
+					handleSearch(itineraryOption,destination,targetDiv);
 
 					});
 				});
@@ -618,7 +620,7 @@ function createPlaceCard(place,addbtn) {
 
 function addItinerary(card, place, addbtn) {
 	console.log(addbtn.parentElement)
-	const itinerary = addbtn.parentElement.closest(".timelineditiDiv");
+	const itinerary = addbtn.closest(".timelineditiDiv");
 	itinerary.appendChild(card);
 }
 async function handleSearch(itineraryOption,destination,addbtn) {

@@ -1,4 +1,3 @@
-
 import { createElement } from "../JS/utility.js"
 import { toggleActive } from "../JS/utility.js"
 export let dateDivFromModal = null;
