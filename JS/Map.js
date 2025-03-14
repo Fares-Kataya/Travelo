@@ -1,42 +1,62 @@
 export async function setupDestinationMap(destination) {
-		let map;
-		destination.addEventListener("change", function () {
-			let destVal = destination.value.trim();
-			fetch(
-				`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-					destVal
-				)}&format=json`
-			)
-				.then((response) => response.json())
-				.then((data) => {
-					if (data && data.length > 0) {
-						let lat = parseFloat(data[0].lat);
-						let lon = parseFloat(data[0].lon);
-						let trip = document.getElementById("trip");
-						let mapDiv = document.getElementById("preview");
-						if (!mapDiv) {
-							mapDiv = document.createElement("div");
-							mapDiv.id = "map";
-							trip.appendChild(mapDiv);
-						}
-						if (!map) {
-							map = L.map(mapDiv).setView([lat, lon], 5);
-							L.tileLayer(
-								"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-								{
-									attribution: "&copy; OpenStreetMap contributors",
-								}
-							).addTo(map);
-                            
-						} else {
-							map.setView([lat, lon], 5);
-						}
-						L.marker([lat, lon]).addTo(map).bindPopup(destVal).openPopup();
-					} else {
-						alert("Location not found. Please try another destination.");
-					}
+	let map = null;
+	let marker = null;
+
+	destination.addEventListener("change", async function () {
+		const destVal = destination.value.trim();
+
+		try {
+			const coords = await getCoordinates(destVal);
+
+			if (!coords) {
+				alert("Location not found. Please try another destination.");
+				return;
+			}
+
+			const trip = document.getElementById("trip");
+			let mapDiv = document.getElementById("preview");
+
+			if (!mapDiv) {
+				mapDiv = document.createElement("div");
+				mapDiv.id = "preview";
+				mapDiv.style.height = "400px";
+				trip.appendChild(mapDiv);
+			}
+
+			if (!map) {
+				mapboxgl.accessToken =
+					"pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ";
+				map = new mapboxgl.Map({
+					container: "preview",
+					style: "mapbox://styles/mapbox/streets-v12",
+					center: coords,
+					zoom: 5,
 				});
-		});
+
+				map.addControl(new mapboxgl.NavigationControl());
+				map.addControl(
+					new mapboxgl.GeolocateControl({
+						positionOptions: { enableHighAccuracy: true },
+						trackUserLocation: true,
+					})
+				);
+
+				marker = new mapboxgl.Marker()
+					.setLngLat(coords)
+					.setPopup(new mapboxgl.Popup().setHTML(destVal))
+					.addTo(map);
+				marker.getPopup().addTo(map);
+			} else {
+				map.flyTo({ center: coords, zoom: 5 });
+				marker.setLngLat(coords);
+				marker.getPopup().setHTML(destVal).addTo(map);
+				marker.togglePopup();
+			}
+		} catch (error) {
+			console.error("Error:", error);
+			alert("Error fetching location. Please try again.");
+		}
+	});
 }
 export async function getCoordinates(destinationName) {
 	let url = `https://api.mapbox.com/search/geocode/v6/forward?q=${destinationName}&access_token=pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ`;
@@ -112,35 +132,35 @@ export async function createInteractiveMap(coordinates) {
 	// );
 }
 export async function getCountryCodeFromName(countryName) {
-	console.log(countryName)
-  const accessToken = "pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ";
-  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-    countryName
-  )}.json?types=country&access_token=${accessToken}`;
+	console.log(countryName);
+	const accessToken =
+		"pk.eyJ1IjoiZmFyZXN0eWsiLCJhIjoiY204M2c3OTl3MHFrMTJpcjR2Z2ZrYWgybSJ9.elrKNi3eYJ-He6z0zEjjtQ";
+	const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+		countryName
+	)}.json?types=country&access_token=${accessToken}`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-    const data = await response.json();
-	  if (
-      data.features &&
-      Array.isArray(data.features) &&
-      data.features.length > 0
-	  ) {
-      const firstFeature = data.features[0];
-      if (firstFeature.properties) {
-		  console.log(data.features)
-		  const countryContext = firstFeature.properties.short_code;
-		  if (countryContext) {
-			  console.log(countryContext)
-          return countryContext || null;
-		  }
-      }
-    }
-    return null;
-
-  } catch (error) {
-    console.error("Error fetching country code:", error);
-    return null;
-  }
+	try {
+		const response = await fetch(url);
+		if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+		const data = await response.json();
+		if (
+			data.features &&
+			Array.isArray(data.features) &&
+			data.features.length > 0
+		) {
+			const firstFeature = data.features[0];
+			if (firstFeature.properties) {
+				console.log(data.features);
+				const countryContext = firstFeature.properties.short_code;
+				if (countryContext) {
+					console.log(countryContext);
+					return countryContext || null;
+				}
+			}
+		}
+		return null;
+	} catch (error) {
+		console.error("Error fetching country code:", error);
+		return null;
+	}
 }

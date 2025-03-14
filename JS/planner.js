@@ -335,6 +335,8 @@ let imageSelector = (destination = "", image) => {
 		image.src = "../Assets/images/marcin-nowak-iXqTqC-f6jI-unsplash.jpg";
 	} else if (destination.toLowerCase() === "egypt") {
 		image.src = "../Assets/images/alex-azabache-MoonoldXeqs-unsplash.jpg";
+	} else if (destination.toLowerCase() === "france") {
+		image.src = "../Assets/images/chris-karidis-nnzkZNYWHaU-unsplash.jpg";
 	}
 	return image;
 };
@@ -609,10 +611,10 @@ function createPlaceCard(place,addbtn) {
 		place.review_count || 0
 		} reviews)`;
 	const workingHours = createElement("div")
-	workingHours.textContent = place.working_hours
+	// workingHours.textContent = place.working_hours
 	cardDeets.appendChild(rating);
 	cardflex.appendChild(cardDeets);
-	cardflex.appendChild(workingHours);
+	// cardflex.appendChild(workingHours);
 	card.appendChild(cardflex);
 	card.addEventListener("click", () => { addItinerary(card,place,addbtn) });
 	return card;
