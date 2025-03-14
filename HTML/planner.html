@@ -2,37 +2,78 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
 		<title>itinerary Planner</title>
-		<link rel="stylesheet" href="../CSS/bootstrap.min.css" />
-		<link rel="stylesheet" href="../CSS/planner.css" />
-		<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-		<link rel="stylesheet" href="../CSS/utility.css">
+		<link
+			rel="stylesheet"
+			href="../CSS/bootstrap.min.css" />
+		<link
+			rel="stylesheet"
+			href="../CSS/planner.css" />
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet/dist/leaflet.css" />
+		<link
+			rel="stylesheet"
+			href="../CSS/utility.css" />
 		<!-- <link rel="stylesheet" href="../CSS/style.css"> -->
-		<script type="module" src="../JS/utility.js"></script>
+		<script
+			type="module"
+			src="../JS/utility.js"></script>
 		<!-- <script type="module" src="../JS/refactoredPlanner.js"></script> -->
-		<script type="module" src="../JS/planner.js"></script>
-	<script src="https://api.mapbox.com/mapbox-gl-js/v3.1.0/mapbox-gl.js"></script>
-	<script id="search-js" defer src="https://api.mapbox.com/search-js/v1.0.0/web.js"></script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.0/mapbox-gl.css" rel="stylesheet" />
+		<script
+			type="module"
+			src="../JS/planner.js"></script>
+		<script src="https://api.mapbox.com/mapbox-gl-js/v3.1.0/mapbox-gl.js"></script>
+		<script
+			id="search-js"
+			defer
+			src="https://api.mapbox.com/search-js/v1.0.0/web.js"></script>
+		<link
+			href="https://api.mapbox.com/mapbox-gl-js/v3.1.0/mapbox-gl.css"
+			rel="stylesheet" />
 		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 	</head>
 	<body>
-		
 		<header id="header-container">
 			<nav></nav>
 		</header>
 		<section class="listnav container col-6 mb-5">
 			<ul id="menu-list">
-				<li><a class="menu-links" href="#">Discover</a></li>
-				<li><a class="menu-links" href="#">Inspiration</a></li>
-				<li><a class="menu-links active" href="#">My Trips</a></li>
+				<li>
+					<a
+						class="menu-links"
+						href="#"
+						>Discover</a
+					>
+				</li>
+				<li>
+					<a
+						class="menu-links"
+						href="#"
+						>Inspiration</a
+					>
+				</li>
+				<li>
+					<a
+						class="menu-links active"
+						href="#"
+						>My Trips</a
+					>
+				</li>
 			</ul>
 		</section>
 		<section class="container col-10">
 			<h1>My Trips</h1>
 			<hr />
-			<button class="btn btn-lg d-block mx-auto mt-5" id="tripbtn"><span class="plus-btn">+</span> <span class="tripbtn-txt">Create a New Trip</span></button>
+			<button
+				class="btn btn-lg d-block mx-auto mt-5"
+				id="tripbtn">
+				<span class="plus-btn">+</span>
+				<span class="tripbtn-txt">Create a New Trip</span>
+			</button>
 			<h2>Planned Trips</h2>
 			<hr />
 			<article id="planned-Trips">
@@ -40,21 +81,27 @@
 					<p class="para">
 						you have no upcoming trips. Where are you going next?
 					</p>
-					<button class="btn d-block mx-auto mt-3" id="exploreBtn"><span class="btn-text">Start Exploring!</span><img class="btn-icon" src="../Assets/icons/icons8-explore-50.png" alt=""></button>
+					<button
+						class="btn d-block mx-auto mt-3"
+						id="exploreBtn">
+						<span class="btn-text">Start Exploring!</span
+						><img
+							class="btn-icon"
+							src="../Assets/icons/icons8-explore-50.png"
+							alt="" />
+					</button>
 				</div>
 			</article>
 			<article id="completed">
-			<h2>Completed Trips</h2>
-			<hr>
-			<div class="comp">
-				<p class="para">
+				<h2>Completed Trips</h2>
+				<hr />
+				<div class="comp">
+					<p class="para">
 						your completed trips will appear here, start by creating a new trip!
 					</p>
-			</div>
+				</div>
 			</article>
 		</section>
-		<footer id="footer-container">
-
-		</footer>
+		<footer id="footer-container"></footer>
 	</body>
 </html>

@@ -769,60 +769,60 @@ if (leftButton && rightButton) {
 document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
 
 // load the user information from local storage
-document.addEventListener('DOMContentLoaded', function () {
-	if (window.location.pathname.endsWith('profile.html')) {
-		let user_name = find_cookie('user_name');
-		let user_email = find_cookie('user_email');
-		if (user_name && user_email) {
-			document.getElementById('Name').innerHTML = user_name;
-			document.getElementById('Email').innerHTML = user_email;
-			document
-				.getElementById('edit_button')
-				.addEventListener('click', function () {
-					document.getElementById('editName').value = user_name;
-					document.getElementById('editEmail').value = user_email;
-				});
-			document
-				.getElementById('editForm')
-				.addEventListener('submit', function (e) {
-					e.preventDefault();
-					let fullName = document.getElementById('editName').value.trim();
-					let email = document.getElementById('editEmail').value.trim();
-					let password = document.getElementById('editPassowrd').value.trim();
-					document
-						.querySelectorAll('.error-message')
-						.forEach((el) => el.remove());
-					let valid = true;
-					if (!/^[A-Za-z\s]+$/.test(fullName)) {
-						showError('editName', 'Full name must contain only letters.');
-						valid = false;
-					}
-					if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-						showError('editEmail', 'Please enter a valid email address.');
-						valid = false;
-					}
-					if (password !== localStorage.getItem('user_password')) {
-						showError('editPassowrd', 'the password is incorrect');
-						valid = false;
-					}
-					if (valid) {
-						let expireDate = new Date();
-						expireDate.setDate(expireDate.getDate() + 30);
-						localStorage.setItem('user_name', fullName);
-						localStorage.setItem('user_email', email);
-						document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
-						document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
-						window.location.href = '../HTML/profile.html';
-					}
-				});
-			document.getElementById('planers').addEventListener('click', function () {
-				window.location.href = '../HTML/planner.html';
+
+if (window.location.pathname.endsWith('profile.html')) {
+	let user_name = find_cookie('user_name');
+	let user_email = find_cookie('user_email');
+	if (user_name && user_email) {
+		document.getElementById('Name').innerHTML = user_name;
+		document.getElementById('Email').innerHTML = user_email;
+		document
+			.getElementById('edit_button')
+			.addEventListener('click', function () {
+				document.getElementById('editName').value = user_name;
+				document.getElementById('editEmail').value = user_email;
 			});
-		} else {
-			window.location.href = '../HTML/login.html';
-		}
+		document
+			.getElementById('editForm')
+			.addEventListener('submit', function (e) {
+				e.preventDefault();
+				let fullName = document.getElementById('editName').value.trim();
+				let email = document.getElementById('editEmail').value.trim();
+				let password = document.getElementById('editPassowrd').value.trim();
+				document
+					.querySelectorAll('.error-message')
+					.forEach((el) => el.remove());
+				let valid = true;
+				if (!/^[A-Za-z\s]+$/.test(fullName)) {
+					showError('editName', 'Full name must contain only letters.');
+					valid = false;
+				}
+				if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+					showError('editEmail', 'Please enter a valid email address.');
+					valid = false;
+				}
+				if (password !== localStorage.getItem('user_password')) {
+					showError('editPassowrd', 'the password is incorrect');
+					valid = false;
+				}
+				if (valid) {
+					let expireDate = new Date();
+					expireDate.setDate(expireDate.getDate() + 30);
+					localStorage.setItem('user_name', fullName);
+					localStorage.setItem('user_email', email);
+					document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+					document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
+					window.location.href = '../HTML/profile.html';
+				}
+			});
+		document.getElementById('planers').addEventListener('click', function () {
+			window.location.href = '../HTML/planner.html';
+		});
+	} else {
+		window.location.href = '../HTML/login.html';
 	}
-});
+}
+
 // check if cookie exists
 function find_cookie(cookie_name) {
 	let cookies = document.cookie.split('; ');
