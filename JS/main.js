@@ -525,18 +525,20 @@ async function searchByType(text) {
 	params.append('query', text);
 	params.append('lat', geo.latitude);
 	params.append('lng', geo.longitude);
-	params.append('limit', 40);
+	params.append('limit', 20);
 	rowOfPlaces.innerHTML = '';
 	const loading = generateSpinner();
 	const loadingContainer = createElement('div', [
-		'col-12',
+		'w-100',
 		'position-relative',
+		'h-100',
 	]);
 	rowOfPlaces.appendChild(loadingContainer);
 	loadingContainer.appendChild(loading);
 	try {
 		let data = await getData('nearby.php', params);
-		data?.data.forEach((place) => {
+		rowOfPlaces.removeChild(loadingContainer);
+		data?.data.map((place) => {
 			if (place.photos.length > 0) {
 				const node = createCard(
 					place.business_id,
@@ -549,7 +551,6 @@ async function searchByType(text) {
 				rowOfPlaces.appendChild(node);
 			}
 		});
-		rowOfPlaces.removeChild(loadingContainer);
 	} catch (error) {
 		rowOfPlaces.removeChild(loadingContainer);
 		console.log(error);

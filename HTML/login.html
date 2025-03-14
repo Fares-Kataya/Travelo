@@ -23,7 +23,8 @@
 			<div
 				class="login position-absolute start-50 top-50 px-3 py-5 overflow-hidden rounded-4 text-white">
 				<div class="position-absolute start-0 top-0 w-100 h-100 blur"></div>
-				<div class="Leftside d-flex justify-content-center align-items-center">
+				<div
+					class="Leftside d-flex flex-column justify-content-center align-items-center">
 					<div class="col-10 col-md-8">
 						<h2>Log in</h2>
 						<form id="loginForm">
@@ -53,23 +54,30 @@
 							</div>
 							<button
 								type="submit"
+								style="background-color: black; color: white"
 								class="btn btn-yellow w-100 mb-3">
 								log in
 							</button>
-							<button type="button" class="btn btn-outline-light me-2">
+							<button
+								type="button"
+								class="btn btn-outline-light me-2">
 								<i class="fa-brands fa-facebook"></i> Facebook
 							</button>
-						</div>
-					</form>
+						</form>
+					</div>
 					<p class="mt-4">
 						don't have account?
-						<a href="signup.html" class="text-decoration-none">signup</a>
+						<a
+							href="signup.html"
+							class="text-decoration-none"
+							>signup</a
+						>
 					</p>
 				</div>
 			</div>
 		</div>
 		<script
-    src="../JS/main.js"
-    type="module"></script>
+			src="../JS/main.js"
+			type="module"></script>
 	</body>
 </html>

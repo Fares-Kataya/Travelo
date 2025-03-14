@@ -1027,19 +1027,16 @@ input:invalid {
 /* Start Keyframes */
 @keyframes move_login {
 	0% {
-		transform: translate(-50%, -70%);
+		opacity: 0;
+		backdrop-filter: blur(0px);
 	}
-
-	25% {
-		transform: translate(-50%, -40%);
-	}
-
 	50% {
-		transform: translate(-50%, -55%);
+		opacity: 0.5;
+		backdrop-filter: blur(2.5px);
 	}
-
 	100% {
-		transform: translate(-50%, -50%);
+		opacity: 1;
+		backdrop-filter: blur(5px);
 	}
 }
 
