@@ -705,8 +705,17 @@
 	background: white;
 	position: absolute;
 	transition: 0.3s all ease-in-out;
+	/* display: flex;
+	justify-content: center;
+	align-items: center; */
 }
-
+.more-to-explore-button-right i,
+.more-to-explore-button-left i {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
 .more-to-explore-button-right {
 	right: 0px;
 	top: 50%;

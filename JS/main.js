@@ -595,28 +595,23 @@ function updateButtonsVisibility() {
 	let container = document.querySelector('.more-to-explore-wrapper');
 	let leftButton = document.querySelector('.more-to-explore-button-left');
 	let rightButton = document.querySelector('.more-to-explore-button-right');
-	let scrollLeft;
-	let scrollWidth;
-	let clientWidth;
-	if (container) {
-		scrollLeft = container.scrollLeft;
-		scrollWidth = container.scrollWidth;
-		clientWidth = container.clientWidth;
+
+	let scrollLeft = container.scrollLeft;
+	let scrollWidth = container.scrollWidth;
+	let clientWidth = container.clientWidth;
+
+	let threshold = 5;
+
+	if (scrollLeft <= threshold) {
+		leftButton.style.display = 'none';
+	} else {
+		leftButton.style.display = 'block';
 	}
 
-	if (leftButton) {
-		if (scrollLeft <= 0) {
-			leftButton.style.display = 'none';
-		} else {
-			leftButton.style.display = 'block';
-		}
-	}
-	if (rightButton) {
-		if (scrollLeft + clientWidth >= scrollWidth - 1) {
-			rightButton.style.display = 'none';
-		} else {
-			rightButton.style.display = 'block';
-		}
+	if (scrollLeft + clientWidth >= scrollWidth - threshold) {
+		rightButton.style.display = 'none';
+	} else {
+		rightButton.style.display = 'block';
 	}
 }
 
@@ -722,57 +717,54 @@ if (mapElement && choseLoaction) {
 	};
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-	let hearts = document.querySelectorAll('.heart');
-	let userName = getCookie('user_name');
-	let favorites =
-		JSON.parse(localStorage.getItem(`favorites_${userName}`)) || {};
+let hearts = document.querySelectorAll('.heart');
+let userName = getCookie('user_name');
+let favorites = JSON.parse(localStorage.getItem(`favorites_${userName}`)) || {};
 
-	hearts.forEach((heart, index) => {
-		if (!heart.dataset.id) {
-			heart.dataset.id = `card-${index}`;
+hearts.forEach((heart, index) => {
+	if (!heart.dataset.id) {
+		heart.dataset.id = `card-${index}`;
+	}
+
+	let cardId = heart.dataset.id;
+
+	if (favorites[cardId]) {
+		heart.style.color = 'red';
+	}
+
+	heart.addEventListener('click', function () {
+		if (!userName) {
+			Swal.fire({
+				title: 'Login Required',
+				text: 'Please login to add your favorites ❤️',
+				icon: 'warning',
+				confirmButtonText: 'OK',
+				confirmButtonColor: '#ff4757',
+				customClass: {
+					popup: 'custom-alert',
+				},
+			});
+			return;
 		}
-
-		let cardId = heart.dataset.id;
-
 		if (favorites[cardId]) {
+			delete favorites[cardId];
+			heart.style.color = '';
+		} else {
+			favorites[cardId] = true;
 			heart.style.color = 'red';
 		}
 
-		heart.addEventListener('click', function () {
-			if (!userName) {
-				Swal.fire({
-					title: 'Login Required',
-					text: 'Please login to add your favorites ❤️',
-					icon: 'warning',
-					confirmButtonText: 'OK',
-					confirmButtonColor: '#ff4757',
-					customClass: {
-						popup: 'custom-alert',
-					},
-				});
-				return;
-			}
-			if (favorites[cardId]) {
-				delete favorites[cardId];
-				heart.style.color = '';
-			} else {
-				favorites[cardId] = true;
-				heart.style.color = 'red';
-			}
-
-			localStorage.setItem(`favorites_${userName}`, JSON.stringify(favorites));
-		});
+		localStorage.setItem(`favorites_${userName}`, JSON.stringify(favorites));
 	});
-	function scrollCards(direction) {
-		let scrollAmount = container.clientWidth * direction;
-		container.scrollLeft += scrollAmount;
-	}
-	if (leftButton && rightButton) {
-		leftButton.addEventListener('click', () => scrollCards(-1));
-		rightButton.addEventListener('click', () => scrollCards(1));
-	}
 });
+function scrollCards(direction) {
+	let scrollAmount = container.clientWidth * direction;
+	container.scrollLeft += scrollAmount;
+}
+if (leftButton && rightButton) {
+	leftButton.addEventListener('click', () => scrollCards(-1));
+	rightButton.addEventListener('click', () => scrollCards(1));
+}
 
 document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
 
@@ -842,92 +834,83 @@ function find_cookie(cookie_name) {
 	return false;
 }
 /*****************login and signup**************** */
-document.addEventListener('DOMContentLoaded', function () {
-	if (
-		window.location.pathname.endsWith('login.html') ||
-		window.location.pathname.endsWith('login.html?')
-	) {
-		if (find_cookie('user_name') && find_cookie('user_email'))
+if (
+	window.location.pathname.endsWith('login.html') ||
+	window.location.pathname.endsWith('login.html?')
+) {
+	if (find_cookie('user_name') && find_cookie('user_email'))
+		window.location.href = '../HTML/index.html';
+	document.getElementById('loginForm').addEventListener('submit', function (e) {
+		e.preventDefault();
+		let email = document.getElementById('email').value.trim();
+		let password = document.getElementById('password').value.trim();
+		document.querySelectorAll('.error-message').forEach((el) => el.remove());
+		let valid = true;
+		if (
+			email !== localStorage.getItem('user_email') ||
+			password !== localStorage.getItem('user_password')
+		) {
+			showError('email', 'Enter valid email and password');
+			valid = false;
+		}
+		if (valid) {
+			let fullName = localStorage.getItem('user_name');
+			let email = localStorage.getItem('user_email');
+			let expireDate = new Date();
+			expireDate.setDate(expireDate.getDate() + 30);
+			document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+			document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
 			window.location.href = '../HTML/index.html';
-		document
-			.getElementById('loginForm')
-			.addEventListener('submit', function (e) {
-				e.preventDefault();
-				let email = document.getElementById('email').value.trim();
-				let password = document.getElementById('password').value.trim();
-				document
-					.querySelectorAll('.error-message')
-					.forEach((el) => el.remove());
-				let valid = true;
-				if (
-					email !== localStorage.getItem('user_email') ||
-					password !== localStorage.getItem('user_password')
-				) {
-					showError('email', 'Enter valid email and password');
-					valid = false;
-				}
-				if (valid) {
-					let fullName = localStorage.getItem('user_name');
-					let email = localStorage.getItem('user_email');
-					let expireDate = new Date();
-					expireDate.setDate(expireDate.getDate() + 30);
-					document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
-					document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
-					window.location.href = '../HTML/index.html';
-				}
-			});
-	}
-});
+		}
+	});
+}
 
-document.addEventListener('DOMContentLoaded', function () {
-	if (
-		window.location.pathname.endsWith('signup.html') ||
-		window.location.pathname.endsWith('signup.html?')
-	) {
-		if (find_cookie('user_name') && find_cookie('user_email'))
-			window.location.href = '../HTML/index.html';
-		document
-			.getElementById('signupForm')
-			.addEventListener('submit', function (e) {
-				e.preventDefault();
-				let fullName = document.getElementById('fullName').value.trim();
-				let email = document.getElementById('email').value.trim();
-				let password = document.getElementById('password').value.trim();
-				document
-					.querySelectorAll('.error-message')
-					.forEach((el) => el.remove());
-				let valid = true;
-				if (!/^[A-Za-z\s]+$/.test(fullName)) {
-					showError('fullName', 'Full name must contain only letters.');
-					valid = false;
-				}
-				if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-					showError('email', 'Please enter a valid email address.');
-					valid = false;
-				}
-				const passwordPattern =
-					/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-				if (!passwordPattern.test(password)) {
-					showError(
-						'password',
-						'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a symbol (@$#!%*?&) .'
-					);
-					valid = false;
-				}
-				if (valid) {
-					let expireDate = new Date();
-					expireDate.setDate(expireDate.getDate() + 30);
-					localStorage.clear();
-					localStorage.setItem('user_name', fullName);
-					localStorage.setItem('user_email', email);
-					localStorage.setItem('user_password', password);
-					document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
-					document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
-					window.location.href = '../HTML/index.html';
-				}
-			});
-	}
-});
+if (
+	window.location.pathname.endsWith('signup.html') ||
+	window.location.pathname.endsWith('signup.html?')
+) {
+	if (find_cookie('user_name') && find_cookie('user_email'))
+		window.location.href = '../HTML/index.html';
+	document
+		.getElementById('signupForm')
+		.addEventListener('submit', function (e) {
+			e.preventDefault();
+			let fullName = document.getElementById('fullName').value.trim();
+			let email = document.getElementById('email').value.trim();
+			let password = document.getElementById('password').value.trim();
+			document.querySelectorAll('.error-message').forEach((el) => el.remove());
+			let valid = true;
+			if (!/^[A-Za-z\s]+$/.test(fullName)) {
+				showError('fullName', 'Full name must contain only letters.');
+				valid = false;
+			}
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+				showError('email', 'Please enter a valid email address.');
+				valid = false;
+			}
+			const passwordPattern =
+				/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+			if (!passwordPattern.test(password)) {
+				showError(
+					'password',
+					'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a symbol (@$#!%*?&) .'
+				);
+				valid = false;
+			}
+			if (valid) {
+				let expireDate = new Date();
+				expireDate.setDate(expireDate.getDate() + 30);
+				localStorage.clear();
+				localStorage.setItem('user_name', fullName);
+				localStorage.setItem('user_email', email);
+				localStorage.setItem('user_password', password);
+				document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+				document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
+				window.location.href = '../HTML/index.html';
+			}
+		});
+}
+
 //show the error massages
 function showError(inputId, message) {
 	let inputElement = document.getElementById(inputId);
