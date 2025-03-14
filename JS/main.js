@@ -1,35 +1,28 @@
 import { categories } from '../data/categories.js';
 import { createElement, loadHeaderFooter, RequestBody } from './utility.js';
 
-
-
-
-
-
 // Loading header and footer
 loadHeaderFooter('../HTML/header.html').then((data) => {
 	document.getElementById('header-container').innerHTML = data;
-	const header = document.getElementById('sign-up')
-	logINOut()
+	const header = document.getElementById('sign-up');
+	logINOut();
 });
 loadHeaderFooter('../HTML/footer.html').then((data) => {
 	document.getElementById('footer-container').innerHTML = data;
 	const footer = document.getElementById('footer-container').childNodes[0];
 });
 
-
 //get cookie from user
 function getCookie(name) {
-	let cookies = document.cookie.split('; ')
+	let cookies = document.cookie.split('; ');
 	for (let i = 0; i < cookies.length; i++) {
-		let cookie = cookies[i].split('=')
+		let cookie = cookies[i].split('=');
 		if (cookie[0] === name) {
-			return cookie[1]
+			return cookie[1];
 		}
 	}
-	return null
+	return null;
 }
-
 
 //control user login && logout
 function logINOut() {
@@ -48,7 +41,7 @@ function logINOut() {
 
 		SignInButton.addEventListener('click', function () {
 			if (userName) {
-				document.cookie = "user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+				document.cookie = 'user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
 				window.location.href = 'signup.html';
 			} else {
 				window.location.href = 'signup.html';
@@ -56,9 +49,6 @@ function logINOut() {
 		});
 	}
 }
-
-
-
 
 // Importing elements from details page
 const imagesDivs = document.querySelectorAll('.images div');
@@ -588,12 +578,9 @@ function updateButtonsVisibility() {
 	}
 }
 
-
 document.addEventListener('DOMContentLoaded', function () {
 	updateButtonsVisibility();
 });
-
-
 
 if (dark && searchDiv) {
 	dark.addEventListener('click', hideSearch);
@@ -609,7 +596,8 @@ if (searchInput) {
 document.addEventListener('DOMContentLoaded', function () {
 	let hearts = document.querySelectorAll('.heart');
 	let userName = getCookie('user_name');
-	let favorites = JSON.parse(localStorage.getItem(`favorites_${userName}`)) || {};
+	let favorites =
+		JSON.parse(localStorage.getItem(`favorites_${userName}`)) || {};
 
 	hearts.forEach((heart, index) => {
 		if (!heart.dataset.id) {
@@ -625,14 +613,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		heart.addEventListener('click', function () {
 			if (!userName) {
 				Swal.fire({
-					title: "Login Required",
-					text: "Please login to add your favorites ❤️",
-					icon: "warning",
-					confirmButtonText: "OK",
-					confirmButtonColor: "#ff4757",
+					title: 'Login Required',
+					text: 'Please login to add your favorites ❤️',
+					icon: 'warning',
+					confirmButtonText: 'OK',
+					confirmButtonColor: '#ff4757',
 					customClass: {
-						popup: 'custom-alert'
-					}
+						popup: 'custom-alert',
+					},
 				});
 				return;
 			}
@@ -649,5 +637,167 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 
+document.addEventListener('DOMContentLoaded', updateButtonsVisibility);
 
+// load the user information from local storage
+document.addEventListener('DOMContentLoaded', function () {
+	if (window.location.pathname.endsWith('profile.html')) {
+		let user_name = find_cookie('user_name');
+		let user_email = find_cookie('user_email');
+		if (user_name && user_email) {
+			document.getElementById('Name').innerHTML = user_name;
+			document.getElementById('Email').innerHTML = user_email;
+			document
+				.getElementById('edit_button')
+				.addEventListener('click', function () {
+					document.getElementById('editName').value = user_name;
+					document.getElementById('editEmail').value = user_email;
+				});
+			document
+				.getElementById('editForm')
+				.addEventListener('submit', function (e) {
+					e.preventDefault();
+					let fullName = document.getElementById('editName').value.trim();
+					let email = document.getElementById('editEmail').value.trim();
+					let password = document.getElementById('editPassowrd').value.trim();
+					document
+						.querySelectorAll('.error-message')
+						.forEach((el) => el.remove());
+					let valid = true;
+					if (!/^[A-Za-z\s]+$/.test(fullName)) {
+						showError('editName', 'Full name must contain only letters.');
+						valid = false;
+					}
+					if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+						showError('editEmail', 'Please enter a valid email address.');
+						valid = false;
+					}
+					if (password !== localStorage.getItem('user_password')) {
+						showError('editPassowrd', 'the password is incorrect');
+						valid = false;
+					}
+					if (valid) {
+						let expireDate = new Date();
+						expireDate.setDate(expireDate.getDate() + 30);
+						localStorage.setItem('user_name', fullName);
+						localStorage.setItem('user_email', email);
+						document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+						document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
+						window.location.href = '../HTML/profile.html';
+					}
+				});
+			document.getElementById('planers').addEventListener('click', function () {
+				window.location.href = '../HTML/planner.html';
+			});
+		} else {
+			window.location.href = '../HTML/login.html';
+		}
+	}
+});
+// check if cookie exists
+function find_cookie(cookie_name) {
+	let cookies = document.cookie.split('; ');
+	for (let cookie of cookies) {
+		if (cookie.split('=')[0] === cookie_name) {
+			return cookie.split('=')[1];
+		}
+	}
+	return false;
+}
+/*****************login and signup**************** */
+document.addEventListener('DOMContentLoaded', function () {
+	if (
+		window.location.pathname.endsWith('login.html') ||
+		window.location.pathname.endsWith('login.html?')
+	) {
+		if (find_cookie('user_name') && find_cookie('user_email'))
+			window.location.href = '../HTML/index.html';
+		document
+			.getElementById('loginForm')
+			.addEventListener('submit', function (e) {
+				e.preventDefault();
+				let email = document.getElementById('email').value.trim();
+				let password = document.getElementById('password').value.trim();
+				document
+					.querySelectorAll('.error-message')
+					.forEach((el) => el.remove());
+				let valid = true;
+				if (
+					email !== localStorage.getItem('user_email') ||
+					password !== localStorage.getItem('user_password')
+				) {
+					showError('email', 'Enter valid email and password');
+					valid = false;
+				}
+				if (valid) {
+					let fullName = localStorage.getItem('user_name');
+					let email = localStorage.getItem('user_email');
+					let expireDate = new Date();
+					expireDate.setDate(expireDate.getDate() + 30);
+					document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+					document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
+					window.location.href = '../HTML/index.html';
+				}
+			});
+	}
+});
 
+document.addEventListener('DOMContentLoaded', function () {
+	if (
+		window.location.pathname.endsWith('signup.html') ||
+		window.location.pathname.endsWith('signup.html?')
+	) {
+		if (find_cookie('user_name') && find_cookie('user_email'))
+			window.location.href = '../HTML/index.html';
+		document
+			.getElementById('signupForm')
+			.addEventListener('submit', function (e) {
+				e.preventDefault();
+				let fullName = document.getElementById('fullName').value.trim();
+				let email = document.getElementById('email').value.trim();
+				let password = document.getElementById('password').value.trim();
+				document
+					.querySelectorAll('.error-message')
+					.forEach((el) => el.remove());
+				let valid = true;
+				if (!/^[A-Za-z\s]+$/.test(fullName)) {
+					showError('fullName', 'Full name must contain only letters.');
+					valid = false;
+				}
+				if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+					showError('email', 'Please enter a valid email address.');
+					valid = false;
+				}
+				const passwordPattern =
+					/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+				if (!passwordPattern.test(password)) {
+					showError(
+						'password',
+						'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a symbol (@$#!%*?&) .'
+					);
+					valid = false;
+				}
+				if (valid) {
+					let expireDate = new Date();
+					expireDate.setDate(expireDate.getDate() + 30);
+					localStorage.clear();
+					localStorage.setItem('user_name', fullName);
+					localStorage.setItem('user_email', email);
+					localStorage.setItem('user_password', password);
+					document.cookie = `user_name=${fullName}; expires=${expireDate.toUTCString()};`;
+					document.cookie = `user_email=${email}; expires=${expireDate.toUTCString()};`;
+					window.location.href = '../HTML/index.html';
+				}
+			});
+	}
+});
+//show the error massages
+function showError(inputId, message) {
+	let inputElement = document.getElementById(inputId);
+	let existingError = inputElement.parentNode.querySelector('.error-message');
+	if (existingError) existingError.remove();
+	let errorElement = document.createElement('div');
+	errorElement.className = 'error-message text-danger mt-1';
+	errorElement.innerText = message;
+	inputElement.parentNode.appendChild(errorElement);
+}
