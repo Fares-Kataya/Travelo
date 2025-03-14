@@ -253,7 +253,7 @@ export async function searchPlacesData(
   zoom = 13,
   lang = "en"
 ) {
-  const apiKey = "06c97ba8fbmshcc2f2887477377ep182d49jsn9f11b9aadd19";
+  const apiKey = "20b4800490msh4213a96bd695313p1772dcjsn4921896a0a5e";
   const url = `https://maps-data.p.rapidapi.com/searchmaps.php?query=${encodeURIComponent(query)}&limit=${limit}&country=${country}&lang=${lang}&lat=${lat}&lng=${lng}&offset=${offset}&zoom=${zoom}`;
 
   const headers = {
@@ -282,7 +282,7 @@ export async function searchPlacesData(
  * @returns {Promise<Object|null>} A promise that resolves with the photo data (or null on error).
  */
 export async function getPlacePhotos(businessId) {
-  const apiKey = "06c97ba8fbmshcc2f2887477377ep182d49jsn9f11b9aadd19";
+  const apiKey = "20b4800490msh4213a96bd695313p1772dcjsn4921896a0a5e";
   const url = `https://maps-data.p.rapidapi.com/photos.php?business_id=${encodeURIComponent(businessId)}&lang=en`;
   
   const headers = {

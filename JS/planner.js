@@ -180,6 +180,8 @@ function buildTripCard(trip) {
 	);
 	console.log("first");
 	let daysPara = dateDivFromModal;
+	console.log("hhhfirst")
+	console.log(daysPara);
 	console.log(trip.startDate);
 	const dateText = daysPara
 		? daysPara.childNodes[1].textContent
@@ -267,9 +269,7 @@ function setupTripCardAnimation(tripCard) {
 			} else {
 				flexContainer.style.width = "100%";
 				flexContainer.style.height = "200%";
-				const destination =
-					document.querySelector("#location").childNodes[1].textContent;
-				console.log(event.target.closest("#location, h6"))//.childNodes[1].innerHTML)
+				const destination = event.target.closest("#location, h6").innerHTML
 				renderItinerary(tripCard, destination);
 			}
 		};
@@ -466,7 +466,9 @@ function renderItinerary(card, destination) {
 			});
 			document.querySelectorAll(".it-option").forEach((itineraryOption) => {
 				itineraryOption.addEventListener("click", () => {
-					const overlay = createElement("div", ["overlay","z"]);
+					const existingOverlays = document.querySelectorAll(".overlay");
+					existingOverlays.forEach(overlay => overlay.remove());
+					const overlay = createElement("div", ["overlay"]);
 					const searchBar = createInput("text", "search", "search");
 					const hr = createElement("hr");
 					const modalConfig = {
@@ -494,10 +496,10 @@ function renderItinerary(card, destination) {
 								document.removeEventListener("keydown", escListener);
 							}
 						}
-						
-					});
-					handleSearch(itineraryOption);
-					
+
+					});console.log(event.target)
+					handleSearch(itineraryOption,destination,event.target);
+
 					});
 				});
 			});
@@ -566,7 +568,7 @@ async function generateMap(destName) {
 	let coords = await getCoordinates(destName);
 	createInteractiveMap(coords)
 }
-function createPlaceCard(place) {
+function createPlaceCard(place,addbtn) {
 	console.log(place)
 	const card = createElement("div");
 	card.classList.add("place-card");
@@ -578,49 +580,65 @@ function createPlaceCard(place) {
 	name.textContent = place.name;
 	cardDeets.appendChild(name);
 
-	const city = createElement("h6");
+	const city = createElement("h5", ["city"]);
 	city.textContent = place.city;
 	cardDeets.appendChild(city);
 
-
-
+	const types = createElement("h6", ["type"]);
+	types.textContent = place.types[0]
+	cardDeets.appendChild(types)
 	getPlacePhotos(place.business_id).then((places) => {
 	if (places && places.data && places.data.photos && places.data.photos[0]) {
 		imgElement.setAttribute("src", places.data.photos[0]);
 	}
-});
-	const rating = createElement("p");
+	});
+	const price = createElement("p", ["price"])
+	price.textContent = place.price_level
+	if (price.textContent && (price.textContent === "€" || price.textContent === "£")) {
+		price.classList.add("cheap")
+	} else if (price.textContent && (price.textContent === "€€" || price.textContent === "££")) {
+		price.classList.add("med")
+	} else if (price.textContent && (price.textContent === "€€€" || price.textContent === "£££")) {
+		price.classList.add("exp")
+	}
+	cardDeets.appendChild(price)
+	const rating = createElement("p", ["rating"]);
 	rating.textContent = `Rating: ${place.rating || ""} (${
 		place.review_count || 0
-	} reviews)`;
+		} reviews)`;
+	const workingHours = createElement("div")
+	workingHours.textContent = place.working_hours
 	cardDeets.appendChild(rating);
 	cardflex.appendChild(cardDeets);
+	cardflex.appendChild(workingHours);
 	card.appendChild(cardflex);
-	card.addEventListener("click", () => { addItinerary(card,place) });
+	card.addEventListener("click", () => { addItinerary(card,place,addbtn) });
 	return card;
 }
 
-function addItinerary(card, place) {
-	const itinerary = document.querySelector(".timelineditiDiv");
+function addItinerary(card, place, addbtn) {
+	console.log(addbtn.parentElement)
+	const itinerary = addbtn.parentElement.closest(".timelineditiDiv");
 	itinerary.appendChild(card);
 }
-async function handleSearch(itineraryOption) {
-
-	const destinationElem = document.querySelector("#location h6");
-
-	const destination = destinationElem.textContent.trim();
-	console.log("Destination:", destination);
+async function handleSearch(itineraryOption,destination,addbtn) {
 
 	const countryCode = await getCountryCodeFromName(destination);
-
-	const places = await searchPlacesData(
+	console.log(countryCode)
+	let places
+	if (countryCode) {
+	places = await searchPlacesData(
 		itineraryOption.textContent,
 		countryCode,
+		false,
+		false,
 		10,
 		0,
 		13,
 		"en"
-	);
+	);	
+	}
+	
 	console.log("Search Results:", places);
 
 	const resultsContainer = document.getElementsByClassName("modal-footer")[0];
@@ -642,7 +660,7 @@ async function handleSearch(itineraryOption) {
 					latitude: place.latitude,
 					longitude: place.longitude,
 				};
-				const placeCard = createPlaceCard(placeObj);
+				const placeCard = createPlaceCard(placeObj,addbtn);
 				resultsContainer.appendChild(placeCard);
 			});
 		} else {
