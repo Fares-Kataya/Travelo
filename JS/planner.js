@@ -6,14 +6,22 @@ import {
 	getData,
 	createModal,
 	createInput,
+	searchPlacesData,
+	getPlacePhotos,
 } from "../JS/utility.js";
-import { setupDestinationMap } from "../JS/Map.js";
+import {
+	setupDestinationMap,
+	createInteractiveMap,
+	getCoordinates,
+	getCountryCodeFromName,
+} from "../JS/Map.js";
 import {
 	setupDateModal,
 	dateDivFromModal,
 	resetDateDivFromModal,
 	startCalDate,
 	endCalDate,
+	generateCalendar,
 } from "../JS/Calendar.js";
 document.addEventListener("DOMContentLoaded", loadPage);
 initEvents();
@@ -69,8 +77,8 @@ function createTrip() {
 			onClose: close,
 		},
 		contentWrapper: true,
-		body: [tripDetails, previewDiv],
-		contentWrapper: true,
+		body: { divs: [tripDetails, previewDiv], id: "trip" },
+		contentWrapper: [true, "content"],
 		footer: {
 			buttonsContainer: optionBtns,
 			buttons: [
@@ -86,10 +94,11 @@ function createTrip() {
 					attributes: { id: "apply" },
 					onClick: () => {
 						save({
-							name: modalConfig.body[0].childNodes[1].value,
-							dest: modalConfig.body[0].childNodes[3].value,
-							desc: modalConfig.body[0].childNodes[5].value,
-							startDate: document.getElementById("start-date").value || startCalDate,
+							name: modalConfig.body.divs[0].childNodes[1].value,
+							dest: modalConfig.body.divs[0].childNodes[3].value,
+							desc: modalConfig.body.divs[0].childNodes[5].value,
+							startDate:
+								document.getElementById("start-date").value || startCalDate,
 							endDate: document.getElementById("end-date").value || endCalDate,
 						});
 					},
@@ -171,6 +180,8 @@ function buildTripCard(trip) {
 	);
 	console.log("first");
 	let daysPara = dateDivFromModal;
+	console.log("hhhfirst")
+	console.log(daysPara);
 	console.log(trip.startDate);
 	const dateText = daysPara
 		? daysPara.childNodes[1].textContent
@@ -258,7 +269,8 @@ function setupTripCardAnimation(tripCard) {
 			} else {
 				flexContainer.style.width = "100%";
 				flexContainer.style.height = "200%";
-				renderItinerary(tripCard);
+				const destination = event.target.closest("#location, h6").innerHTML
+				renderItinerary(tripCard, destination);
 			}
 		};
 		if (tripCard.classList.contains("active-card")) {
@@ -326,7 +338,7 @@ let imageSelector = (destination = "", image) => {
 	}
 	return image;
 };
-function renderItinerary(card) {
+function renderItinerary(card, destination) {
 	let date = card.querySelector("#date");
 	let datetxt = "";
 	let fromDate, toDate;
@@ -363,7 +375,6 @@ function renderItinerary(card) {
 	let placesPinedMap = createElement("div", ["container"], {
 		id: "placesPinedMap",
 	});
-	// renderMap(card, placePinedMap);
 	flexContainer.appendChild(itineraryDetails);
 	const daysContainer = createElement("div", ["container"], {
 		id: "daysContainer",
@@ -398,6 +409,8 @@ function renderItinerary(card) {
 		const timnelineDiv = createElement("div", ["timelineDiv"], {
 			id: "timeline",
 		});
+		const timelineditiDiv = createElement("div", ["timelineditiDiv"], {})
+		timelineditiDiv.appendChild(timnelineDiv)
 		addItineraryBtn = createElement(
 			"button",
 			["addItinerary"],
@@ -405,7 +418,7 @@ function renderItinerary(card) {
 			"+"
 		);
 		dayDiv.appendChild(dayHeader);
-		dayDiv.appendChild(timnelineDiv);
+		dayDiv.appendChild(timelineditiDiv);
 		dayDiv.appendChild(addItineraryBtn);
 		dayDiv.appendChild(createElement("hr"));
 		daysContainer.appendChild(dayDiv);
@@ -435,13 +448,78 @@ function renderItinerary(card) {
 			}
 			itineraryOptions.classList.remove("collapse");
 			itineraryOptions.classList.remove("expand");
-		});
+			document.querySelectorAll(".it-option").forEach((itineraryOption) => {
+				itineraryOption.addEventListener("mouseover", () => {
+					itineraryOption.childNodes[1].setAttribute(
+						"src",
+						`../Assets/icons/${itineraryOption.childNodes[0].textContent}-light.svg`
+					);
+				});
+			});
+			document.querySelectorAll(".it-option").forEach((itineraryOption) => {
+				itineraryOption.addEventListener("mouseout", () => {
+					itineraryOption.childNodes[1].setAttribute(
+						"src",
+						`../Assets/icons/${itineraryOption.childNodes[0].textContent}-dark.svg`
+					);
+				});
+			});
+			document.querySelectorAll(".it-option").forEach((itineraryOption) => {
+				console.log(itineraryOption)
+				itineraryOption.addEventListener("click", (event) => {
+					const existingOverlays = document.querySelectorAll(".overlay");
+					existingOverlays.forEach(overlay => overlay.remove());
+					const overlay = createElement("div", ["overlay"]);
+					const searchBar = createInput("text", "search", "search");
+					const hr = createElement("hr");
+					const modalConfig = {
+						header: {
+							title: `search for ${itineraryOption.textContent}`,
+							closeBtn: false,
+							onClose: close,
+						},
+						contentWrapper: [true, "search"],
+						body: { divs: [searchBar, hr], id: "search-div"},
+						footer: {
+						},
+					};
+					const modalElement = createModal(modalConfig, ["search-modal"]);
+					overlay.appendChild(modalElement);
+					document.body.appendChild(overlay);
+					itineraryOptions.classList.remove("expand");
+					itineraryOptions.classList.add("collapse");
+					itineraryOptions.style.display = "none";
+					document.addEventListener("keydown", function escListener(e) {
+						if (e.key === "Escape") {
+							const overlay = document.querySelector(".overlay");
+							if (overlay) {
+								overlay.remove();
+								document.removeEventListener("keydown", escListener);
+							}
+						}
+
+					});
+					const targetDiv = event.target.parentElement.parentElement.parentElement.childNodes[1]
+					handleSearch(itineraryOption,destination,targetDiv);
+
+					});
+				});
+			});
 	});
 	const accImg = createElement("img", ["OptIcon"], {
-		src: "../Assets/icons/house_16203341.png",
+		src: "../Assets/icons/Accommodation-dark.svg",
 	});
 	const toDoImg = createElement("img", ["OptIcon"], {
-		src: "../Assets/icons/address-location-icon.svg",
+		src: "../Assets/icons/Things to Do-dark.svg",
+	});
+	const foodDrinks = createElement("img", ["OptIcon"], {
+		src: "../Assets/icons/Food & Drinks-dark.svg",
+	});
+	const transportationImg = createElement("img", ["OptIcon"], {
+		src: "../Assets/icons/Transportation-dark.svg",
+	});
+	const entertainmentImg = createElement("img", ["OptIcon"], {
+		src: "../Assets/icons/Entertainment-dark.svg",
 	});
 	const addActivityBtn = createElement(
 		"button",
@@ -467,12 +545,128 @@ function renderItinerary(card) {
 		{ id: "transportationOpt" },
 		"Transportation"
 	);
+	const addEntertainmentBtn = createElement(
+		"button",
+		["it-option"],
+		{ id: "entertainmentOpt" },
+		"Entertainment"
+	);
 	addAccommodationBtn.appendChild(accImg);
 	addActivityBtn.appendChild(toDoImg);
+	addRestaurantBtn.appendChild(foodDrinks);
+	addEntertainmentBtn.appendChild(entertainmentImg);
+	addTransportBtn.appendChild(transportationImg);
 	const optBtnsDiv = createElement("div", [], { id: "it-option" });
 	optBtnsDiv.appendChild(addActivityBtn);
 	optBtnsDiv.appendChild(addRestaurantBtn);
 	optBtnsDiv.appendChild(addAccommodationBtn);
+	optBtnsDiv.appendChild(addEntertainmentBtn);
 	optBtnsDiv.appendChild(addTransportBtn);
 	itineraryOptions.appendChild(optBtnsDiv);
+	generateMap(card.querySelector("#details").childNodes[1].childNodes[1].textContent);
+}
+async function generateMap(destName) {
+	console.log(destName)
+	let coords = await getCoordinates(destName);
+	createInteractiveMap(coords)
+}
+function createPlaceCard(place,addbtn) {
+	console.log(place)
+	const card = createElement("div");
+	card.classList.add("place-card");
+	const cardflex = createElement("div", [], { id: "place-card-flex" });
+	const cardDeets = createElement("div", [], { id: "place-card-Deets" });
+	const imgElement = createElement("img");
+	cardflex.appendChild(imgElement);
+	const name = createElement("h4");
+	name.textContent = place.name;
+	cardDeets.appendChild(name);
+
+	const city = createElement("h5", ["city"]);
+	city.textContent = place.city;
+	cardDeets.appendChild(city);
+
+	const types = createElement("h6", ["type"]);
+	types.textContent = place.types[0]
+	cardDeets.appendChild(types)
+	getPlacePhotos(place.business_id).then((places) => {
+	if (places && places.data && places.data.photos && places.data.photos[0]) {
+		imgElement.setAttribute("src", places.data.photos[0]);
+	}
+	});
+	const price = createElement("p", ["price"])
+	price.textContent = place.price_level
+	if (price.textContent && (price.textContent === "€" || price.textContent === "£")) {
+		price.classList.add("cheap")
+	} else if (price.textContent && (price.textContent === "€€" || price.textContent === "££")) {
+		price.classList.add("med")
+	} else if (price.textContent && (price.textContent === "€€€" || price.textContent === "£££")) {
+		price.classList.add("exp")
+	}
+	cardDeets.appendChild(price)
+	const rating = createElement("p", ["rating"]);
+	rating.textContent = `Rating: ${place.rating || ""} (${
+		place.review_count || 0
+		} reviews)`;
+	const workingHours = createElement("div")
+	workingHours.textContent = place.working_hours
+	cardDeets.appendChild(rating);
+	cardflex.appendChild(cardDeets);
+	cardflex.appendChild(workingHours);
+	card.appendChild(cardflex);
+	card.addEventListener("click", () => { addItinerary(card,place,addbtn) });
+	return card;
+}
+
+function addItinerary(card, place, addbtn) {
+	console.log(addbtn.parentElement)
+	const itinerary = addbtn.closest(".timelineditiDiv");
+	itinerary.appendChild(card);
+}
+async function handleSearch(itineraryOption,destination,addbtn) {
+
+	const countryCode = await getCountryCodeFromName(destination);
+	console.log(countryCode)
+	let places
+	if (countryCode) {
+	places = await searchPlacesData(
+		itineraryOption.textContent,
+		countryCode,
+		false,
+		false,
+		10,
+		0,
+		13,
+		"en"
+	);	
+	}
+	
+	console.log("Search Results:", places);
+
+	const resultsContainer = document.getElementsByClassName("modal-footer")[0];
+	if (resultsContainer) {
+		resultsContainer.innerHTML = "";
+		if (places && places.data && places.data.length > 0) {
+			places.data.forEach((place) => {
+				const placeObj = {
+					business_id: place.business_id,
+					name: place.name,
+					price_level: place.price_level,
+					phone_number: place.phone_number,
+					rating: place.rating,
+					review_count: place.review_count,
+					types: place.types,
+					working_hours: place.working_hours,
+					city: place.city,
+					full_address_array: place.full_address_array,
+					latitude: place.latitude,
+					longitude: place.longitude,
+				};
+				const placeCard = createPlaceCard(placeObj,addbtn);
+				resultsContainer.appendChild(placeCard);
+			});
+		} else {
+			resultsContainer.innerHTML = "<p>No results found.</p>";
+		}
+	}
 }

@@ -1,4 +1,3 @@
-
 import { createElement } from "../JS/utility.js"
 import { toggleActive } from "../JS/utility.js"
 export let dateDivFromModal = null;
@@ -124,7 +123,7 @@ export function setupDateModal(overlay) {
       }
       startCalDate = "2025-" + (currentMonthIndex + 1) + "-" + lowerBound
       endCalDate = "2025-" + (currentMonthIndex + 1) + "-" + upperBound;
-        console.log(startCalDate, endCalDate);
+      dateModal.remove();
 			});
 
     nextButton.addEventListener("click", () => {
@@ -352,7 +351,7 @@ function attachDayListeners(modal) {
         src: "../Assets/icons/calendar.png",
       });
       let tripLengthPara = createElement("p", [], {}, `${dayCount} days`);
-      trip.daysPara = tripLengthPara.innerHTML;
+      trip.daysPara = tripLengthPara.textContent;
       let dateDiv = createElement("div", [], { id: "date" });
       dateDiv.append(calIcon, tripLengthPara);
       dateDivFromModal = dateDiv;
