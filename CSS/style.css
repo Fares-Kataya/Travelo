@@ -45,8 +45,9 @@
 	align-items: center;
 	gap: 0.5rem;
 	position: fixed;
-	bottom: 40px;
-	right: 40px;
+	bottom: 50px;
+	left: 50%;
+	transform: translateX(-50%);
 	background-color: black;
 	color: white;
 	border-radius: 2rem;
