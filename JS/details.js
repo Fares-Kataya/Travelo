@@ -36,6 +36,10 @@ const dark = document.querySelector('.dark');
 const close = document.querySelector('.close');
 const closeBtn = document.querySelector('.btn-close-white');
 const paymentForm = document.querySelector('.confirm');
+const rightArrow = document.querySelector('.images .right');
+const leftArrow = document.querySelector('.images .left');
+let currentImage = 0;
+let imagesDivs = [];
 let calcBill = {
 	initalPrice: 0,
 	noGuests: 1,
@@ -100,6 +104,7 @@ function setData(data) {
 		}
 		div.appendChild(img);
 		imagesContainer.appendChild(div);
+		imagesDivs.push(div);
 	});
 
 	data.photos.slice(5, 9).map((item) => {
@@ -288,6 +293,53 @@ async function createInteractiveMap(coordinates) {
 function togglePaymentForm() {
 	paymentForm.classList.toggle('active');
 	dark.classList.toggle('active');
+}
+
+// Move the images of a place to left in details page
+function MoveImagesToLeft() {
+	if (currentImage + 1 < imagesDivs.length) {
+		imagesDivs[currentImage].classList.remove('active');
+		imagesDivs[currentImage].classList.add('inActive');
+		imagesDivs[++currentImage].classList.add('active');
+
+		// Refresh the dots at the bottom of the carousel
+		loadDots();
+	}
+}
+
+// Move the images of a place to right in details page
+function MoveImagesToRight() {
+	console.log('hi');
+	if (currentImage > 0) {
+		imagesDivs[currentImage].classList.remove('active');
+		imagesDivs[--currentImage].classList.remove('inActive');
+		imagesDivs[currentImage].classList.add('active');
+
+		// Refresh the dots at the bottom of the carousel
+		loadDots();
+	}
+}
+
+// Set the dots at the bottom of the carousel according to the number of images
+function loadDots() {
+	dots.innerHTML = '';
+	imagesDivs.forEach((div, index) => {
+		let classes = ['dot'];
+		if (div.classList.contains('active')) {
+			classes.push('active');
+		}
+		const dot = createElement('span', [...classes]);
+		dots.appendChild(dot);
+	});
+}
+
+if (rightArrow) {
+	rightArrow.addEventListener('click', MoveImagesToLeft);
+	loadDots();
+}
+if (leftArrow) {
+	leftArrow.addEventListener('click', MoveImagesToRight);
+	loadDots();
 }
 
 loadReviews();

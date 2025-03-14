@@ -315,45 +315,43 @@ document.querySelectorAll('.category-item').forEach((item) => {
 	});
 });
 
-let currentImage = 0;
+// // Move the images of a place to left in details page
+// function MoveImagesToLeft() {
+// 	if (currentImage + 1 < imagesDivs.length) {
+// 		imagesDivs[currentImage].classList.remove('active');
+// 		imagesDivs[currentImage].classList.add('inActive');
+// 		imagesDivs[++currentImage].classList.add('active');
 
-// Move the images of a place to left in details page
-function MoveImagesToLeft() {
-	if (currentImage + 1 < imagesDivs.length) {
-		imagesDivs[currentImage].classList.remove('active');
-		imagesDivs[currentImage].classList.add('inActive');
-		imagesDivs[++currentImage].classList.add('active');
+// 		// Refresh the dots at the bottom of the carousel
+// 		loadDots();
+// 	}
+// }
 
-		// Refresh the dots at the bottom of the carousel
-		loadDots();
-	}
-}
+// // Move the images of a place to right in details page
+// function MoveImagesToRight() {
+// 	console.log('hi');
+// 	if (currentImage > 0) {
+// 		imagesDivs[currentImage].classList.remove('active');
+// 		imagesDivs[--currentImage].classList.remove('inActive');
+// 		imagesDivs[currentImage].classList.add('active');
 
-// Move the images of a place to right in details page
-function MoveImagesToRight() {
-	console.log('hi');
-	if (currentImage > 0) {
-		imagesDivs[currentImage].classList.remove('active');
-		imagesDivs[--currentImage].classList.remove('inActive');
-		imagesDivs[currentImage].classList.add('active');
+// 		// Refresh the dots at the bottom of the carousel
+// 		loadDots();
+// 	}
+// }
 
-		// Refresh the dots at the bottom of the carousel
-		loadDots();
-	}
-}
-
-// Set the dots at the bottom of the carousel according to the number of images
-function loadDots() {
-	dots.innerHTML = '';
-	imagesDivs.forEach((div, index) => {
-		let classes = ['dot'];
-		if (div.classList.contains('active')) {
-			classes.push('active');
-		}
-		const dot = createElement('span', [...classes]);
-		dots.appendChild(dot);
-	});
-}
+// // Set the dots at the bottom of the carousel according to the number of images
+// function loadDots() {
+// 	dots.innerHTML = '';
+// 	imagesDivs.forEach((div, index) => {
+// 		let classes = ['dot'];
+// 		if (div.classList.contains('active')) {
+// 			classes.push('active');
+// 		}
+// 		const dot = createElement('span', [...classes]);
+// 		dots.appendChild(dot);
+// 	});
+// }
 
 // Show/Hide the payment form in the details page
 function togglePaymentForm() {
@@ -430,8 +428,8 @@ async function showSearch() {
 		console.log(geo);
 		const loading = generateSpinner();
 		div = createElement('div', ['show-search', 'overflow-scroll-y']);
-		const wrapper = createCategories();
-		div.appendChild(wrapper);
+		// const wrapper = createCategories();
+		// div.appendChild(wrapper);
 		let content = createElement('div', ['p-3']);
 		div.appendChild(content);
 		content.appendChild(loading);
@@ -440,7 +438,7 @@ async function showSearch() {
 		initializeSearchResult()
 			.then((places) => {
 				if (places) {
-					places.forEach((place) => {
+					places.slice(0, 20).forEach((place) => {
 						if (place.photos.length > 0) {
 							const node = createCard(
 								place.business_id,
@@ -527,14 +525,14 @@ async function searchByType(text) {
  * if it exists or not before adding the event listenerto avoid errors
  */
 
-if (rightArrow) {
-	rightArrow.addEventListener('click', MoveImagesToLeft);
-	loadDots();
-}
-if (leftArrow) {
-	leftArrow.addEventListener('click', MoveImagesToRight);
-	loadDots();
-}
+// if (rightArrow) {
+// 	rightArrow.addEventListener('click', MoveImagesToLeft);
+// 	loadDots();
+// }
+// if (leftArrow) {
+// 	leftArrow.addEventListener('click', MoveImagesToRight);
+// 	loadDots();
+// }
 
 if (reserveBtn) {
 	reserveBtn.addEventListener('click', togglePaymentForm);
