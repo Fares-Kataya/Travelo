@@ -438,7 +438,7 @@ async function initializeSearchResult() {
 	params.append('lat', geo.latitude);
 	params.append('lng', geo.longitude);
 	params.append('limit', 20);
-	params.append('country', 'eg');
+	params.append('country', '');
 
 	try {
 		let data = await getData('nearby.php', params);
@@ -459,13 +459,15 @@ let div;
 let rowOfPlaces;
 // Show the search result
 async function showSearch() {
+	const { lng, lat } = map.getCenter();
+
+	geo.latitude = lat;
+	geo.longitude = lng;
 	if (!div) {
-		const { lng, lat } = map.getCenter();
-		geo.latitude = lat;
-		geo.longitude = lng;
 		console.log(geo);
 		const loading = generateSpinner();
 		div = createElement('div', ['show-search', 'overflow-scroll-y']);
+		div.innerHTML = '';
 		// const wrapper = createCategories();
 		// div.appendChild(wrapper);
 		let content = createElement('div', ['p-3']);
@@ -498,13 +500,7 @@ async function showSearch() {
 			});
 
 		content.appendChild(rowOfPlaces);
-	} else {
-		// If data is already available, remove loading immediately
-		if (placesData) {
-			document.querySelector('.loading-spinner')?.remove();
-		}
 	}
-
 	if (!searchDiv.classList.contains('active')) {
 		searchDiv.classList.add('active');
 		dark.classList.add('active');
@@ -515,8 +511,10 @@ async function showSearch() {
 // Hide the search result
 function hideSearch() {
 	document.body.removeChild(div);
+	div.remove();
 	dark.classList.remove('active');
 	searchDiv.classList.remove('active');
+	searchInput.value = '';
 }
 
 async function searchByType(text) {
@@ -533,11 +531,13 @@ async function searchByType(text) {
 		'position-relative',
 		'h-100',
 	]);
+
 	rowOfPlaces.appendChild(loadingContainer);
 	loadingContainer.appendChild(loading);
 	try {
 		let data = await getData('nearby.php', params);
 		rowOfPlaces.removeChild(loadingContainer);
+		console.log(data);
 		data?.data.map((place) => {
 			if (place.photos.length > 0) {
 				const node = createCard(
@@ -552,8 +552,10 @@ async function searchByType(text) {
 			}
 		});
 	} catch (error) {
-		rowOfPlaces.removeChild(loadingContainer);
-		console.log(error);
+		if (rowOfPlaces.hasChildNodes()) {
+			rowOfPlaces.removeChild(loadingContainer);
+			console.log(error);
+		}
 	}
 }
 
@@ -693,13 +695,14 @@ if (dark && searchDiv) {
 if (container) {
 	container.addEventListener('scroll', updateButtonsVisibility);
 }
-
+let delay;
 if (searchInput) {
 	searchInput.addEventListener('focus', showSearch);
 	searchInput.addEventListener('input', (e) => {
-		debounce(() => {
+		clearTimeout(delay);
+		delay = setTimeout(() => {
 			searchByType(e.target.value);
-		})();
+		}, 2000);
 	});
 }
 
