@@ -1,65 +1,106 @@
-# Interactive Travel Planner Dashboard
+# Travelo - Your Ultimate Travel Companion
 
-## Project Description
-Interactive Travel Planner Dashboard is a dynamic, front-end web application designed to empower users to explore travel destinations, create personalized itineraries, and view detailed destination information—all without a backend. Using static JSON data to simulate API responses, this project showcases modern front-end technologies.
+## Overview
 
----
-
-## Table of Contents
-
-- [About The Project](#about-the-project)
-- [Features](#features)
-- [Built With](#built-with)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
-
----
-
-## About The Project
-
-The **Interactive Travel Planner Dashboard** simplifies travel planning by combining various tools into one intuitive platform. Whether you're mapping out your next vacation or managing complex itineraries, this project integrates interactive maps, real-time weather updates, and budget tracking to make travel planning efficient and enjoyable.
-
-Key functionalities include:
-- **Interactive Maps:** Visualize travel routes and explore destinations.
-- **Custom Itinerary Builder:** Organize your travel schedule with ease.
-- **Budget Management:** Monitor expenses and keep your travel budget in check.
-- **Real-Time Updates:** Stay informed with current weather and travel recommendations.
-
----
-
-## Built With
-
-- **HTML5** – Structuring the web pages with semantic markup.
-- **Bootstrap / CSS3:** – Styling and responsive design for a user-friendly interface.
-- **JavaScript** – Adding interactivity and dynamic content.
-
----
+Travelo is a web application that combines the functionalities of Airbnb and TripAdvisor to provide users with an all-in-one travel planning and booking experience. Users can search for hotels, restaurants, and attractions around their location or any destination of their choice. The platform also allows users to create trip plans, reserve accommodations, and save favorite places.
 
 ## Features
 
-- **Interactive Map Integration:**  
-  Leverage map APIs to display destinations, routes, and points of interest.
+- **User Authentication**: Sign up and login functionalities to save user data.
+- **Location-based Search**: Automatically detects user's location and suggests nearby places (hotels, restaurants, attractions).
+- **Map Integration**: Users can select any location worldwide from an interactive map.
+- **Reservations**: Users can book hotels and restaurants through the website.
+- **Favorites List**: Save favorite places for future reference.
+- **Trip Planner**:
+  - Select a destination and get recommendations for activities.
+  - Set the number of days for the trip.
+- **Local Storage Integration**: Stores user plans, favorites, and authentication details locally.
+- **Mapbox Integration**: Utilizes Mapbox JS library for interactive maps.
+- **World Map API**: Fetches place details and recommendations.
 
-- **Itinerary Builder:**  
-  Easily add, edit, and organize travel plans with a drag-and-drop interface.
+## Technologies Used
 
-- **Budget Tracker:**  
-  Manage travel expenses and forecast budgets with built-in tools.
+- **Frontend**: HTML, CSS, JavaScript
+- **Maps**: Mapbox JS library
+- **Data Storage**: LocalStorage
+- **APIs**: World Map API for place details
 
-- **Destination Insights:**  
-  Get detailed information on accommodations, restaurants, and local attractions.
+## Folder Structure
 
-- **Weather Updates:**  
-  Access real-time weather information to plan your trips effectively.
+/project-root
+│
+├── Assets/
+│ ├── icons/
+│ └── images/
+│
+├── CSS/
+│ ├── bootstrap.min.css
+│ ├── planner.css
+│ ├── style.css
+│ └── utility.css
+│
+├── data/
+│
+├── HTML/
+│ ├── details.html
+│ ├── footer.html
+│ ├── header.html
+│ ├── index.html
+│ ├── login.html
+│ ├── planner.html
+│ ├── profile.html
+│ └── signup.html
+│
+├── JS/
+│ ├── bootstrap.bundle.min.js
+│ ├── Calendar.js
+│ ├── details.js
+│ ├── login.js
+│ ├── main.js
+│ ├── Map.js
+│ ├── planner.js
+│ ├── profile.js
+│ ├── refactoredPlanner.js
+│ ├── signup.js
+│ └── utility.js
+│
+├── JSON/
+│
+└── README.md
 
-- **User Authentication:**  
-  Secure login and personalized dashboards for managing your travel plans.
+## How to Use
 
-- **Responsive Design:**  
-  Fully optimized for both desktop and mobile devices.
+1. **Clone the repository**
+
+   ````sh
+   git clone https://github.com/your-username/your-repo.git```
+
+   ````
+
+2. Navigate into the project directory
+   `cd your-repo`
+
+3. Open index.html in your browser
+   Simply open the index.html file in any web browser with live server to start using the application.
+
+## Contributors
+
+- [**Hossam Mahmoud**](hossamkheder999@gmail.com)
+- [**Fares Kataya**](farestyk@gmail.com)
+- [**Karim Mustafa**](karimmustafa495@gmail.com)
+- [**Youssef Abdo**](yousefabdo200212@gmail.com)
+
+## Credits
+
+Special thanks to:
+
+- **Eng. Arwa Osama**
+- **Noha Salah**
+
+## Demo
+
+Watch the demo video of Travelo: [Demo Video Link](https://drive.google.com/file/d/1wZPPdcqk2-RIvHueLDZVGEpZvyUwZWVo/view?usp=sharing)
 
 ---
+
+Enjoy seamless trip planning with Travelo!
