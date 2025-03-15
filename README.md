@@ -27,6 +27,7 @@ Travelo is a web application that combines the functionalities of Airbnb and Tri
 
 ## Folder Structure
 
+```
 /project-root
 │
 ├── Assets/
@@ -67,15 +68,16 @@ Travelo is a web application that combines the functionalities of Airbnb and Tri
 ├── JSON/
 │
 └── README.md
+```
 
 ## How to Use
 
 1. **Clone the repository**
 
-   ````sh
-   git clone https://github.com/your-username/your-repo.git```
+   ```sh
+   git clone https://github.com/your-username/your-repo.git
 
-   ````
+   ```
 
 2. Navigate into the project directory
    `cd your-repo`
