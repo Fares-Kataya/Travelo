@@ -91,10 +91,10 @@ Travelo is a web application that combines the functionalities of Airbnb and Tri
 
 ## Contributors
 
-- [**Hossam Mahmoud**](hossamkheder999@gmail.com)
-- [**Fares Kataya**](farestyk@gmail.com)
-- [**Karim Mustafa**](karimmustafa495@gmail.com)
-- [**Youssef Abdo**](yousefabdo200212@gmail.com)
+- [**Hossam Mahmoud**](https://github.com/HossamMahmoudkhedr)
+- [**Fares Kataya**](https://github.com/Fares-Kataya)
+- [**Karim Mustafa**](https://github.com/karimmustafa11)
+- [**Youssef Abdo**](https://github.com/yousefabdo200)
 
 ## Credits
 
