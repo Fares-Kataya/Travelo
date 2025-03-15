@@ -1,5 +1,9 @@
 # Travelo - Your Ultimate Travel Companion
 
+## Demo
+
+Watch the demo video of Travelo: [Demo Video Link 🎥](https://drive.google.com/file/d/1wZPPdcqk2-RIvHueLDZVGEpZvyUwZWVo/view?usp=sharing)
+
 ## Overview
 
 Travelo is a web application that combines the functionalities of Airbnb and TripAdvisor to provide users with an all-in-one travel planning and booking experience. Users can search for hotels, restaurants, and attractions around their location or any destination of their choice. The platform also allows users to create trip plans, reserve accommodations, and save favorite places.
@@ -98,10 +102,6 @@ Special thanks to:
 
 - **Eng. Arwa Osama**
 - **Noha Salah**
-
-## Demo
-
-Watch the demo video of Travelo: [Demo Video Link](https://drive.google.com/file/d/1wZPPdcqk2-RIvHueLDZVGEpZvyUwZWVo/view?usp=sharing)
 
 ---
 
