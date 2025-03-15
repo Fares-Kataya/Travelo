@@ -101,7 +101,7 @@ Travelo is a web application that combines the functionalities of Airbnb and Tri
 Special thanks to:
 
 - **Eng. Arwa Osama**
-- **Noha Salah**
+- **Eng. Noha Salah**
 
 ---
 
