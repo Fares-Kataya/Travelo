@@ -79,12 +79,12 @@ Travelo is a web application that combines the functionalities of Airbnb and Tri
 1. **Clone the repository**
 
    ```sh
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/Fares-Kataya/Travelo.git
 
    ```
 
 2. Navigate into the project directory
-   `cd your-repo`
+   `cd Travelo`
 
 3. Open index.html in your browser
    Simply open the index.html file in any web browser with live server to start using the application.
